@@ -94,7 +94,7 @@ struct FourLawsView: View {
             identityStatement: statement,
             votedAt: Date()
         )
-        try? await supabase.from("identity_votes").insert(vote).execute()
+        _ = try? await supabase.from("identity_votes").insert(vote).execute()
         HapticManager.impact(.light)
         await load()
     }

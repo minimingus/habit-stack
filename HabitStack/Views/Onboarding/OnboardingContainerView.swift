@@ -46,6 +46,7 @@ final class ScorecardViewModel {
     func skipToHabitWizard() {
         let result = ScorecardService.calculate(sleep: 3, movement: 3, mind: 3, growth: 3)
         step = .habitWizard(ScorecardService.templateHabit(for: result.recommended))
+        Task { await saveResult(result) }
     }
 
     func answer(_ score: Int, for dimension: ScorecardResult.Dimension) {
@@ -112,11 +113,11 @@ struct OnboardingContainerView: View {
         case .notificationPermission:
             NotificationPermissionView(onComplete: { viewModel.advance() })
         case .complete:
-            // Trigger RootViewModel reload
             ProgressView()
                 .task {
-                    // Force auth state refresh so RootViewModel re-checks onboarding
-                    _ = try? await supabase.auth.session
+                    // Sign out and back in to re-trigger RootViewModel's auth state observer
+                    // which calls checkOnboardingStatus() and reads the updated scorecardResult
+                    _ = try? await supabase.auth.refreshSession()
                 }
         }
     }

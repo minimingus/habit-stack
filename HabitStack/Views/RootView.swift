@@ -15,7 +15,7 @@ final class RootViewModel {
     @MainActor
     private func observeAuth() async {
         isLoading = true
-        for await (event, session) in supabase.auth.authStateChanges {
+        for await (_, session) in supabase.auth.authStateChanges {
             self.session = session
             if session != nil {
                 await checkOnboardingStatus()

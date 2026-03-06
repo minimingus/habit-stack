@@ -104,7 +104,7 @@ final class HabitWizardViewModel {
             .is("archived_at", value: nil)
             .execute()
             .value) ?? []
-        isPro = await RevenueCatManager.shared.isProUser
+        isPro = RevenueCatManager.shared.isProUser
     }
 
     func save(userId: UUID) async throws {

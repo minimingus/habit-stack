@@ -57,7 +57,7 @@ final class NotificationManager {
     func uploadDeviceToken(_ token: Data) async {
         let tokenString = token.map { String(format: "%02.2hhx", $0) }.joined()
         guard let userId = try? await supabase.auth.session.user.id else { return }
-        try? await supabase
+        _ = try? await supabase
             .from("device_tokens")
             .upsert(["user_id": userId.uuidString, "token": tokenString, "platform": "ios"])
             .execute()

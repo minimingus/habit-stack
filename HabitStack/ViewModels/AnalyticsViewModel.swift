@@ -13,7 +13,7 @@ final class AnalyticsViewModel {
     func load() async {
         guard let userId = try? await supabase.auth.session.user.id else { return }
         isLoading = true
-        isPro = await RevenueCatManager.shared.isProUser
+        isPro = RevenueCatManager.shared.isProUser
         habits = (try? await supabase
             .from("habits")
             .select()

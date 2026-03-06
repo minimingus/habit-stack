@@ -16,7 +16,11 @@ final class TodayViewModel {
     private var userId: UUID?
 
     func loadToday() async {
-        guard let userId = try? await supabase.auth.session.user.id else { return }
+        print("[TodayVM] loadToday() called")
+        guard let userId = try? await supabase.auth.session.user.id else {
+            print("[TodayVM] ERROR: no session")
+            return
+        }
         self.userId = userId
         isLoading = true
         defer { isLoading = false }

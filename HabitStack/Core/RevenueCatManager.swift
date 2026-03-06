@@ -55,7 +55,7 @@ final class RevenueCatManager {
     private func syncPlanWithSupabase() async {
         guard let userId = try? await supabase.auth.session.user.id else { return }
         let plan = isProUser ? "pro" : "free"
-        try? await supabase
+        _ = try? await supabase
             .from("profiles")
             .update(["plan": plan])
             .eq("id", value: userId.uuidString)
