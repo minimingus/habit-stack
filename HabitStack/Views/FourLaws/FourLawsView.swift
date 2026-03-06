@@ -1,63 +1,121 @@
 import SwiftUI
 
+private struct LawScore {
+    let title: String
+    let icon: String
+    let tip: String
+    let count: Int
+    let total: Int
+    var fraction: Double { total == 0 ? 0 : Double(count) / Double(total) }
+}
+
 struct FourLawsView: View {
     @State private var habits: [Habit] = []
     @State private var identityVotes: [IdentityVote] = []
     @State private var isLoading = false
 
-    private let laws: [(title: String, subtitle: String, timeOfDay: [Habit.TimeOfDay]?)] = [
-        ("Make it Obvious", "Design your environment. Use cues and habit stacking.", nil),
-        ("Make it Attractive", "Bundle habits with things you enjoy.", nil),
-        ("Make it Easy", "Reduce friction with the 2-minute rule.", nil),
-        ("Make it Satisfying", "Reward yourself immediately.", nil)
-    ]
+    private var lawScores: [LawScore] {
+        let n = habits.count
+        return [
+            LawScore(
+                title: "Make it Obvious",
+                icon: "eye",
+                tip: "Add a cue or anchor habit to each habit",
+                count: habits.filter { !($0.cue ?? "").isEmpty }.count,
+                total: n
+            ),
+            LawScore(
+                title: "Make it Attractive",
+                icon: "heart",
+                tip: "Write why each habit matters to you",
+                count: habits.filter { !($0.craving ?? "").isEmpty }.count,
+                total: n
+            ),
+            LawScore(
+                title: "Make it Easy",
+                icon: "bolt",
+                tip: "Set a 2-minute version for each habit",
+                count: habits.filter { !($0.tinyVersion ?? "").isEmpty }.count,
+                total: n
+            ),
+            LawScore(
+                title: "Make it Satisfying",
+                icon: "star",
+                tip: "Define an immediate reward for each habit",
+                count: habits.filter { !($0.reward ?? "").isEmpty }.count,
+                total: n
+            ),
+        ]
+    }
+
+    private var topIdentity: String? {
+        let grouped = Dictionary(grouping: identityVotes, by: { $0.identityStatement })
+        return grouped.max(by: { $0.value.count < $1.value.count })?.key
+    }
+
+    private var identityGroups: [(String, Int)] {
+        let grouped = Dictionary(grouping: identityVotes, by: { $0.identityStatement })
+        return grouped.map { ($0.key, $0.value.count) }
+            .sorted { $0.1 > $1.1 }
+            .prefix(3)
+            .map { $0 }
+    }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
-                    ForEach(laws.indices, id: \.self) { i in
-                        LawCard(
-                            title: laws[i].title,
-                            subtitle: laws[i].subtitle,
-                            habits: habitsForLaw(i)
-                        )
+                VStack(spacing: 24) {
+
+                    // MARK: Identity Hero
+                    IdentityHeroCard(statement: topIdentity)
                         .padding(.horizontal, 16)
-                    }
 
-                    // Identity votes
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("My Identity")
-                            .font(.headline)
-                            .padding(.horizontal, 16)
-
-                        Text("I am the type of person who...")
-                            .font(.subheadline)
-                            .foregroundStyle(Color("Stone500"))
-                            .padding(.horizontal, 16)
-
-                        if identityVotes.isEmpty {
-                            VStack(spacing: 10) {
-                                Image(systemName: "person.fill.checkmark")
-                                    .font(.system(size: 36))
-                                    .foregroundStyle(Color("Teal").opacity(0.6))
-                                Text("Complete habits to build your identity.")
-                                    .font(.subheadline.bold())
+                    // MARK: System Health
+                    if !habits.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Habit System Health")
+                                    .font(.headline)
                                     .foregroundStyle(Color("Stone950"))
-                                Text("Each check-in is a vote for who you're becoming.\nStart by completing a habit in the Today tab.")
+                                Text("How well are you applying the Four Laws?")
                                     .font(.caption)
                                     .foregroundStyle(Color("Stone500"))
-                                    .multilineTextAlignment(.center)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 24)
                             .padding(.horizontal, 16)
-                        } else {
-                            let grouped = Dictionary(grouping: identityVotes, by: { $0.identityStatement })
-                            let top3 = grouped.sorted { $0.value.count > $1.value.count }.prefix(3)
 
-                            ForEach(top3, id: \.key) { statement, votes in
-                                IdentityVoteView(statement: statement, voteCount: votes.count) {
+                            VStack(spacing: 0) {
+                                ForEach(Array(lawScores.enumerated()), id: \.offset) { index, law in
+                                    LawScoreRow(law: law)
+                                    if index < lawScores.count - 1 {
+                                        Divider().padding(.leading, 52)
+                                    }
+                                }
+                            }
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+                            .padding(.horizontal, 16)
+                        }
+                    }
+
+                    // MARK: Identity Votes
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("My Identity Votes")
+                                .font(.headline)
+                                .foregroundStyle(Color("Stone950"))
+                            Text("Each completed habit is a vote for who you're becoming.")
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                        }
+                        .padding(.horizontal, 16)
+
+                        if identityVotes.isEmpty {
+                            IdentityEmptyState()
+                                .padding(.horizontal, 16)
+                        } else {
+                            ForEach(identityGroups, id: \.0) { statement, count in
+                                IdentityVoteView(statement: statement, voteCount: count) {
                                     await castVote(for: statement)
                                 }
                                 .padding(.horizontal, 16)
@@ -67,18 +125,10 @@ struct FourLawsView: View {
                 }
                 .padding(.vertical, 16)
             }
-            .navigationTitle("Four Laws")
+            .background(Color("Stone100").ignoresSafeArea())
+            .navigationTitle("Identity")
             .task { await load() }
-        }
-    }
-
-    private func habitsForLaw(_ index: Int) -> [Habit] {
-        switch index {
-        case 0: return habits.filter { $0.cue != nil && !($0.cue?.isEmpty ?? true) }
-        case 1: return habits.filter { $0.craving != nil && !($0.craving?.isEmpty ?? true) }
-        case 2: return habits.filter { $0.tinyVersion != nil && !($0.tinyVersion?.isEmpty ?? true) }
-        case 3: return habits.filter { $0.reward != nil && !($0.reward?.isEmpty ?? true) }
-        default: return []
+            .refreshable { await load() }
         }
     }
 
@@ -116,44 +166,145 @@ struct FourLawsView: View {
     }
 }
 
-struct LawCard: View {
-    let title: String
-    let subtitle: String
-    let habits: [Habit]
+// MARK: - Identity Hero Card
+
+private struct IdentityHeroCard: View {
+    let statement: String?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.headline)
-                    .foregroundStyle(Color("Stone950"))
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(Color("Stone500"))
-            }
+        VStack(spacing: 12) {
+            if let statement {
+                VStack(spacing: 8) {
+                    Text("You are becoming")
+                        .font(.caption)
+                        .foregroundStyle(Color("Teal"))
+                        .textCase(.uppercase)
+                        .kerning(0.8)
 
-            if habits.isEmpty {
-                Text("No habits using this law yet")
-                    .font(.caption)
-                    .foregroundStyle(Color("Stone500").opacity(0.7))
-                    .italic()
+                    Text("someone who \(statement.lowercased())")
+                        .font(.title3.bold())
+                        .foregroundStyle(Color("Stone950"))
+                        .multilineTextAlignment(.center)
+
+                    Text("Keep showing up. Identity is built one rep at a time.")
+                        .font(.caption)
+                        .foregroundStyle(Color("Stone500"))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(20)
+                .background(
+                    LinearGradient(
+                        colors: [Color("TealLight"), Color("TealLight").opacity(0.4)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(Color("Teal").opacity(0.2), lineWidth: 1)
+                )
             } else {
-                ForEach(habits) { habit in
-                    HStack(spacing: 6) {
-                        Text(habit.emoji)
-                        Text(habit.name)
-                            .font(.subheadline)
+                VStack(spacing: 8) {
+                    Text("Who are you becoming?")
+                        .font(.title3.bold())
+                        .foregroundStyle(Color("Stone950"))
+                    Text("Complete habits to cast identity votes. Every check-in says: this is the kind of person I am.")
+                        .font(.subheadline)
+                        .foregroundStyle(Color("Stone500"))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(20)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+            }
+        }
+    }
+}
+
+// MARK: - Law Score Row
+
+private struct LawScoreRow: View {
+    let law: LawScore
+
+    private var scoreColor: Color {
+        if law.total == 0 { return Color("Stone500") }
+        if law.fraction >= 0.75 { return Color("Teal") }
+        if law.fraction >= 0.4 { return .orange }
+        return .red.opacity(0.7)
+    }
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: law.icon)
+                .font(.system(size: 16))
+                .foregroundStyle(scoreColor)
+                .frame(width: 22)
+
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text(law.title)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(Color("Stone950"))
+                    Spacer()
+                    Text("\(law.count)/\(law.total)")
+                        .font(.caption.bold())
+                        .foregroundStyle(scoreColor)
+                }
+
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(Color("Stone100"))
+                            .frame(height: 5)
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(scoreColor)
+                            .frame(width: geo.size.width * law.fraction, height: 5)
+                            .animation(.spring(duration: 0.6), value: law.fraction)
                     }
+                }
+                .frame(height: 5)
+
+                if law.total > 0 && law.fraction < 0.5 {
+                    Text(law.tip)
+                        .font(.caption2)
+                        .foregroundStyle(Color("Stone500"))
                 }
             }
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
     }
 }
+
+// MARK: - Identity Empty State
+
+private struct IdentityEmptyState: View {
+    var body: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 40))
+                .foregroundStyle(Color("Teal").opacity(0.5))
+            Text("No identity votes yet")
+                .font(.subheadline.bold())
+                .foregroundStyle(Color("Stone950"))
+            Text("Go to Today and complete a habit.\nEach one adds a vote here.")
+                .font(.caption)
+                .foregroundStyle(Color("Stone500"))
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 28)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: .black.opacity(0.04), radius: 2, y: 1)
+    }
+}
+
+// MARK: - Identity Vote View
 
 struct IdentityVoteView: View {
     let statement: String
