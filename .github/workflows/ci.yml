@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  migrate:
+    name: Apply DB Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Apply migrations
+        run: supabase db push --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+  build:
+    name: Build & Test
+    runs-on: macos-15
+    needs: migrate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
+      - name: Install Mint
+        run: brew install mint
+
+      - name: Install XcodeGen
+        run: mint install yonaskolb/XcodeGen
+
+      - name: Write Secrets.plist
+        run: |
+          cat > HabitStack/Secrets.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>SupabaseURL</key><string>${{ secrets.SUPABASE_URL }}</string>
+            <key>SupabaseAnonKey</key><string>${{ secrets.SUPABASE_ANON_KEY }}</string>
+            <key>RevenueCatAPIKey</key><string>${{ secrets.REVENUECAT_API_KEY }}</string>
+            <key>PostHogAPIKey</key><string>${{ secrets.POSTHOG_API_KEY }}</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Generate Xcode project
+        run: mint run xcodegen generate
+
+      - name: Resolve SPM packages
+        run: xcodebuild -resolvePackageDependencies -project HabitStack.xcodeproj -scheme HabitStack
+
+      - name: Build
+        run: |
+          xcodebuild build-for-testing \
+            -project HabitStack.xcodeproj \
+            -scheme HabitStack \
+            -destination "platform=iOS Simulator,name=iPhone 16" \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+      - name: Test
+        run: |
+          xcodebuild test-without-building \
+            -project HabitStack.xcodeproj \
+            -scheme HabitStackTests \
+            -destination "platform=iOS Simulator,name=iPhone 16" \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty

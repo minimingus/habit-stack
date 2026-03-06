@@ -1,0 +1,118 @@
+import Foundation
+import Supabase
+
+enum HabitServiceError: Error {
+    case freeTierHabitLimit
+    case freeTierHistoryLimit
+}
+
+final class HabitService {
+    static let shared = HabitService()
+    private init() {}
+
+    private let freeTierHabitLimit = 5
+    private let freeTierHistoryDays = 7
+
+    func fetchTodayHabits(userId: UUID) async throws -> [HabitWithStatus] {
+        let habits: [Habit] = try await supabase
+            .from("habits")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .is("archived_at", value: nil)
+            .order("sort_order")
+            .execute()
+            .value
+
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+
+        let logs: [HabitLog] = try await supabase
+            .from("habit_logs")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .gte("logged_at", value: ISO8601DateFormatter().string(from: today))
+            .lt("logged_at", value: ISO8601DateFormatter().string(from: tomorrow))
+            .execute()
+            .value
+
+        let logsByHabit = Dictionary(grouping: logs, by: { $0.habitId })
+
+        return habits.map { habit in
+            let log = logsByHabit[habit.id]?.first
+            return HabitWithStatus(
+                habit: habit,
+                isCompleted: log?.status == .done,
+                log: log
+            )
+        }
+    }
+
+    func createHabit(_ habit: Habit, isPro: Bool) async throws {
+        print("[HabitService] createHabit() isPro=\(isPro)")
+        if !isPro {
+            print("[HabitService] checking free tier limit")
+            let existing: [Habit] = try await supabase
+                .from("habits")
+                .select()
+                .eq("user_id", value: habit.userId.uuidString)
+                .is("archived_at", value: nil)
+                .execute()
+                .value
+            print("[HabitService] existing count: \(existing.count)")
+            if existing.count >= freeTierHabitLimit {
+                throw HabitServiceError.freeTierHabitLimit
+            }
+        }
+        print("[HabitService] about to insert habit: \(habit.name)")
+        try await supabase.from("habits").insert(habit).execute()
+        print("[HabitService] insert succeeded")
+        NotificationManager.shared.scheduleReminder(for: habit)
+    }
+
+    func updateHabit(_ habit: Habit) async throws {
+        try await supabase
+            .from("habits")
+            .update(habit)
+            .eq("id", value: habit.id.uuidString)
+            .execute()
+        NotificationManager.shared.cancelReminder(for: habit.id)
+        NotificationManager.shared.scheduleReminder(for: habit)
+    }
+
+    func archiveHabit(_ habitId: UUID) async throws {
+        try await supabase
+            .from("habits")
+            .update(["archived_at": ISO8601DateFormatter().string(from: Date())])
+            .eq("id", value: habitId.uuidString)
+            .execute()
+        NotificationManager.shared.cancelReminder(for: habitId)
+    }
+
+    func logHabit(habitId: UUID, userId: UUID, status: HabitLog.Status) async throws {
+        let log = HabitLog(
+            id: UUID(),
+            habitId: habitId,
+            userId: userId,
+            loggedAt: Date(),
+            status: status
+        )
+        try await supabase.from("habit_logs").insert(log).execute()
+    }
+
+    func fetchHistory(habitId: UUID, userId: UUID, days: Int, isPro: Bool) async throws -> [HabitLog] {
+        let clampedDays = isPro ? days : min(days, freeTierHistoryDays)
+        if !isPro && days > freeTierHistoryDays {
+            throw HabitServiceError.freeTierHistoryLimit
+        }
+        let since = Calendar.current.date(byAdding: .day, value: -clampedDays, to: Date())!
+        return try await supabase
+            .from("habit_logs")
+            .select()
+            .eq("habit_id", value: habitId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .gte("logged_at", value: ISO8601DateFormatter().string(from: since))
+            .order("logged_at", ascending: false)
+            .execute()
+            .value
+    }
+}

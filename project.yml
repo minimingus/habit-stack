@@ -1,0 +1,62 @@
+name: HabitStack
+options:
+  bundleIdPrefix: com.habitstack
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.0.0
+  RevenueCat:
+    url: https://github.com/RevenueCat/purchases-ios
+    from: 4.0.0
+  PostHog:
+    url: https://github.com/posthog/posthog-ios
+    from: 3.0.0
+
+targets:
+  HabitStack:
+    type: application
+    platform: iOS
+    sources:
+      - path: HabitStack
+    resources:
+      - path: HabitStack/Assets.xcassets
+      - path: HabitStack/Secrets.plist
+        optional: true
+    dependencies:
+      - package: Supabase
+        product: Supabase
+      - package: RevenueCat
+        product: RevenueCat
+      - package: PostHog
+        product: PostHog
+    info:
+      path: HabitStack/Info.plist
+      properties:
+        CFBundleName: HabitStack
+        CFBundleIdentifier: com.habitstack.app
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSCameraUsageDescription: Used for profile photos
+    settings:
+      base:
+        SWIFT_VERSION: "5.10"
+        DEVELOPMENT_TEAM: ""
+
+  HabitStackTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: HabitStackTests
+    dependencies:
+      - target: HabitStack
+    settings:
+      base:
+        SWIFT_VERSION: "5.10"
+        GENERATE_INFOPLIST_FILE: YES

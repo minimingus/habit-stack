@@ -1,0 +1,10 @@
+Secrets.plist
+*.xcuserstate
+xcuserdata/
+.DS_Store
+.build/
+*.xcworkspace/xcuserdata/
+DerivedData/
+supabase/.temp/
+supabase/.branches/
+supabase/snippets/
