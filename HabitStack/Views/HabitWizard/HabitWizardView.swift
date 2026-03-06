@@ -83,17 +83,10 @@ struct HabitWizardView: View {
     }
 
     private func save() async {
-        print("[HabitWizard] save() started")
-        guard let userId = try? await supabase.auth.session.user.id else {
-            print("[HabitWizard] ERROR: no session — returning early")
-            return
-        }
-        print("[HabitWizard] got userId: \(userId)")
+        guard let userId = try? await supabase.auth.session.user.id else { return }
         viewModel.isSaving = true
         do {
-            print("[HabitWizard] calling viewModel.save()")
             try await viewModel.save(userId: userId)
-            print("[HabitWizard] save() succeeded")
             await MainActor.run {
                 onSave()
                 dismiss()
@@ -101,11 +94,9 @@ struct HabitWizardView: View {
         } catch HabitServiceError.freeTierHabitLimit {
             await MainActor.run { showPaywall = true }
         } catch {
-            print("[HabitWizard] save() threw: \(error)")
             await MainActor.run { viewModel.errorMessage = error.localizedDescription }
         }
         viewModel.isSaving = false
-        print("[HabitWizard] save() finished, isSaving = false")
     }
 }
 

@@ -43,6 +43,18 @@ final class ScorecardViewModel {
         }
     }
 
+    func back() {
+        switch step {
+        case .questions(let index) where index > 0:
+            answers[dimensions[index]] = nil
+            step = .questions(index: index - 1)
+        case .questions:
+            step = .scorecardGate
+        default:
+            break
+        }
+    }
+
     func skipToHabitWizard() {
         let result = ScorecardService.calculate(sleep: 3, movement: 3, mind: 3, growth: 3)
         step = .habitWizard(ScorecardService.templateHabit(for: result.recommended))
@@ -104,6 +116,7 @@ struct OnboardingContainerView: View {
                 questionIndex: index,
                 total: viewModel.dimensions.count,
                 onAnswer: { score in viewModel.answer(score, for: viewModel.dimensions[index]) },
+                onBack: { viewModel.back() },
                 onSkip: { viewModel.skipToHabitWizard() }
             )
         case .result(let result):

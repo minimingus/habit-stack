@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var showAdminSpend = false
     @State private var versionTapCount = 0
     @State private var profile: Profile?
+    @State private var userEmail: String?
 
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
@@ -15,10 +16,18 @@ struct SettingsView: View {
             List {
                 // Account
                 Section("Account") {
-                    if let profile {
+                    if let email = userEmail {
                         LabeledContent("Email") {
-                            Text(profile.name ?? "No name")
+                            Text(email)
                                 .foregroundStyle(Color("Stone500"))
+                        }
+                    }
+                    if let profile {
+                        if let name = profile.name, !name.isEmpty {
+                            LabeledContent("Name") {
+                                Text(name)
+                                    .foregroundStyle(Color("Stone500"))
+                            }
                         }
                         LabeledContent("Plan") {
                             Text(profile.plan == .pro ? "Pro" : "Free")
@@ -96,11 +105,12 @@ struct SettingsView: View {
     }
 
     private func loadProfile() async {
-        guard let userId = try? await supabase.auth.session.user.id else { return }
+        guard let user = try? await supabase.auth.session.user else { return }
+        userEmail = user.email
         profile = try? await supabase
             .from("profiles")
             .select()
-            .eq("id", value: userId.uuidString)
+            .eq("id", value: user.id.uuidString)
             .single()
             .execute()
             .value

@@ -16,10 +16,13 @@ struct ProgressRingView: View {
                 .stroke(Color("Teal"), style: StrokeStyle(lineWidth: 10, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .animation(.spring(duration: 0.5), value: animatedProgress)
-            VStack(spacing: 2) {
+            VStack(spacing: 1) {
                 Text("\(completed)/\(total)")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundStyle(Color("Stone950"))
+                Text("\(Int(animatedProgress * 100))%")
+                    .font(.caption2.bold())
+                    .foregroundStyle(Color("Teal"))
                 Text("done")
                     .font(.caption2)
                     .foregroundStyle(Color("Stone500"))

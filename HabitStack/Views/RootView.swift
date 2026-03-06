@@ -75,16 +75,21 @@ struct MainTabView: View {
             CoachView()
                 .tabItem { Label("Coach", systemImage: "bubble.left.fill") }
             FourLawsView()
-                .tabItem { Label("Four Laws", systemImage: "4.circle.fill") }
+                .tabItem { Label("Identity", systemImage: "person.crop.circle.badge.checkmark") }
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }
         .tint(Color("Teal"))
         .task { await checkWeeklyReflection() }
         .sheet(isPresented: $showWeeklyReflection) {
-            WeeklyReflectionView(habitStats: habitStats) {
+            WeeklyReflectionView(habitStats: habitStats, onDismiss: {
                 showWeeklyReflection = false
-            }
+            }, onSnooze: {
+                // Set last date to 20h ago so it re-prompts in ~4 hours
+                let snoozeDate = Date().addingTimeInterval(-20 * 3600)
+                UserDefaults.standard.set(snoozeDate.timeIntervalSince1970, forKey: "lastWeeklyReflectionDate")
+                showWeeklyReflection = false
+            })
         }
     }
 

@@ -3,6 +3,7 @@ import SwiftUI
 struct WeeklyReflectionView: View {
     let habitStats: [(name: String, emoji: String, completionRate: Double)]
     let onDismiss: () -> Void
+    var onSnooze: (() -> Void)? = nil
 
     @State private var easiest = ""
     @State private var hardest = ""
@@ -89,8 +90,15 @@ struct WeeklyReflectionView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Later", action: onDismiss)
-                        .foregroundStyle(Color("Stone500"))
+                    Menu {
+                        Button("Later") { onDismiss() }
+                        if let snooze = onSnooze {
+                            Button("Remind me in 4 hours") { snooze() }
+                        }
+                    } label: {
+                        Text("Later")
+                            .foregroundStyle(Color("Stone500"))
+                    }
                 }
             }
         }

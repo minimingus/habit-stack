@@ -1,7 +1,15 @@
 import SwiftUI
 
 struct NeverMissTwiceBanner: View {
+    var missedCount: Int = 0
     let onDismiss: () -> Void
+
+    private var subtitle: String {
+        if missedCount > 1 {
+            return "\(missedCount) habits missed yesterday — never miss twice."
+        }
+        return "Rule: Never miss twice. Start again today."
+    }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -12,7 +20,7 @@ struct NeverMissTwiceBanner: View {
                 Text("You missed yesterday. That's okay.")
                     .font(.subheadline.bold())
                     .foregroundStyle(Color("Stone950"))
-                Text("Rule: Never miss twice. Start again today.")
+                Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(Color("Stone500"))
             }

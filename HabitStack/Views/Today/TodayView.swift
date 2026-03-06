@@ -22,35 +22,28 @@ struct TodayView: View {
                         )
                     } else {
                         List {
-                            // XP Header
+                            // XP Header (includes identity statement inline)
                             if let profile = viewModel.profile {
                                 Section {
-                                    XPHeaderView(profile: profile)
-                                        .listRowBackground(Color.clear)
-                                        .listRowSeparator(.hidden)
+                                    XPHeaderView(
+                                        profile: profile,
+                                        identityStatement: viewModel.topIdentityStatement
+                                    )
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
                                 }
                             }
 
                             // Never Miss Twice banner
                             if viewModel.showNeverMissTwice {
                                 Section {
-                                    NeverMissTwiceBanner {
+                                    NeverMissTwiceBanner(missedCount: viewModel.neverMissTwiceCount) {
                                         viewModel.showNeverMissTwice = false
                                         viewModel.neverMissTwiceDismissed = true
                                     }
                                     .listRowBackground(Color.clear)
                                     .listRowSeparator(.hidden)
                                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                                }
-                            }
-
-                            // Identity statement
-                            if let identity = viewModel.topIdentityStatement {
-                                Section {
-                                    IdentityStatementBanner(statement: identity)
-                                        .listRowBackground(Color.clear)
-                                        .listRowSeparator(.hidden)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                                 }
                             }
 

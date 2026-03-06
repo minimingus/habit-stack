@@ -16,22 +16,13 @@ final class TodayViewModel {
     private var userId: UUID?
 
     func loadToday() async {
-        print("[TodayVM] loadToday() called")
-        guard let userId = try? await supabase.auth.session.user.id else {
-            print("[TodayVM] ERROR: no session")
-            return
-        }
+        guard let userId = try? await supabase.auth.session.user.id else { return }
         self.userId = userId
         isLoading = true
         defer { isLoading = false }
         do {
-            print("[TodayVM] fetching habits")
             let habits = try await HabitService.shared.fetchTodayHabits(userId: userId)
-            print("[TodayVM] fetched \(habits.count) habits")
-            print("[TodayVM] fetching streaks")
             let allStreaks = try await StreakService.shared.fetchStreaks(userId: userId)
-            print("[TodayVM] fetched \(allStreaks.count) streaks")
-            print("[TodayVM] fetching profile")
             let profiles: [Profile] = (try? await supabase
                 .from("profiles")
                 .select()
@@ -39,33 +30,33 @@ final class TodayViewModel {
                 .limit(1)
                 .execute()
                 .value) ?? []
-            print("[TodayVM] fetched profile: \(profiles.first != nil)")
             await MainActor.run {
                 self.streaks = Dictionary(uniqueKeysWithValues: allStreaks.map { ($0.habitId, $0) })
                 self.habitGroups = Dictionary(grouping: habits, by: { $0.habit.timeOfDay })
                 self.profile = profiles.first
                 self.checkNeverMissTwice(streaks: allStreaks)
             }
-            print("[TodayVM] loading identity")
             await loadTopIdentity(userId: userId)
-            print("[TodayVM] loadToday complete")
         } catch {
-            print("[TodayVM] loadToday error: \(error)")
             await MainActor.run { errorMessage = error.localizedDescription }
         }
     }
 
+    var neverMissTwiceCount = 0
+
     private func checkNeverMissTwice(streaks: [Streak]) {
-        guard !neverMissTwiceDismissed else { return }
+        guard !neverMissTwiceDismissed, !streaks.isEmpty else { return }
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let missedYesterday = streaks.contains { streak in
+        let missedCount = streaks.filter { streak in
             guard let lastDate = streak.lastLoggedDate else { return false }
             let last = calendar.startOfDay(for: lastDate)
             let days = calendar.dateComponents([.day], from: last, to: today).day ?? 0
             return days >= 2
-        }
-        showNeverMissTwice = missedYesterday
+        }.count
+        // Only show banner when the majority (>50%) of habits were missed yesterday
+        neverMissTwiceCount = missedCount
+        showNeverMissTwice = missedCount > streaks.count / 2
     }
 
     var topIdentityStatement: String?

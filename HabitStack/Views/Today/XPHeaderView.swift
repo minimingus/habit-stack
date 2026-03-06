@@ -2,6 +2,7 @@ import SwiftUI
 
 struct XPHeaderView: View {
     let profile: Profile
+    var identityStatement: String? = nil
 
     private var xpForNextLevel: Int { profile.level * 100 }
     private var xpProgress: Double {
@@ -11,51 +12,61 @@ struct XPHeaderView: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Level badge
-            ZStack {
-                Circle()
-                    .fill(Color("Teal"))
-                    .frame(width: 36, height: 36)
-                Text("L\(profile.level)")
-                    .font(.caption.bold())
-                    .foregroundStyle(.white)
-            }
-
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text("\(profile.xpTotal) XP")
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
+                // Level badge
+                ZStack {
+                    Circle()
+                        .fill(Color("Teal"))
+                        .frame(width: 36, height: 36)
+                    Text("L\(profile.level)")
                         .font(.caption.bold())
-                        .foregroundStyle(Color("Stone950"))
-                    Spacer()
-                    Text("→ Level \(profile.level + 1) at \(xpForNextLevel) XP")
-                        .font(.caption2)
-                        .foregroundStyle(Color("Stone500"))
+                        .foregroundStyle(.white)
                 }
 
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color("Stone100"))
-                            .frame(height: 6)
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color("Teal"))
-                            .frame(width: geo.size.width * xpProgress, height: 6)
-                            .animation(.easeInOut(duration: 0.5), value: xpProgress)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("\(profile.xpTotal) XP")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color("Stone950"))
+                        Spacer()
+                        Text("→ Level \(profile.level + 1) at \(xpForNextLevel) XP")
+                            .font(.caption2)
+                            .foregroundStyle(Color("Stone500"))
+                    }
+
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color("Stone100"))
+                                .frame(height: 6)
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color("Teal"))
+                                .frame(width: geo.size.width * xpProgress, height: 6)
+                                .animation(.easeInOut(duration: 0.5), value: xpProgress)
+                        }
+                    }
+                    .frame(height: 6)
+                }
+
+                if profile.streakShields > 0 {
+                    HStack(spacing: 2) {
+                        Image(systemName: "shield.fill")
+                            .foregroundStyle(Color("Teal"))
+                            .font(.caption)
+                        Text("\(profile.streakShields)")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color("Teal"))
                     }
                 }
-                .frame(height: 6)
             }
 
-            if profile.streakShields > 0 {
-                HStack(spacing: 2) {
-                    Image(systemName: "shield.fill")
-                        .foregroundStyle(Color("Teal"))
-                        .font(.caption)
-                    Text("\(profile.streakShields)")
-                        .font(.caption.bold())
-                        .foregroundStyle(Color("Teal"))
-                }
+            if let statement = identityStatement {
+                Text("I am becoming the type of person who \(statement.lowercased())")
+                    .font(.caption)
+                    .foregroundStyle(Color("Teal"))
+                    .italic()
+                    .lineLimit(1)
             }
         }
         .padding(.horizontal, 16)

@@ -5,6 +5,7 @@ struct ScorecardQuestionView: View {
     let questionIndex: Int
     let total: Int
     let onAnswer: (Int) -> Void
+    let onBack: () -> Void
     let onSkip: () -> Void
 
     private var question: String {
@@ -27,6 +28,18 @@ struct ScorecardQuestionView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
+                if questionIndex > 0 {
+                    Button(action: onBack) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                            Text("Back")
+                        }
+                        .foregroundStyle(Color("Stone500"))
+                    }
+                    .padding()
+                } else {
+                    Spacer().frame(width: 60)
+                }
                 Spacer()
                 Button("Skip", action: onSkip)
                     .foregroundStyle(Color("Stone500"))

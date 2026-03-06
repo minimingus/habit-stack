@@ -63,13 +63,20 @@ struct AuthView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(isLoading || email.isEmpty || password.isEmpty)
-                }
 
-                Button("Don't have an account? Sign Up") {
-                    showSignUp = true
+                    Button {
+                        showSignUp = true
+                    } label: {
+                        Text("Create an Account")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.clear)
+                            .foregroundStyle(Color("Teal"))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Teal"), lineWidth: 1.5))
+                    }
                 }
-                .foregroundStyle(Color("Teal"))
-                .font(.subheadline)
 
                 Spacer()
             }

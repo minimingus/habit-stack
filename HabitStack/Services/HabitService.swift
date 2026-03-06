@@ -48,9 +48,7 @@ final class HabitService {
     }
 
     func createHabit(_ habit: Habit, isPro: Bool) async throws {
-        print("[HabitService] createHabit() isPro=\(isPro)")
         if !isPro {
-            print("[HabitService] checking free tier limit")
             let existing: [Habit] = try await supabase
                 .from("habits")
                 .select()
@@ -58,14 +56,11 @@ final class HabitService {
                 .is("archived_at", value: nil)
                 .execute()
                 .value
-            print("[HabitService] existing count: \(existing.count)")
             if existing.count >= freeTierHabitLimit {
                 throw HabitServiceError.freeTierHabitLimit
             }
         }
-        print("[HabitService] about to insert habit: \(habit.name)")
         try await supabase.from("habits").insert(habit).execute()
-        print("[HabitService] insert succeeded")
         NotificationManager.shared.scheduleReminder(for: habit)
     }
 

@@ -26,17 +26,33 @@ struct FourLawsView: View {
                     }
 
                     // Identity votes
-                    if !identityVotes.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("My Identity")
-                                .font(.headline)
-                                .padding(.horizontal, 16)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("My Identity")
+                            .font(.headline)
+                            .padding(.horizontal, 16)
 
-                            Text("I am the type of person who...")
-                                .font(.subheadline)
-                                .foregroundStyle(Color("Stone500"))
-                                .padding(.horizontal, 16)
+                        Text("I am the type of person who...")
+                            .font(.subheadline)
+                            .foregroundStyle(Color("Stone500"))
+                            .padding(.horizontal, 16)
 
+                        if identityVotes.isEmpty {
+                            VStack(spacing: 10) {
+                                Image(systemName: "person.fill.checkmark")
+                                    .font(.system(size: 36))
+                                    .foregroundStyle(Color("Teal").opacity(0.6))
+                                Text("Complete habits to build your identity.")
+                                    .font(.subheadline.bold())
+                                    .foregroundStyle(Color("Stone950"))
+                                Text("Each check-in is a vote for who you're becoming.\nStart by completing a habit in the Today tab.")
+                                    .font(.caption)
+                                    .foregroundStyle(Color("Stone500"))
+                                    .multilineTextAlignment(.center)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 24)
+                            .padding(.horizontal, 16)
+                        } else {
                             let grouped = Dictionary(grouping: identityVotes, by: { $0.identityStatement })
                             let top3 = grouped.sorted { $0.value.count > $1.value.count }.prefix(3)
 

@@ -10,7 +10,7 @@ struct HabitCardView: View {
 
     @State private var showArchiveAlert = false
     @State private var showConfetti = false
-    @State private var wasCompleted = false
+    @State private var showDetail = false
 
     private var habit: Habit { habitWithStatus.habit }
 
@@ -67,6 +67,8 @@ struct HabitCardView: View {
                     .allowsHitTesting(false)
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { showDetail = true }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             Button(action: onEdit) {
                 Label("Edit", systemImage: "pencil")
@@ -86,6 +88,15 @@ struct HabitCardView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This habit will be archived and removed from your daily view.")
+        }
+        .sheet(isPresented: $showDetail) {
+            HabitDetailView(
+                habit: habit,
+                streak: streak,
+                anchorName: anchorName,
+                onEdit: onEdit,
+                onArchive: onArchive
+            )
         }
     }
 }

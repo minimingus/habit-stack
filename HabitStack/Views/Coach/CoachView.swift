@@ -3,6 +3,7 @@ import SwiftUI
 struct CoachView: View {
     @State private var viewModel = CoachViewModel()
     @State private var inputText = ""
+    @State private var showSuggestions = false
     @FocusState private var isInputFocused: Bool
 
     private let suggestions = [
@@ -14,19 +15,8 @@ struct CoachView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Rate limit banner
-                if viewModel.messagesRemainingToday <= 2 {
-                    HStack {
-                        Image(systemName: "exclamationmark.circle.fill")
-                            .foregroundStyle(Color("Teal"))
-                        Text("\(viewModel.messagesRemainingToday) of 5 messages remaining today")
-                            .font(.caption)
-                            .foregroundStyle(Color("Stone500"))
-                    }
-                    .padding(10)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("TealLight"))
-                }
+                // Always-visible usage bar
+                UsageBarView(used: viewModel.messagesUsedToday, limit: viewModel.dailyLimit)
 
                 ScrollViewReader { proxy in
                     ScrollView {
@@ -61,15 +51,26 @@ struct CoachView: View {
 
                 Divider()
 
-                // Suggestions
-                if viewModel.messages.isEmpty {
+                // Collapsible suggestions
+                if showSuggestions || viewModel.messages.isEmpty {
                     CoachSuggestionsView(suggestions: suggestions) { suggestion in
                         inputText = suggestion
+                        showSuggestions = false
                     }
                 }
 
                 // Input bar
-                HStack(spacing: 12) {
+                HStack(spacing: 8) {
+                    if !viewModel.messages.isEmpty {
+                        Button {
+                            withAnimation { showSuggestions.toggle() }
+                        } label: {
+                            Image(systemName: "lightbulb\(showSuggestions ? ".fill" : "")")
+                                .foregroundStyle(showSuggestions ? Color("Teal") : Color("Stone500"))
+                                .font(.system(size: 20))
+                        }
+                    }
+
                     TextField("Ask anything...", text: $inputText, axis: .vertical)
                         .lineLimit(1...4)
                         .padding(.horizontal, 12)
@@ -82,6 +83,7 @@ struct CoachView: View {
                         let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
                         guard !text.isEmpty else { return }
                         inputText = ""
+                        showSuggestions = false
                         Task { await viewModel.sendMessage(text) }
                     } label: {
                         Image(systemName: "arrow.up.circle.fill")
@@ -94,8 +96,44 @@ struct CoachView: View {
                 .padding(.vertical, 8)
             }
             .navigationTitle("AI Coach")
+            .toolbar {
+                if !viewModel.messages.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Clear") {
+                            viewModel.clearConversation()
+                        }
+                        .foregroundStyle(Color("Stone500"))
+                        .font(.subheadline)
+                    }
+                }
+            }
             .sheet(isPresented: $viewModel.showPaywall) { PaywallView() }
         }
+    }
+}
+
+private struct UsageBarView: View {
+    let used: Int
+    let limit: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "bubble.left.and.bubble.right")
+                .font(.caption)
+                .foregroundStyle(Color("Teal"))
+            Text("\(used)/\(limit) messages today")
+                .font(.caption)
+                .foregroundStyle(used >= limit ? .red : Color("Stone500"))
+            Spacer()
+            if used >= limit - 1 {
+                Text("Upgrade for more")
+                    .font(.caption.bold())
+                    .foregroundStyle(Color("Teal"))
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(used >= limit ? Color.red.opacity(0.06) : Color("TealLight"))
     }
 }
 
