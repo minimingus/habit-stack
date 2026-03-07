@@ -60,7 +60,7 @@ private struct AchievementBadge: View {
                     .font(.system(size: 56))
             } else {
                 Text(achievement.emoji)
-                    .font(.caption)
+                    .font(.system(size: 56))
                     .opacity(0.3)
                     .grayscale(1)
             }
