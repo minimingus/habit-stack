@@ -311,13 +311,13 @@ private struct IdentityCarousel: View {
     private var groups: [IdentityGroup] {
         let withCraving = habits.compactMap { habit -> (Habit, String)? in
             guard let craving = habit.craving?.trimmingCharacters(in: .whitespaces), !craving.isEmpty else { return nil }
-            return (habit, craving)
+            return (habit, craving.lowercased())
         }
         let grouped = Dictionary(grouping: withCraving, by: { $0.1 })
         return grouped.map { key, value in
-            let keyNormalized = key.lowercased().trimmingCharacters(in: .whitespaces)
-            let count = votes.filter { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) == keyNormalized }.count
-            return IdentityGroup(id: key, statement: key, habits: value.map { $0.0 }, evidenceCount: count)
+            let count = votes.filter { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) == key }.count
+            let displayStatement = value.first?.0.craving?.trimmingCharacters(in: .whitespaces) ?? key
+            return IdentityGroup(id: key, statement: displayStatement, habits: value.map { $0.0 }, evidenceCount: count)
         }
         .sorted { $0.evidenceCount > $1.evidenceCount }
     }
@@ -384,24 +384,27 @@ private struct IdentityCard: View {
             }
 
             // Habit chips
-            HStack(spacing: 8) {
-                ForEach(group.habits.prefix(3)) { habit in
-                    Button { onHabitTap(habit) } label: {
-                        Text("\(habit.emoji) \(habit.name)")
-                            .font(.caption.bold())
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(Color("CardBackground").opacity(0.7))
-                            .foregroundStyle(Color("Stone950"))
-                            .clipShape(Capsule())
-                            .overlay(Capsule().strokeBorder(Color("Teal").opacity(0.3), lineWidth: 1))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(group.habits.prefix(3)) { habit in
+                        Button { onHabitTap(habit) } label: {
+                            Text("\(habit.emoji) \(habit.name)")
+                                .font(.caption.bold())
+                                .lineLimit(1)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Color("CardBackground").opacity(0.7))
+                                .foregroundStyle(Color("Stone950"))
+                                .clipShape(Capsule())
+                                .overlay(Capsule().strokeBorder(Color("Teal").opacity(0.3), lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
-                }
-                if group.habits.count > 3 {
-                    Text("+\(group.habits.count - 3) more")
-                        .font(.caption)
-                        .foregroundStyle(Color("Stone500"))
+                    if group.habits.count > 3 {
+                        Text("+\(group.habits.count - 3) more")
+                            .font(.caption)
+                            .foregroundStyle(Color("Stone500"))
+                    }
                 }
             }
 
