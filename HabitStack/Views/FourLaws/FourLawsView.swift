@@ -309,11 +309,15 @@ private struct IdentityCarousel: View {
     }
 
     private var groups: [IdentityGroup] {
-        let withCraving = habits.filter { !($0.craving ?? "").isEmpty }
-        let grouped = Dictionary(grouping: withCraving, by: { $0.craving! })
+        let withCraving = habits.compactMap { habit -> (Habit, String)? in
+            guard let craving = habit.craving?.trimmingCharacters(in: .whitespaces), !craving.isEmpty else { return nil }
+            return (habit, craving)
+        }
+        let grouped = Dictionary(grouping: withCraving, by: { $0.1 })
         return grouped.map { key, value in
-            let count = votes.filter { $0.identityStatement == key }.count
-            return IdentityGroup(id: key, statement: key, habits: value, evidenceCount: count)
+            let keyNormalized = key.lowercased().trimmingCharacters(in: .whitespaces)
+            let count = votes.filter { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) == keyNormalized }.count
+            return IdentityGroup(id: key, statement: key, habits: value.map { $0.0 }, evidenceCount: count)
         }
         .sorted { $0.evidenceCount > $1.evidenceCount }
     }
@@ -331,7 +335,7 @@ private struct IdentityCarousel: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .automatic))
-            .frame(height: 240)
+            .frame(height: 264)
         }
     }
 
@@ -381,7 +385,7 @@ private struct IdentityCard: View {
 
             // Habit chips
             HStack(spacing: 8) {
-                ForEach(group.habits) { habit in
+                ForEach(group.habits.prefix(3)) { habit in
                     Button { onHabitTap(habit) } label: {
                         Text("\(habit.emoji) \(habit.name)")
                             .font(.caption.bold())
@@ -393,6 +397,11 @@ private struct IdentityCard: View {
                             .overlay(Capsule().strokeBorder(Color("Teal").opacity(0.3), lineWidth: 1))
                     }
                     .buttonStyle(.plain)
+                }
+                if group.habits.count > 3 {
+                    Text("+\(group.habits.count - 3) more")
+                        .font(.caption)
+                        .foregroundStyle(Color("Stone500"))
                 }
             }
 
