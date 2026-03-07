@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct HabitWizardView: View {
-    let prefillTemplate: HabitTemplate?
+    var template: HabitTemplate? = nil
     var editingHabit: Habit? = nil
+    var replacingBehavior: String? = nil
     let onSave: () -> Void
 
     @State private var viewModel = HabitWizardViewModel()
@@ -55,11 +56,14 @@ struct HabitWizardView: View {
         .interactiveDismissDisabled(true)
         .task {
             await viewModel.loadExistingHabits()
-            if let template = prefillTemplate {
+            if let template {
                 viewModel.prefill(from: template)
             }
             if let habit = editingHabit {
                 viewModel.prefill(from: habit)
+            }
+            if let behavior = replacingBehavior {
+                viewModel.prefill(replacing: behavior)
             }
         }
         .alert("Couldn't Save Habit", isPresented: Binding(

@@ -3,8 +3,11 @@ import SwiftUI
 struct TodayView: View {
     @State private var viewModel = TodayViewModel()
     @State private var showHabitWizard = false
+    @State private var showTemplateLibrary = false
+    @State private var selectedTemplate: HabitTemplate? = nil
     @State private var editingHabit: Habit?
     @State private var selectedTab: Int = 0
+    @State private var showAddOptions = false
 
     var body: some View {
         NavigationStack {
@@ -16,7 +19,7 @@ struct TodayView: View {
                         EmptyStateView(
                             icon: "checkmark.circle",
                             headline: "No habits yet",
-                            subtext: "Tap + to add your first habit.",
+                            subtext: "Start with just one habit. Small beats ambitious.",
                             cta: "Add Habit",
                             onCTA: { showHabitWizard = true }
                         )
@@ -57,6 +60,14 @@ struct TodayView: View {
                                 .frame(maxWidth: .infinity)
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)
+                            }
+
+                            // Daily 1% insight
+                            Section {
+                                DailyInsightCard()
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                             }
 
                             ForEach(viewModel.orderedGroups, id: \.0) { (timeOfDay, habits) in
@@ -117,7 +128,7 @@ struct TodayView: View {
 
                 // FAB
                 Button {
-                    showHabitWizard = true
+                    showAddOptions = true
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2.bold())
@@ -129,6 +140,11 @@ struct TodayView: View {
                 }
                 .padding(.trailing, 24)
                 .padding(.bottom, 24)
+                .confirmationDialog("Add Habit", isPresented: $showAddOptions) {
+                    Button("Browse Templates") { showTemplateLibrary = true }
+                    Button("Create Personal") { showHabitWizard = true }
+                    Button("Cancel", role: .cancel) {}
+                }
             }
             .navigationTitle("Today")
             .task { await viewModel.loadToday() }
@@ -140,14 +156,26 @@ struct TodayView: View {
                 )
             }
             .sheet(isPresented: $showHabitWizard) {
-                HabitWizardView(prefillTemplate: nil) {
+                HabitWizardView(template: selectedTemplate) {
                     Task { await viewModel.loadToday() }
                 }
             }
+            .sheet(isPresented: $showTemplateLibrary) {
+                HabitTemplateLibraryView { template in
+                    selectedTemplate = template
+                    showTemplateLibrary = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showHabitWizard = true
+                    }
+                }
+            }
             .sheet(item: $editingHabit) { habit in
-                HabitWizardView(prefillTemplate: nil, editingHabit: habit) {
+                HabitWizardView(editingHabit: habit) {
                     Task { await viewModel.loadToday() }
                 }
+            }
+            .onChange(of: showHabitWizard) { _, isShowing in
+                if !isShowing { selectedTemplate = nil }
             }
         }
     }

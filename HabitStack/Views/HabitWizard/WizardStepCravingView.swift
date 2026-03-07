@@ -3,35 +3,53 @@ import SwiftUI
 struct WizardStepCravingView: View {
     @Bindable var viewModel: HabitWizardViewModel
 
+    private static let identitySuggestions = [
+        "reads every day",
+        "exercises regularly",
+        "meditates daily",
+        "eats healthy",
+        "sleeps well",
+        "journals daily",
+        "stays hydrated",
+        "learns continuously",
+    ]
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Make it Attractive")
                         .font(.headline)
-                    Text("Identity-based habits stick. The goal isn't a habit — it's to become a certain type of person.")
+                    Text("Habits stick when they match who you want to be.")
                         .font(.subheadline)
                         .foregroundStyle(Color("Stone500"))
                 }
 
-                FormSection(title: "Complete this sentence") {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("I am becoming the type of person who...")
-                            .font(.caption)
-                            .foregroundStyle(Color("Stone500"))
-                        TextField("e.g. reads every day", text: $viewModel.craving)
+                FormSection(title: "I am becoming the type of person who…") {
+                    VStack(alignment: .leading, spacing: 10) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(Self.identitySuggestions, id: \.self) { suggestion in
+                                    Button {
+                                        viewModel.craving = suggestion
+                                    } label: {
+                                        Text(suggestion)
+                                            .font(.subheadline)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 7)
+                                            .background(viewModel.craving == suggestion ? Color("Teal") : Color("Stone100"))
+                                            .foregroundStyle(viewModel.craving == suggestion ? .white : Color("Stone950"))
+                                            .clipShape(Capsule())
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                        }
+                        TextField("Or add a personal identity…", text: $viewModel.craving)
                             .padding()
                             .background(Color("Stone100"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                }
-
-                FormSection(title: "Why does this matter? (Optional)") {
-                    TextField("e.g. I want to feel energized and focused...", text: $viewModel.routine, axis: .vertical)
-                        .lineLimit(3...5)
-                        .padding()
-                        .background(Color("Stone100"))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
             .padding(24)

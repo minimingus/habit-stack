@@ -26,15 +26,7 @@ final class RootViewModel {
 
     @MainActor
     private func checkOnboardingStatus() async {
-        guard let userId = session?.user.id else { return }
-        let profiles: [Profile] = (try? await supabase
-            .from("profiles")
-            .select()
-            .eq("id", value: userId.uuidString)
-            .limit(1)
-            .execute()
-            .value) ?? []
-        isOnboardingComplete = profiles.first?.scorecardResult != nil
+        isOnboardingComplete = UserDefaults.standard.bool(forKey: "onboardingComplete")
     }
 
     func signOut() async throws {

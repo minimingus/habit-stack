@@ -21,6 +21,10 @@ final class HabitWizardViewModel {
     var timeOfDay: Habit.TimeOfDay = .allDay
     var reminderEnabled: Bool = false
     var reminderTime: Date = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
+    var durationEnabled: Bool = false
+    var durationMinutes: Int = 10
+    var isQuantified: Bool = false
+    var targetCount: Int = 8
 
     var currentStep: WizardStep = .cue
     var existingHabits: [Habit] = []
@@ -29,6 +33,7 @@ final class HabitWizardViewModel {
     var isSaving: Bool = false
     var errorMessage: String?
     var suggestedCues: [String] = []
+    var replacingBehavior: String? = nil
 
     var isPro: Bool = false
 
@@ -36,25 +41,15 @@ final class HabitWizardViewModel {
         name = template.name
         emoji = template.emoji
         tinyVersion = template.tinyVersion
-        craving = template.craving
-        routine = template.routine
-        reward = template.reward
+        craving = template.identity
+        cue = template.cue
         timeOfDay = template.timeOfDay
-        suggestedCues = Self.cues(for: template.dimension)
-        cue = suggestedCues.first ?? ""
+        reward = template.reward
     }
 
-    static func cues(for dimension: ScorecardResult.Dimension) -> [String] {
-        switch dimension {
-        case .sleep:
-            return ["After I turn off the TV", "After I brush my teeth", "When I get into bed", "After dinner is done"]
-        case .movement:
-            return ["After I wake up", "After I finish work", "After my morning coffee", "After I change clothes"]
-        case .mind:
-            return ["After I make my morning coffee", "After I sit at my desk", "After I wake up", "After lunch"]
-        case .growth:
-            return ["After I get into bed", "After my morning coffee", "After dinner", "After I sit on the couch"]
-        }
+    func prefill(replacing behavior: String) {
+        replacingBehavior = behavior
+        cue = "When I feel like \(behavior)"
     }
 
     func prefill(from habit: Habit) {
@@ -73,6 +68,11 @@ final class HabitWizardViewModel {
         timeOfDay = habit.timeOfDay
         reminderEnabled = habit.reminderEnabled
         if let rt = habit.reminderTime { reminderTime = rt }
+        let saved = UserDefaults.standard.integer(forKey: "habitDuration_\(habit.id.uuidString)")
+        if saved > 0 { durationEnabled = true; durationMinutes = saved }
+        isQuantified = UserDefaults.standard.bool(forKey: "habitQuantified_\(habit.id.uuidString)")
+        let savedTarget = UserDefaults.standard.integer(forKey: "habitTargetCount_\(habit.id.uuidString)")
+        if savedTarget > 0 { targetCount = savedTarget }
     }
 
     func nextStep() {
@@ -133,6 +133,21 @@ final class HabitWizardViewModel {
             try await HabitService.shared.updateHabit(habit)
         } else {
             try await HabitService.shared.createHabit(habit, isPro: isPro)
+        }
+
+        let durationKey = "habitDuration_\(habit.id.uuidString)"
+        if durationEnabled && durationMinutes > 0 {
+            UserDefaults.standard.set(durationMinutes, forKey: durationKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: durationKey)
+        }
+
+        if isQuantified && targetCount > 0 {
+            UserDefaults.standard.set(true, forKey: "habitQuantified_\(habit.id.uuidString)")
+            UserDefaults.standard.set(targetCount, forKey: "habitTargetCount_\(habit.id.uuidString)")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "habitQuantified_\(habit.id.uuidString)")
+            UserDefaults.standard.removeObject(forKey: "habitTargetCount_\(habit.id.uuidString)")
         }
     }
 }

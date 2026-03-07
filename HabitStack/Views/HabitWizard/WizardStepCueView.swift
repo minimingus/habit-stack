@@ -2,20 +2,78 @@ import SwiftUI
 
 struct WizardStepCueView: View {
     @Bindable var viewModel: HabitWizardViewModel
+    @AppStorage("habitCountAdvisoryDismissed") private var advisoryDismissed = false
+
+    private static let defaultCues = [
+        "After I wake up",
+        "After morning coffee",
+        "After lunch",
+        "After work",
+        "After dinner",
+        "Before bed",
+    ]
 
     private let colors = ["#0D9488", "#6366F1", "#F59E0B", "#EF4444", "#10B981",
                           "#3B82F6", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316"]
 
     private let emojis = [
         "✅", "💪", "🏃", "📚", "✍️", "🧘", "💤", "🥗", "💧", "🎯",
-        "🌅", "🎵", "📝", "🧠", "❤️", "🌿", "⚡", "🔥", "🎨", "🏋️",
+        "🌅", "🎵", "📝", "🧠", "❤️", "🌿", "⚡", "🔥", "🎨", "🤸",
         "🚴", "🏊", "🍎", "☕", "🌙", "📖", "🎓", "💻", "🌞", "🚶",
-        "🧹", "🙏", "⏰", "🌬️", "🏆", "⭐", "🧪", "💊", "🎸", "🍵"
+        "🧹", "🙏", "⏰", "🌊", "🏆", "⭐", "🫁", "💊", "🎸", "🍵"
     ]
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
+                replacementBanner
+                habitCountAdvisory
+
+                // Quick Pick — suggests templates inline
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Quick Pick")
+                        .font(.caption.bold())
+                        .foregroundStyle(Color("Stone500"))
+                        .textCase(.uppercase)
+                        .kerning(0.5)
+                        .padding(.horizontal, 24)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(HabitTemplateLibrary.all) { template in
+                                Button {
+                                    viewModel.prefill(from: template)
+                                } label: {
+                                    HStack(spacing: 5) {
+                                        Text(template.emoji)
+                                        Text(template.name)
+                                            .font(.subheadline)
+                                            .foregroundStyle(Color("Stone950"))
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 7)
+                                    .background(
+                                        viewModel.name == template.name
+                                            ? Color("TealLight")
+                                            : Color("Stone100")
+                                    )
+                                    .clipShape(Capsule())
+                                    .overlay(
+                                        Capsule().strokeBorder(
+                                            viewModel.name == template.name
+                                                ? Color("Teal")
+                                                : Color.clear,
+                                            lineWidth: 1.5
+                                        )
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                    }
+                }
+
                 FormSection(title: "Habit Name") {
                     TextField("e.g. Morning Meditation", text: $viewModel.name)
                         .padding()
@@ -68,44 +126,28 @@ struct WizardStepCueView: View {
 
                 FormSection(title: "Cue") {
                     VStack(alignment: .leading, spacing: 10) {
-                        if !viewModel.suggestedCues.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(viewModel.suggestedCues, id: \.self) { suggestion in
-                                        Button {
-                                            viewModel.cue = suggestion
-                                        } label: {
-                                            Text(suggestion)
-                                                .font(.subheadline)
-                                                .padding(.horizontal, 12)
-                                                .padding(.vertical, 7)
-                                                .background(viewModel.cue == suggestion ? Color("Teal") : Color("Stone100"))
-                                                .foregroundStyle(viewModel.cue == suggestion ? .white : Color("Stone950"))
-                                                .clipShape(Capsule())
-                                        }
-                                        .buttonStyle(.plain)
-                                    }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(Self.defaultCues, id: \.self) { suggestion in
                                     Button {
-                                        if viewModel.suggestedCues.contains(viewModel.cue) { viewModel.cue = "" }
+                                        viewModel.cue = suggestion
                                     } label: {
-                                        Text("Custom")
+                                        Text(suggestion)
                                             .font(.subheadline)
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 7)
-                                            .background(!viewModel.suggestedCues.contains(viewModel.cue) ? Color("Teal") : Color("Stone100"))
-                                            .foregroundStyle(!viewModel.suggestedCues.contains(viewModel.cue) ? .white : Color("Stone950"))
+                                            .background(viewModel.cue == suggestion ? Color("Teal") : Color("Stone100"))
+                                            .foregroundStyle(viewModel.cue == suggestion ? .white : Color("Stone950"))
                                             .clipShape(Capsule())
                                     }
                                     .buttonStyle(.plain)
                                 }
                             }
                         }
-                        if viewModel.suggestedCues.isEmpty || !viewModel.suggestedCues.contains(viewModel.cue) {
-                            TextField("After I...", text: $viewModel.cue)
-                                .padding()
-                                .background(Color("Stone100"))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
+                        TextField("After I...", text: $viewModel.cue)
+                            .padding()
+                            .background(Color("Stone100"))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
 
@@ -125,6 +167,44 @@ struct WizardStepCueView: View {
                 }
             }
             .padding(24)
+        }
+    }
+
+    @ViewBuilder private var replacementBanner: some View {
+        if viewModel.replacingBehavior != nil {
+            HStack(spacing: 10) {
+                Image(systemName: "arrow.triangle.2.circlepath").foregroundStyle(Color("Teal"))
+                Text("Same cue, new routine. Keep what triggers it — change what you do.")
+                    .font(.subheadline).foregroundStyle(Color("Stone500"))
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color("TealLight").opacity(0.4))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding(.horizontal, 24)
+        }
+    }
+
+    @ViewBuilder private var habitCountAdvisory: some View {
+        if !advisoryDismissed && !viewModel.isEditing
+            && viewModel.replacingBehavior == nil
+            && viewModel.existingHabits.count >= 2 {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "lightbulb.fill").foregroundStyle(Color("Stone500")).font(.subheadline)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("You have \(viewModel.existingHabits.count) habits.")
+                        .font(.subheadline.bold())
+                    Text("Give each habit a few weeks before adding more.")
+                        .font(.caption).foregroundStyle(Color("Stone500"))
+                }
+                Spacer()
+                Button("Got it") { advisoryDismissed = true }
+                    .font(.caption.bold()).foregroundStyle(Color("Teal"))
+            }
+            .padding(12)
+            .background(Color("Stone100"))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding(.horizontal, 24)
         }
     }
 }

@@ -15,7 +15,7 @@ struct NotificationPermissionView: View {
                 Text("Stay on Track")
                     .font(.title2.bold())
 
-                Text("Enable reminders to get notified when it's time for your habits. You can customize times for each habit.")
+                Text("Set a time for each habit and never forget to show up.")
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color("Stone500"))

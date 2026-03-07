@@ -9,9 +9,33 @@ struct WizardStepRoutineView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Make it Easy")
                         .font(.headline)
-                    Text("Reduce friction. Start with a version so easy you can't say no — the 2-Minute Rule.")
+                    Text("The 2-Minute Rule: make starting so easy you can't say no.")
                         .font(.subheadline)
                         .foregroundStyle(Color("Stone500"))
+                }
+
+                FormSection(title: "Habit Type") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("Count-based goal", isOn: $viewModel.isQuantified)
+                            .tint(Color("Teal"))
+
+                        if viewModel.isQuantified {
+                            HStack {
+                                Text("Daily target")
+                                    .font(.subheadline)
+                                    .foregroundStyle(Color("Stone950"))
+                                Spacer()
+                                Stepper("\(viewModel.targetCount)", value: $viewModel.targetCount, in: 2...100)
+                                    .fixedSize()
+                            }
+                            Text("e.g. 8 glasses of water, 10 push-ups, 5 pages")
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                        }
+                    }
+                    .padding()
+                    .background(Color("Stone100"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
 
                 FormSection(title: "2-Minute Version") {
@@ -37,6 +61,36 @@ struct WizardStepRoutineView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                }
+
+                FormSection(title: "Timer (optional)") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("Set a duration", isOn: $viewModel.durationEnabled)
+                            .tint(Color("Teal"))
+
+                        if viewModel.durationEnabled {
+                            HStack {
+                                Text("\(viewModel.durationMinutes) min")
+                                    .font(.subheadline.bold())
+                                    .foregroundStyle(Color("Teal"))
+                                    .frame(width: 64)
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(viewModel.durationMinutes) },
+                                        set: { viewModel.durationMinutes = Int($0) }
+                                    ),
+                                    in: 1...60, step: 1
+                                )
+                                .tint(Color("Teal"))
+                            }
+                            Text("A timer will appear on the habit card. Complete the session to log the habit.")
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                        }
+                    }
+                    .padding()
+                    .background(Color("Stone100"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
             .padding(24)
