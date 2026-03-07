@@ -40,7 +40,7 @@ BEGIN
       FROM public.habit_logs hl
       WHERE hl.habit_id    = h.id
         AND hl.user_id     = p_user_id
-        AND hl.logged_at::date = v_yesterday
+        AND (hl.logged_at AT TIME ZONE 'UTC')::date = v_yesterday
     );
 END;
 $$;
