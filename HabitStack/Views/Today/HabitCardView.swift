@@ -161,8 +161,22 @@ struct HabitCardView: View {
             Button { onEdit() } label: { Label("Edit Habit", systemImage: "pencil") }
             Button(role: .destructive) { showArchiveAlert = true } label: { Label("Archive", systemImage: "archivebox") }
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button(action: onEdit) { Label("Edit", systemImage: "pencil") }.tint(Color("Teal"))
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            if habitWithStatus.isCompleted {
+                Button {
+                    onToggle()
+                } label: {
+                    Label("Undo", systemImage: "xmark")
+                }
+                .tint(Color("Stone500"))
+            } else {
+                Button {
+                    onToggle()
+                } label: {
+                    Label("Done", systemImage: "checkmark")
+                }
+                .tint(Color("Teal"))
+            }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button { showArchiveAlert = true } label: { Label("Archive", systemImage: "archivebox") }.tint(.orange)
