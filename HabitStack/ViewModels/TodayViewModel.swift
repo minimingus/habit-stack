@@ -1,6 +1,10 @@
 import Foundation
 import Observation
 
+enum NeverMissTwiceState {
+    case warning, comeback, dismissed
+}
+
 private let milestoneValues: Set<Int> = [7, 14, 21, 30, 66, 100]
 
 @Observable
@@ -21,6 +25,8 @@ final class TodayViewModel {
     var milestoneStreak = 0
     var milestoneHabitName = ""
     var topIdentityStatement: String?
+    var neverMissTwiceState: NeverMissTwiceState = .dismissed
+    var isPerfectDay = false
 
     private var userId: UUID?
 
@@ -127,6 +133,8 @@ final class TodayViewModel {
                     self.topIdentityStatement = completedHabit?.habit.craving
                     self.showXPToastRotated()
                     self.checkMilestone(for: habitId, habitName: habitName, streaks: allStreaks)
+                    self.checkPerfectDay()
+                    self.checkComeback()
                     self.scheduleRetentionNotifications(
                         habits: self.habitGroups.values.flatMap { $0 }.map { $0 },
                         streaks: allStreaks
@@ -161,6 +169,7 @@ final class TodayViewModel {
         let key = "shownMilestone_\(habitId)_\(count)"
         guard !UserDefaults.standard.bool(forKey: key) else { return }
         UserDefaults.standard.set(true, forKey: key)
+        UserDefaults.standard.set(true, forKey: "achievement_milestone_\(count)")
         milestoneStreak = count
         milestoneHabitName = habitName
         showMilestone = true
@@ -178,7 +187,9 @@ final class TodayViewModel {
             return days >= 2
         }.count
         neverMissTwiceCount = missedCount
-        showNeverMissTwice = missedCount > streaks.count / 2
+        let shouldShow = missedCount > 0 && missedCount > streaks.count / 2
+        showNeverMissTwice = shouldShow
+        neverMissTwiceState = shouldShow ? .warning : .dismissed
     }
 
     private func scheduleRetentionNotifications(habits: [HabitWithStatus], streaks: [Streak]) {
@@ -205,6 +216,45 @@ final class TodayViewModel {
         }
         if missed2Days {
             NotificationManager.shared.scheduleMiss2DaysEncouragement()
+        }
+    }
+
+    private func checkPerfectDay() {
+        guard completedHabits == totalHabits, totalHabits > 0, !showMilestone else { return }
+        let dateKey = "perfectDay_\(todayDateString)"
+        guard !UserDefaults.standard.bool(forKey: dateKey) else { return }
+        UserDefaults.standard.set(true, forKey: dateKey)
+        UserDefaults.standard.set(true, forKey: "achievement_perfectDay")
+        isPerfectDay = true
+        milestoneStreak = 0  // 0 = perfect day sentinel
+        milestoneHabitName = "Perfect Day"
+        showMilestone = true
+        HapticManager.notification(.success)
+    }
+
+    private func checkComeback() {
+        guard neverMissTwiceState == .warning, completedHabits == 1 else { return }
+        withAnimation { neverMissTwiceState = .comeback }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            guard let self else { return }
+            withAnimation { self.neverMissTwiceState = .dismissed }
+        }
+    }
+
+    private var todayDateString: String {
+        String(ISO8601DateFormatter().string(from: Date()).prefix(10))
+    }
+
+    func spendStreakShield() async {
+        guard let userId else { return }
+        try? await supabase.rpc("spend_streak_shield", params: ["p_user_id": userId.uuidString]).execute()
+        await loadToday()
+        await MainActor.run {
+            withAnimation { neverMissTwiceState = .comeback }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                guard let self else { return }
+                withAnimation { self.neverMissTwiceState = .dismissed }
+            }
         }
     }
 
