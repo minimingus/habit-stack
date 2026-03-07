@@ -13,6 +13,7 @@ struct FourLawsView: View {
     @State private var habits: [Habit] = []
     @State private var identityVotes: [IdentityVote] = []
     @State private var isLoading = false
+    @State private var showScorecard = false
 
     private var lawScores: [LawScore] {
         let n = habits.count
@@ -65,6 +66,35 @@ struct FourLawsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
+
+                    // MARK: Habits Scorecard entry point
+                    Button { showScorecard = true } label: {
+                        HStack(spacing: 14) {
+                            Image(systemName: "hand.point.right.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color("Teal"))
+                                .frame(width: 40)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Habits Scorecard")
+                                    .font(.subheadline.bold())
+                                    .foregroundStyle(Color("Stone950"))
+                                Text("Point & call your daily behaviors — make the unconscious conscious")
+                                    .font(.caption)
+                                    .foregroundStyle(Color("Stone500"))
+                                    .multilineTextAlignment(.leading)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption.bold())
+                                .foregroundStyle(Color("Stone500"))
+                        }
+                        .padding(16)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 16)
 
                     // MARK: Identity Hero
                     IdentityHeroCard(statement: topIdentity)
@@ -129,6 +159,9 @@ struct FourLawsView: View {
             .navigationTitle("Identity")
             .task { await load() }
             .refreshable { await load() }
+            .sheet(isPresented: $showScorecard) {
+                HabitsScorecardView()
+            }
         }
     }
 

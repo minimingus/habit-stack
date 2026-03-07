@@ -19,7 +19,9 @@
 		2CFFFCBE6F650B9F2AB6F97B /* HabitWizardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95ADFDFC1B987B20BC879E17 /* HabitWizardViewModel.swift */; };
 		2F1D4D965CA751693F631C31 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3E8AB40BC7350CDDC68688 /* Secrets.swift */; };
 		302D2902E13C14D83133B7E1 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978B04D383502B53C766F257 /* TodayView.swift */; };
+		3270A6B1E3981B71E38631A1 /* ScorecardEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F69062BC6F99A7135D7166 /* ScorecardEntry.swift */; };
 		337D3BDAA8883A727C91ECA5 /* RevenueCatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3A238D3815F241DD164337 /* RevenueCatManager.swift */; };
+		343478017FBEA56B7ED41EA0 /* HabitsScorecardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F896E232829DE88E092E90 /* HabitsScorecardView.swift */; };
 		3E4C06587E482120DBB98066 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6A9695532242A11BF5EE09 /* AnalyticsView.swift */; };
 		3F92871F46D4B7CB8C9FB3EA /* HabitGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */; };
 		41A8EF9616CF06A45E04BE64 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 3C1CB5D1E19E9D7D40EF370B /* PostHog */; };
@@ -93,6 +95,7 @@
 		0A28D864C95319FCAEF8C6F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E18B7B03B31A417C89BEA96 /* WizardStepCravingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardStepCravingView.swift; sourceTree = "<group>"; };
 		13F281294986393E1A8729EF /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
+		17F69062BC6F99A7135D7166 /* ScorecardEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardEntry.swift; sourceTree = "<group>"; };
 		186088F433E12ABBF455C717 /* ProgressRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRingView.swift; sourceTree = "<group>"; };
 		19D5E405CA5C2CEF6C8B0842 /* ScorecardGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardGateView.swift; sourceTree = "<group>"; };
 		1A99311980A85509AB5E78DA /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
@@ -152,6 +155,7 @@
 		EC5FC5AED9021DAA1F75118B /* HabitStackTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HabitStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2BC204FC6086DE968CA7BA5 /* XPHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPHeaderView.swift; sourceTree = "<group>"; };
 		F31141A0C608993335564451 /* ScorecardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardTests.swift; sourceTree = "<group>"; };
+		F3F896E232829DE88E092E90 /* HabitsScorecardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsScorecardView.swift; sourceTree = "<group>"; };
 		F51647C460C285F602B97990 /* CoachMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMessageView.swift; sourceTree = "<group>"; };
 		F63E28FD5D9277B5D7BD52FD /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
 		F7FAC45140B0AD889BE25FBC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -289,6 +293,7 @@
 			isa = PBXGroup;
 			children = (
 				07338F47311998F391D4EC6E /* FourLawsView.swift */,
+				F3F896E232829DE88E092E90 /* HabitsScorecardView.swift */,
 			);
 			path = FourLaws;
 			sourceTree = "<group>";
@@ -352,6 +357,7 @@
 				6D44E33453C575119AEB7761 /* HabitLog.swift */,
 				689304489B1311A7EF416882 /* IdentityVote.swift */,
 				E6AD53D3389F721D32D8E745 /* Profile.swift */,
+				17F69062BC6F99A7135D7166 /* ScorecardEntry.swift */,
 				38D80321B19ED9ADEFC60C82 /* ScorecardResult.swift */,
 				A2E74505815490CAFA130C12 /* Streak.swift */,
 			);
@@ -542,6 +548,7 @@
 				BD00FD931956F7054D4B69BE /* HabitStackApp.swift in Sources */,
 				72A034D36C5F502C4A2B796B /* HabitWizardView.swift in Sources */,
 				2CFFFCBE6F650B9F2AB6F97B /* HabitWizardViewModel.swift in Sources */,
+				343478017FBEA56B7ED41EA0 /* HabitsScorecardView.swift in Sources */,
 				4C6FB6509E5EC772632EABF6 /* HapticManager.swift in Sources */,
 				4B4CF58799D9246ADDD68697 /* HeatmapView.swift in Sources */,
 				49F60F45CE88FE31CB00F4A2 /* IdentityStatementBanner.swift in Sources */,
@@ -556,6 +563,7 @@
 				9DE198E2D6E34BB70DBB7C5A /* ProgressRingView.swift in Sources */,
 				337D3BDAA8883A727C91ECA5 /* RevenueCatManager.swift in Sources */,
 				E65B35E61C13D59A5EF94206 /* RootView.swift in Sources */,
+				3270A6B1E3981B71E38631A1 /* ScorecardEntry.swift in Sources */,
 				C77106D933856CE2FE9635A0 /* ScorecardGateView.swift in Sources */,
 				F4C2A69BE2442261F6F55786 /* ScorecardQuestionView.swift in Sources */,
 				E63796C9014DF95C00E0DB1E /* ScorecardResult.swift in Sources */,
