@@ -13,7 +13,6 @@ final class TodayViewModel {
     var isLoading = false
     var errorMessage: String?
     var streaks: [UUID: Streak] = [:]
-    var showNeverMissTwice = false
     var neverMissTwiceDismissed = false
     var neverMissTwiceCount = 0
     var profile: Profile?
@@ -189,7 +188,6 @@ final class TodayViewModel {
         }.count
         neverMissTwiceCount = missedCount
         let shouldShow = missedCount > 0 && missedCount > streaks.count / 2
-        showNeverMissTwice = shouldShow
         neverMissTwiceState = shouldShow ? .warning : .dismissed
     }
 
@@ -249,7 +247,6 @@ final class TodayViewModel {
     func dismissNeverMissTwice() {
         neverMissTwiceDismissed = true
         neverMissTwiceState = .dismissed
-        showNeverMissTwice = false
     }
 
     func spendStreakShield() async {
