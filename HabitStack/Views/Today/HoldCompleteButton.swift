@@ -12,6 +12,7 @@ struct HoldCompleteButton: View {
     @State private var progress: Double = 0
     @State private var isPressed = false
     @State private var timer: Timer?
+    @State private var resetTask: Task<Void, Never>?
 
     var body: some View {
         ZStack {
@@ -74,24 +75,37 @@ struct HoldCompleteButton: View {
     }
 
     private func startHoldTimer() {
+        resetTask?.cancel()
+        resetTask = nil
         timer?.invalidate()
         let interval = 0.02
         let step = interval / 0.6
-        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { t in
-            Task { @MainActor in
-                progress = min(1.0, progress + step)
-                if progress >= 1.0 {
+        let t = Timer(timeInterval: interval, repeats: true) { [weak self] t in
+            guard let self else { t.invalidate(); return }
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.progress = min(1.0, self.progress + step)
+                if self.progress >= 1.0 {
                     t.invalidate()
                     self.timer = nil
                     self.isPressed = false
                     HapticManager.impact(.medium)
                     AudioServicesPlaySystemSound(1104)
-                    onComplete()
-                    // Reset progress after brief delay so ring doesn't flash
-                    try? await Task.sleep(nanoseconds: 100_000_000)
-                    withAnimation(.spring(duration: 0.3)) { self.progress = 0 }
+                    self.onComplete()
+                    self.scheduleProgressReset()
                 }
             }
+        }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
+    }
+
+    private func scheduleProgressReset() {
+        resetTask?.cancel()
+        resetTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 100_000_000)
+            guard let self, !Task.isCancelled else { return }
+            withAnimation(.spring(duration: 0.3)) { self.progress = 0 }
         }
     }
 
