@@ -27,32 +27,38 @@ struct HabitCardView: View {
                 }
             })
 
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 6) {
-                    Text(habit.emoji)
-                    Text(habit.name)
-                        .font(.body)
-                        .foregroundStyle(Color("Stone950"))
-                }
+            // Tappable label area — opens detail sheet
+            Button { showDetail = true } label: {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: 6) {
+                            Text(habit.emoji)
+                            Text(habit.name)
+                                .font(.body)
+                                .foregroundStyle(Color("Stone950"))
+                        }
 
-                if let anchorName {
-                    Text("↳ After \(anchorName)")
-                        .font(.caption)
-                        .foregroundStyle(Color("Stone500"))
-                }
+                        if let anchorName {
+                            Text("↳ After \(anchorName)")
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                        }
 
-                if let tiny = habit.tinyVersion, !tiny.isEmpty {
-                    Text(tiny)
-                        .font(.caption)
-                        .foregroundStyle(Color("Stone500"))
+                        if let tiny = habit.tinyVersion, !tiny.isEmpty {
+                            Text(tiny)
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                        }
+                    }
+
+                    Spacer()
+
+                    if let streak, streak.currentStreak > 0 {
+                        StreakBadge(streak: streak.currentStreak)
+                    }
                 }
             }
-
-            Spacer()
-
-            if let streak, streak.currentStreak > 0 {
-                StreakBadge(streak: streak.currentStreak)
-            }
+            .buttonStyle(.plain)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
@@ -67,8 +73,6 @@ struct HabitCardView: View {
                     .allowsHitTesting(false)
             }
         }
-        .contentShape(Rectangle())
-        .onTapGesture { showDetail = true }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             Button(action: onEdit) {
                 Label("Edit", systemImage: "pencil")
