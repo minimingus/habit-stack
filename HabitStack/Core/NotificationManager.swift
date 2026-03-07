@@ -54,6 +54,72 @@ final class NotificationManager {
         habits.filter { $0.reminderEnabled }.forEach { scheduleReminder(for: $0, streak: streaks[$0.id]) }
     }
 
+    // MARK: - Retention notifications
+
+    func scheduleEODRecovery(pendingCount: Int) {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["eod-recovery"])
+        guard pendingCount > 0 else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "Don't end the day empty"
+        content.body = "You have \(pendingCount) habit\(pendingCount == 1 ? "" : "s") left to complete today."
+        content.sound = .default
+        var comps = DateComponents()
+        comps.hour = 21
+        comps.minute = 0
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: "eod-recovery", content: content, trigger: trigger))
+    }
+
+    func scheduleStreakAtRisk(habits: [(name: String, streak: Int)]) {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["streak-at-risk"])
+        guard !habits.isEmpty else { return }
+        let content = UNMutableNotificationContent()
+        if habits.count == 1 {
+            content.title = "Streak at risk"
+            content.body = "Don't break your \(habits[0].streak)-day streak for \(habits[0].name)."
+        } else {
+            content.title = "Streaks at risk"
+            content.body = "\(habits.count) habits with active streaks are waiting for you."
+        }
+        content.sound = .default
+        var comps = DateComponents()
+        comps.hour = 20
+        comps.minute = 0
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: "streak-at-risk", content: content, trigger: trigger))
+    }
+
+    func scheduleInactiveUserReminder() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["inactive-user"])
+        guard let fireDate = Calendar.current.date(byAdding: .day, value: 5, to: Date()) else { return }
+        var comps = Calendar.current.dateComponents([.year, .month, .day], from: fireDate)
+        comps.hour = 10
+        comps.minute = 0
+        let content = UNMutableNotificationContent()
+        content.title = "Missing you"
+        content.body = "Your habits are waiting. Even one small action keeps the momentum alive."
+        content.sound = .default
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: "inactive-user", content: content, trigger: trigger))
+    }
+
+    func scheduleMiss2DaysEncouragement() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["miss-2-days"])
+        var comps = DateComponents()
+        comps.hour = 9
+        comps.minute = 0
+        let content = UNMutableNotificationContent()
+        content.title = "You missed yesterday. That's okay."
+        content.body = "Rule: Never miss twice. One small habit today keeps you on track."
+        content.sound = .default
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: "miss-2-days", content: content, trigger: trigger))
+    }
+
     func uploadDeviceToken(_ token: Data) async {
         let tokenString = token.map { String(format: "%02.2hhx", $0) }.joined()
         guard let userId = try? await supabase.auth.session.user.id else { return }

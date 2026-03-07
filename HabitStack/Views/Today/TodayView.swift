@@ -51,7 +51,8 @@ struct TodayView: View {
                                 ProgressRingView(
                                     progress: viewModel.progress,
                                     completed: viewModel.completedHabits,
-                                    total: viewModel.totalHabits
+                                    total: viewModel.totalHabits,
+                                    momentumMessage: viewModel.momentumMessage
                                 )
                                 .frame(maxWidth: .infinity)
                                 .listRowBackground(Color.clear)
@@ -89,14 +90,25 @@ struct TodayView: View {
                 if viewModel.showXPToast {
                     VStack {
                         Spacer()
-                        XPToastView(amount: viewModel.xpToastAmount)
-                            .padding(.bottom, 100)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    withAnimation { viewModel.showXPToast = false }
+                        if viewModel.xpToastIsIdentity, let statement = viewModel.topIdentityStatement {
+                            IdentityToastView(statement: statement)
+                                .padding(.bottom, 100)
+                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                        withAnimation { viewModel.showXPToast = false }
+                                    }
                                 }
-                            }
+                        } else {
+                            XPToastView(amount: viewModel.xpToastAmount)
+                                .padding(.bottom, 100)
+                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        withAnimation { viewModel.showXPToast = false }
+                                    }
+                                }
+                        }
                     }
                 }
 
@@ -117,6 +129,13 @@ struct TodayView: View {
             }
             .navigationTitle("Today")
             .task { await viewModel.loadToday() }
+            .sheet(isPresented: $viewModel.showMilestone) {
+                MilestoneCelebrationView(
+                    streakDays: viewModel.milestoneStreak,
+                    habitName: viewModel.milestoneHabitName,
+                    onDismiss: { viewModel.showMilestone = false }
+                )
+            }
             .sheet(isPresented: $showHabitWizard) {
                 HabitWizardView(prefillTemplate: nil) {
                     Task { await viewModel.loadToday() }

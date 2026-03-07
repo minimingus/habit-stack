@@ -1,6 +1,8 @@
 import Foundation
 import Observation
 
+private let milestoneValues: Set<Int> = [7, 14, 21, 30, 66, 100]
+
 @Observable
 final class TodayViewModel {
     var habitGroups: [Habit.TimeOfDay: [HabitWithStatus]] = [:]
@@ -9,11 +11,47 @@ final class TodayViewModel {
     var streaks: [UUID: Streak] = [:]
     var showNeverMissTwice = false
     var neverMissTwiceDismissed = false
+    var neverMissTwiceCount = 0
     var profile: Profile?
     var showXPToast = false
     var xpToastAmount = 10
+    var xpToastIsIdentity = false
+    var lastCompletedHabitName: String?
+    var showMilestone = false
+    var milestoneStreak = 0
+    var milestoneHabitName = ""
+    var topIdentityStatement: String?
 
     private var userId: UUID?
+
+    // MARK: - Computed
+
+    var totalHabits: Int { habitGroups.values.flatMap { $0 }.count }
+    var completedHabits: Int { habitGroups.values.flatMap { $0 }.filter { $0.isCompleted }.count }
+    var progress: Double {
+        guard totalHabits > 0 else { return 0 }
+        return Double(completedHabits) / Double(totalHabits)
+    }
+
+    var momentumMessage: String {
+        guard totalHabits > 0 else { return "" }
+        switch progress {
+        case 0: return "Let's get started!"
+        case ..<0.5: return "Keep going!"
+        case ..<1.0: return "Almost there!"
+        default: return "Perfect day!"
+        }
+    }
+
+    var orderedGroups: [(Habit.TimeOfDay, [HabitWithStatus])] {
+        let order: [Habit.TimeOfDay] = [.morning, .allDay, .afternoon, .evening]
+        return order.compactMap { tod in
+            guard let habits = habitGroups[tod], !habits.isEmpty else { return nil }
+            return (tod, habits)
+        }
+    }
+
+    // MARK: - Load
 
     func loadToday() async {
         guard let userId = try? await supabase.auth.session.user.id else { return }
@@ -35,6 +73,7 @@ final class TodayViewModel {
                 self.habitGroups = Dictionary(grouping: habits, by: { $0.habit.timeOfDay })
                 self.profile = profiles.first
                 self.checkNeverMissTwice(streaks: allStreaks)
+                self.scheduleRetentionNotifications(habits: habits, streaks: allStreaks)
             }
             await loadTopIdentity(userId: userId)
         } catch {
@@ -42,40 +81,12 @@ final class TodayViewModel {
         }
     }
 
-    var neverMissTwiceCount = 0
-
-    private func checkNeverMissTwice(streaks: [Streak]) {
-        guard !neverMissTwiceDismissed, !streaks.isEmpty else { return }
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let missedCount = streaks.filter { streak in
-            guard let lastDate = streak.lastLoggedDate else { return false }
-            let last = calendar.startOfDay(for: lastDate)
-            let days = calendar.dateComponents([.day], from: last, to: today).day ?? 0
-            return days >= 2
-        }.count
-        // Only show banner when the majority (>50%) of habits were missed yesterday
-        neverMissTwiceCount = missedCount
-        showNeverMissTwice = missedCount > streaks.count / 2
-    }
-
-    var topIdentityStatement: String?
-
-    private func loadTopIdentity(userId: UUID) async {
-        let votes: [IdentityVote] = (try? await supabase
-            .from("identity_votes")
-            .select()
-            .eq("user_id", value: userId.uuidString)
-            .execute()
-            .value) ?? []
-        let grouped = Dictionary(grouping: votes, by: { $0.identityStatement })
-        let top = grouped.max(by: { $0.value.count < $1.value.count })?.key
-        await MainActor.run { self.topIdentityStatement = top }
-    }
+    // MARK: - Toggle
 
     func toggleHabit(_ habitWithStatus: HabitWithStatus) async {
         guard let userId else { return }
         let habitId = habitWithStatus.habit.id
+        let habitName = habitWithStatus.habit.name
         let newStatus: HabitLog.Status = habitWithStatus.isCompleted ? .skipped : .done
 
         // Optimistic update
@@ -91,7 +102,6 @@ final class TodayViewModel {
 
         do {
             try await HabitService.shared.logHabit(habitId: habitId, userId: userId, status: newStatus)
-            // Reload streaks after logging
             let allStreaks = try await StreakService.shared.fetchStreaks(userId: userId)
             let profiles: [Profile] = (try? await supabase
                 .from("profiles")
@@ -104,11 +114,16 @@ final class TodayViewModel {
                 self.streaks = Dictionary(uniqueKeysWithValues: allStreaks.map { ($0.habitId, $0) })
                 self.profile = profiles.first
                 if newStatus == .done {
-                    self.showXPToast = true
+                    self.lastCompletedHabitName = habitName
+                    self.showXPToastRotated()
+                    self.checkMilestone(for: habitId, habitName: habitName, streaks: allStreaks)
+                    self.scheduleRetentionNotifications(
+                        habits: self.habitGroups.values.flatMap { $0 }.map { $0 },
+                        streaks: allStreaks
+                    )
                 }
             }
         } catch {
-            // Revert optimistic update on failure
             await MainActor.run {
                 for key in habitGroups.keys {
                     if let index = habitGroups[key]?.firstIndex(where: { $0.id == habitId }) {
@@ -120,18 +135,78 @@ final class TodayViewModel {
         }
     }
 
-    var totalHabits: Int { habitGroups.values.flatMap { $0 }.count }
-    var completedHabits: Int { habitGroups.values.flatMap { $0 }.filter { $0.isCompleted }.count }
-    var progress: Double {
-        guard totalHabits > 0 else { return 0 }
-        return Double(completedHabits) / Double(totalHabits)
+    // MARK: - Private helpers
+
+    private func showXPToastRotated() {
+        // Alternate between XP and identity message
+        let showIdentity = (topIdentityStatement != nil) && (completedHabits % 2 == 0)
+        xpToastIsIdentity = showIdentity
+        showXPToast = true
     }
 
-    var orderedGroups: [(Habit.TimeOfDay, [HabitWithStatus])] {
-        let order: [Habit.TimeOfDay] = [.morning, .allDay, .afternoon, .evening]
-        return order.compactMap { tod in
-            guard let habits = habitGroups[tod], !habits.isEmpty else { return nil }
-            return (tod, habits)
+    private func checkMilestone(for habitId: UUID, habitName: String, streaks: [Streak]) {
+        guard let streak = streaks.first(where: { $0.habitId == habitId }) else { return }
+        let count = streak.currentStreak
+        guard milestoneValues.contains(count) else { return }
+        let key = "shownMilestone_\(habitId)_\(count)"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        milestoneStreak = count
+        milestoneHabitName = habitName
+        showMilestone = true
+        HapticManager.notification(.success)
+    }
+
+    private func checkNeverMissTwice(streaks: [Streak]) {
+        guard !neverMissTwiceDismissed, !streaks.isEmpty else { return }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let missedCount = streaks.filter { streak in
+            guard let lastDate = streak.lastLoggedDate else { return false }
+            let last = calendar.startOfDay(for: lastDate)
+            let days = calendar.dateComponents([.day], from: last, to: today).day ?? 0
+            return days >= 2
+        }.count
+        neverMissTwiceCount = missedCount
+        showNeverMissTwice = missedCount > streaks.count / 2
+    }
+
+    private func scheduleRetentionNotifications(habits: [HabitWithStatus], streaks: [Streak]) {
+        let incomplete = habits.filter { !$0.isCompleted }
+        NotificationManager.shared.scheduleEODRecovery(pendingCount: incomplete.count)
+
+        let atRisk = streaks.compactMap { streak -> (name: String, streak: Int)? in
+            guard streak.currentStreak > 0 else { return nil }
+            let isComplete = habits.first { $0.habit.id == streak.habitId }?.isCompleted ?? true
+            guard !isComplete else { return nil }
+            let name = habits.first { $0.habit.id == streak.habitId }?.habit.name ?? "a habit"
+            return (name: name, streak: streak.currentStreak)
         }
+        NotificationManager.shared.scheduleStreakAtRisk(habits: atRisk)
+
+        // Miss 2 days check
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let missed2Days = streaks.contains { streak in
+            guard let lastDate = streak.lastLoggedDate else { return false }
+            let last = calendar.startOfDay(for: lastDate)
+            let days = calendar.dateComponents([.day], from: last, to: today).day ?? 0
+            return days == 2
+        }
+        if missed2Days {
+            NotificationManager.shared.scheduleMiss2DaysEncouragement()
+        }
+    }
+
+    private func loadTopIdentity(userId: UUID) async {
+        let votes: [IdentityVote] = (try? await supabase
+            .from("identity_votes")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+            .value) ?? []
+        let grouped = Dictionary(grouping: votes, by: { $0.identityStatement })
+        let top = grouped.max(by: { $0.value.count < $1.value.count })?.key
+        await MainActor.run { self.topIdentityStatement = top }
     }
 }

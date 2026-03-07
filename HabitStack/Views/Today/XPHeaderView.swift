@@ -92,3 +92,23 @@ struct XPToastView: View {
         .shadow(color: .black.opacity(0.15), radius: 6, y: 3)
     }
 }
+
+struct IdentityToastView: View {
+    let statement: String
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "person.fill.checkmark")
+                .foregroundStyle(.white)
+            Text("Vote cast: I am someone who \(statement.lowercased())")
+                .font(.caption.bold())
+                .foregroundStyle(.white)
+                .lineLimit(2)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Color("Teal"))
+        .clipShape(Capsule())
+        .shadow(color: .black.opacity(0.15), radius: 6, y: 3)
+    }
+}

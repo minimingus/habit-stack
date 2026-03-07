@@ -80,7 +80,10 @@ struct MainTabView: View {
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }
         .tint(Color("Teal"))
-        .task { await checkWeeklyReflection() }
+        .task {
+            NotificationManager.shared.scheduleInactiveUserReminder()
+            await checkWeeklyReflection()
+        }
         .sheet(isPresented: $showWeeklyReflection) {
             WeeklyReflectionView(habitStats: habitStats, onDismiss: {
                 showWeeklyReflection = false

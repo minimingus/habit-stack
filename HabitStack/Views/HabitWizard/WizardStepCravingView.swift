@@ -9,30 +9,29 @@ struct WizardStepCravingView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Make it Attractive")
                         .font(.headline)
-                    Text("Link your habit to something you want. The more attractive a habit is, the more likely you are to repeat it.")
+                    Text("Identity-based habits stick. The goal isn't a habit — it's to become a certain type of person.")
                         .font(.subheadline)
                         .foregroundStyle(Color("Stone500"))
                 }
 
-                FormSection(title: "Why does this matter to you?") {
-                    TextField("e.g. I want to feel energized and focused...", text: $viewModel.craving, axis: .vertical)
-                        .lineLimit(3...6)
-                        .padding()
-                        .background(Color("Stone100"))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-
-                FormSection(title: "Temptation Bundle (Optional)") {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("I will [habit] WHILE [something I enjoy]")
+                FormSection(title: "Complete this sentence") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("I am becoming the type of person who...")
                             .font(.caption)
                             .foregroundStyle(Color("Stone500"))
-                        TextField("e.g. I'll meditate while drinking my morning coffee", text: $viewModel.craving, axis: .vertical)
-                            .lineLimit(2...4)
+                        TextField("e.g. reads every day", text: $viewModel.craving)
                             .padding()
                             .background(Color("Stone100"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
+                }
+
+                FormSection(title: "Why does this matter? (Optional)") {
+                    TextField("e.g. I want to feel energized and focused...", text: $viewModel.routine, axis: .vertical)
+                        .lineLimit(3...5)
+                        .padding()
+                        .background(Color("Stone100"))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
             .padding(24)

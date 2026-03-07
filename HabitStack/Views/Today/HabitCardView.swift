@@ -14,6 +14,12 @@ struct HabitCardView: View {
 
     private var habit: Habit { habitWithStatus.habit }
 
+    private var hasFriction: Bool {
+        let noReminder = !habit.reminderEnabled
+        let noTiny = (habit.tinyVersion ?? "").isEmpty
+        return noReminder && noTiny
+    }
+
     var body: some View {
         HStack(spacing: 12) {
             CheckButton(isCompleted: habitWithStatus.isCompleted, onTap: {
@@ -36,6 +42,12 @@ struct HabitCardView: View {
                             Text(habit.name)
                                 .font(.body)
                                 .foregroundStyle(Color("Stone950"))
+                            if hasFriction {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .font(.caption2)
+                                    .foregroundStyle(.orange)
+                                    .help("Add a reminder or 2-minute version to make this habit stick")
+                            }
                         }
 
                         if let anchorName {
@@ -65,6 +77,14 @@ struct HabitCardView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+        .contextMenu {
+            Button { onEdit() } label: {
+                Label("Edit Habit", systemImage: "pencil")
+            }
+            Button(role: .destructive) { showArchiveAlert = true } label: {
+                Label("Archive", systemImage: "archivebox")
+            }
+        }
         .overlay(alignment: .top) {
             if showConfetti {
                 ConfettiView()
