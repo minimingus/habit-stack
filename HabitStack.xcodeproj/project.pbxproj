@@ -35,6 +35,7 @@
 		5273D5B700B0BCD9A4B753F6 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FAC45140B0AD889BE25FBC /* SignUpView.swift */; };
 		529823676CCD8518D95498A6 /* CompletionNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A9DCE881FFF6905BBF977C /* CompletionNoteSheet.swift */; };
 		5532DEAD4B019B888C75E315 /* WeeklyReflectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA90EF2F41E82ACBEBE054B /* WeeklyReflectionView.swift */; };
+		5840DD5686D0538F86955F96 /* HabitFrictionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7AC66A652B7E92253C6A2E /* HabitFrictionSheet.swift */; };
 		5C1E2CBDB290651AEB66D5BC /* Streak.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E74505815490CAFA130C12 /* Streak.swift */; };
 		5FB8959E85DF3E377624D4E8 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6548DB26D57BF808B91201CC /* HabitDetailView.swift */; };
 		60418B4F938E97625EF932BC /* CoachMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AFE8166EBAD62E550456DC /* CoachMessage.swift */; };
@@ -121,6 +122,7 @@
 		6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.example.plist; sourceTree = "<group>"; };
 		689304489B1311A7EF416882 /* IdentityVote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVote.swift; sourceTree = "<group>"; };
 		6D44E33453C575119AEB7761 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
+		6D7AC66A652B7E92253C6A2E /* HabitFrictionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitFrictionSheet.swift; sourceTree = "<group>"; };
 		73C268BA418892607939025B /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		75BC17BB1E3610E60641C444 /* CoachService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachService.swift; sourceTree = "<group>"; };
 		78BF875B257BFB51BDF46E89 /* HeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapView.swift; sourceTree = "<group>"; };
@@ -394,6 +396,7 @@
 				36CF7AD25FC19A87E9CB0B51 /* DailyInsightCard.swift */,
 				9DFD365CCD95709EFB974DD8 /* HabitCardView.swift */,
 				6548DB26D57BF808B91201CC /* HabitDetailView.swift */,
+				6D7AC66A652B7E92253C6A2E /* HabitFrictionSheet.swift */,
 				40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */,
 				8161DC404345213FB00BFF8F /* HabitTimerView.swift */,
 				FB84601EC9027C0603050282 /* HoldCompleteButton.swift */,
@@ -545,6 +548,7 @@
 				A1F5D356D590C8EFF6638B2B /* Habit.swift in Sources */,
 				1923AB62A4F9E2422A46B75B /* HabitCardView.swift in Sources */,
 				5FB8959E85DF3E377624D4E8 /* HabitDetailView.swift in Sources */,
+				5840DD5686D0538F86955F96 /* HabitFrictionSheet.swift in Sources */,
 				3F92871F46D4B7CB8C9FB3EA /* HabitGroupView.swift in Sources */,
 				A0EC6E3DBD0F8FC62FCF51EE /* HabitLog.swift in Sources */,
 				50728D0D73E13B89BC38272F /* HabitService.swift in Sources */,
