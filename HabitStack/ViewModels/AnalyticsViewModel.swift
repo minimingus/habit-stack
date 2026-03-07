@@ -7,8 +7,8 @@ enum CalendarDayStatus {
     case empty    // no habits logged 'done'
 }
 
-@Observable
-final class AnalyticsViewModel {
+@MainActor
+@Observable final class AnalyticsViewModel {
     var habits: [Habit] = []
     var selectedHabit: Habit?
     var logs: [HabitLog] = []
@@ -67,7 +67,8 @@ final class AnalyticsViewModel {
     private func loadAllHabitsStats(userId: UUID) async {
         guard !habits.isEmpty else { return }
         let formatter = ISO8601DateFormatter()
-        let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        let days = isPro ? 35 : 7
+        let weekAgo = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
         var stats: [(habit: Habit, rate: Double)] = []
         var collected: [HabitLog] = []
 
@@ -81,7 +82,7 @@ final class AnalyticsViewModel {
                 .value) ?? []
             collected.append(contentsOf: habitLogs)
             let doneCount = habitLogs.filter { $0.status == .done }.count
-            stats.append((habit: habit, rate: Double(doneCount) / 7.0))
+            stats.append((habit: habit, rate: Double(doneCount) / Double(days)))
         }
 
         let avg = stats.isEmpty ? 0.0 : stats.map { $0.rate }.reduce(0, +) / Double(stats.count)
@@ -143,7 +144,7 @@ final class AnalyticsViewModel {
     func loadCalendarData(userId: UUID) async {
         let calendar = Calendar.current
         let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: Date()))!
-        let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
+        let startOfNextMonth = calendar.date(byAdding: DateComponents(month: 1), to: startOfMonth)!
         let formatter = ISO8601DateFormatter()
 
         let monthLogs: [HabitLog] = (try? await supabase
@@ -151,7 +152,7 @@ final class AnalyticsViewModel {
             .select()
             .eq("user_id", value: userId.uuidString)
             .gte("logged_at", value: formatter.string(from: startOfMonth))
-            .lte("logged_at", value: formatter.string(from: endOfMonth))
+            .lt("logged_at", value: formatter.string(from: startOfNextMonth))
             .eq("status", value: "done")
             .execute()
             .value) ?? []
@@ -159,13 +160,18 @@ final class AnalyticsViewModel {
         guard let range = calendar.range(of: .day, in: .month, for: Date()) else { return }
         let totalHabits = habits.count
 
+        // Pre-group done logs by calendar day to avoid O(n×days) scan
+        var logsByDay: [Date: Set<UUID>] = [:]
+        for log in monthLogs {
+            let day = calendar.startOfDay(for: log.loggedAt)
+            logsByDay[day, default: []].insert(log.habitId)
+        }
+
         var result: [Date: CalendarDayStatus] = [:]
         for day in range {
             guard let date = calendar.date(bySetting: .day, value: day, of: startOfMonth) else { continue }
             let dayStart = calendar.startOfDay(for: date)
-            let uniqueDone = Set(monthLogs.filter {
-                calendar.startOfDay(for: $0.loggedAt) == dayStart
-            }.map { $0.habitId })
+            let uniqueDone = logsByDay[dayStart] ?? []
             let doneCount = uniqueDone.count
             let status: CalendarDayStatus
             if doneCount == totalHabits && totalHabits > 0 {
@@ -186,6 +192,7 @@ final class AnalyticsViewModel {
     // MARK: - Best Time of Day
 
     private func computeBestTimeOfDay() {
+        // Precondition: allLogs must be populated by loadAllHabitsStats before calling this method.
         guard !habits.isEmpty else { bestTimeOfDay = nil; return }
         var rates: [Habit.TimeOfDay: Double] = [:]
         for tod in Habit.TimeOfDay.allCases {
