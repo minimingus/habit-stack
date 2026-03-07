@@ -13,15 +13,13 @@ struct HabitCardView: View {
     @State private var showDetail = false
     @State private var showNote = false
     @State private var showTimer = false
-    @State private var rating: ScorecardEntry.Rating? = nil
-    @State private var showRatingPicker = false
+    @State private var showFrictionSheet = false
     @State private var durationMinutes: Int = 0
     @State private var isQuantified: Bool = false
     @State private var targetCount: Int = 0
     @State private var currentCount: Int = 0
 
     private var habit: Habit { habitWithStatus.habit }
-    private var ratingKey: String { "habitRating_\(habit.id.uuidString)" }
     private var durationKey: String { "habitDuration_\(habit.id.uuidString)" }
     private var accentColor: Color { Color(hex: habit.color) }
     private var todayCountKey: String {
@@ -46,9 +44,6 @@ struct HabitCardView: View {
                     onComplete: {
                         onToggle()
                         withAnimation { showConfetti = true }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                            showNote = true
-                        }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             showConfetti = false
                         }
@@ -63,16 +58,17 @@ struct HabitCardView: View {
             Button { showDetail = true } label: {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 6) {
-                        Text(habit.emoji)
-                            .font(.title3)
+                        ZStack {
+                            Circle()
+                                .fill(accentColor)
+                                .frame(width: 40, height: 40)
+                            Text(String(habit.name.prefix(1)).uppercased())
+                                .font(.headline.bold())
+                                .foregroundStyle(.white)
+                        }
                         Text(habit.name)
                             .font(.headline)
                             .foregroundStyle(Color("Stone950"))
-                        if hasFriction {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .font(.caption2)
-                                .foregroundStyle(.orange)
-                        }
                     }
 
                     if let anchorName {
@@ -85,6 +81,19 @@ struct HabitCardView: View {
                         Text(tiny)
                             .font(.caption)
                             .foregroundStyle(Color("Stone500"))
+                    }
+
+                    if hasFriction {
+                        Button { showFrictionSheet = true } label: {
+                            Text("Needs setup")
+                                .font(.caption.bold())
+                                .foregroundStyle(.orange)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(Color.orange.opacity(0.12))
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -116,16 +125,16 @@ struct HabitCardView: View {
                     }
                 }
 
-                // Rating badge
-                Button { showRatingPicker = true } label: {
-                    Text(rating?.rawValue ?? "·")
-                        .font(.caption.bold())
-                        .frame(width: 26, height: 26)
-                        .background(ratingBackground)
-                        .foregroundStyle(ratingForeground)
-                        .clipShape(RoundedRectangle(cornerRadius: 7))
+                if habitWithStatus.isCompleted {
+                    Button { showNote = true } label: {
+                        Image(systemName: "pencil.circle")
+                            .font(.title3)
+                            .foregroundStyle(Color("Stone500").opacity(0.6))
+                    }
+                    .buttonStyle(.plain)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.3), value: habitWithStatus.isCompleted)
                 }
-                .buttonStyle(.plain)
             }
         }
         .padding(.vertical, 14)
@@ -178,25 +187,15 @@ struct HabitCardView: View {
                 durationMinutes: durationMinutes,
                 onComplete: {
                     onToggle()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { showNote = true }
                 }
             )
         }
-        .confirmationDialog(
-            "Is \"\(habit.name)\" serving who you want to become?",
-            isPresented: $showRatingPicker,
-            titleVisibility: .visible
-        ) {
-            Button("+ Casting a vote for who I want to become") { setRating(.positive) }
-            Button("= Neutral — neither helps nor hurts") { setRating(.neutral) }
-            Button("– Working against who I want to become") { setRating(.negative) }
-            if rating != nil { Button("Clear rating", role: .destructive) { setRating(nil) } }
-            Button("Cancel", role: .cancel) {}
+        .sheet(isPresented: $showFrictionSheet) {
+            HabitFrictionSheet(habit: habit, onSave: {
+                // card will reflect changes on next loadToday
+            })
         }
         .onAppear {
-            if let raw = UserDefaults.standard.string(forKey: ratingKey) {
-                rating = ScorecardEntry.Rating(rawValue: raw)
-            }
             durationMinutes = UserDefaults.standard.integer(forKey: durationKey)
             isQuantified = UserDefaults.standard.bool(forKey: "habitQuantified_\(habit.id.uuidString)")
             let savedTarget = UserDefaults.standard.integer(forKey: "habitTargetCount_\(habit.id.uuidString)")
@@ -261,7 +260,6 @@ struct HabitCardView: View {
                     if currentCount >= targetCount && !habitWithStatus.isCompleted {
                         onToggle()
                         withAnimation { showConfetti = true }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showNote = true }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { showConfetti = false }
                     }
                 } label: {
@@ -274,33 +272,4 @@ struct HabitCardView: View {
         }
     }
 
-    // MARK: - Rating colors
-
-    private var ratingBackground: Color {
-        switch rating {
-        case .positive: return Color("TealLight")
-        case .neutral: return Color("Stone100")
-        case .negative: return Color.red.opacity(0.1)
-        case nil: return Color("Stone100")
-        }
-    }
-
-    private var ratingForeground: Color {
-        switch rating {
-        case .positive: return Color("Teal")
-        case .neutral: return Color("Stone500")
-        case .negative: return Color.red.opacity(0.7)
-        case nil: return Color("Stone500").opacity(0.4)
-        }
-    }
-
-    private func setRating(_ newRating: ScorecardEntry.Rating?) {
-        rating = newRating
-        if let newRating {
-            UserDefaults.standard.set(newRating.rawValue, forKey: ratingKey)
-        } else {
-            UserDefaults.standard.removeObject(forKey: ratingKey)
-        }
-        HapticManager.impact(.light)
-    }
 }
