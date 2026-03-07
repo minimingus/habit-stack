@@ -84,7 +84,6 @@ final class TodayViewModel {
                 self.checkNeverMissTwice(streaks: allStreaks)
                 self.scheduleRetentionNotifications(habits: habits, streaks: allStreaks)
             }
-            await loadTopIdentity(userId: userId)
         } catch {
             await MainActor.run { errorMessage = error.localizedDescription }
         }
@@ -124,6 +123,8 @@ final class TodayViewModel {
                 self.profile = profiles.first
                 if newStatus == .done {
                     self.lastCompletedHabitName = habitName
+                    let completedHabit = self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
+                    self.topIdentityStatement = completedHabit?.habit.craving
                     self.showXPToastRotated()
                     self.checkMilestone(for: habitId, habitName: habitName, streaks: allStreaks)
                     self.scheduleRetentionNotifications(
@@ -207,15 +208,4 @@ final class TodayViewModel {
         }
     }
 
-    private func loadTopIdentity(userId: UUID) async {
-        let votes: [IdentityVote] = (try? await supabase
-            .from("identity_votes")
-            .select()
-            .eq("user_id", value: userId.uuidString)
-            .execute()
-            .value) ?? []
-        let grouped = Dictionary(grouping: votes, by: { $0.identityStatement })
-        let top = grouped.max(by: { $0.value.count < $1.value.count })?.key
-        await MainActor.run { self.topIdentityStatement = top }
-    }
 }
