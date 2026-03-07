@@ -2,11 +2,9 @@ import SwiftUI
 
 struct FourLawsView: View {
     @State private var habits: [Habit] = []
-    @State private var totalVotes: Int = 0
+    @State private var allVotes: [IdentityVote] = []
     @State private var showScorecard = false
     @State private var editingHabit: Habit? = nil
-    @State private var showEditIdentity = false
-    @State private var identityStatement: String = ""
     @State private var expandedLaw: String? = nil
 
     var body: some View {
@@ -15,10 +13,10 @@ struct FourLawsView: View {
                 VStack(spacing: 20) {
 
                     // MARK: 1. Identity Statement — front and centre
-                    IdentityHeroCard(
-                        statement: identityStatement,
-                        votes: totalVotes,
-                        onEdit: { showEditIdentity = true }
+                    IdentityCarousel(
+                        habits: habits,
+                        votes: allVotes,
+                        onHabitTap: { habit in editingHabit = habit }
                     )
                     .padding(.horizontal, 16)
 
@@ -48,9 +46,8 @@ struct FourLawsView: View {
                                 .foregroundStyle(Color("Stone500"))
                         }
                         .padding(16)
-                        .background(Color.white)
+                        .background(Color("CardBackground"))
                         .clipShape(RoundedRectangle(cornerRadius: 14))
-                        .shadow(color: .black.opacity(0.06), radius: 4, y: 2)
                     }
                     .buttonStyle(.plain)
                     .padding(.horizontal, 16)
@@ -85,7 +82,7 @@ struct FourLawsView: View {
                 }
                 .padding(.vertical, 16)
             }
-            .background(Color("Stone100").ignoresSafeArea())
+            .background(Color("AppBackground").ignoresSafeArea())
             .navigationTitle("Identity")
             .task { await load() }
             .refreshable { await load() }
@@ -96,9 +93,6 @@ struct FourLawsView: View {
                 HabitWizardView(editingHabit: habit) {
                     Task { await load() }
                 }
-            }
-            .sheet(isPresented: $showEditIdentity) {
-                EditIdentitySheet(statement: $identityStatement)
             }
         }
     }
@@ -164,15 +158,7 @@ struct FourLawsView: View {
 
         let (loadedHabits, loadedVotes) = await (habitsResult, votesResult)
         habits = loadedHabits
-        totalVotes = loadedVotes.count
-
-        // Identity statement: onboarding entry takes priority, fall back to top vote
-        if let saved = UserDefaults.standard.string(forKey: "onboardingIdentityStatement"), !saved.isEmpty {
-            identityStatement = saved
-        } else {
-            let grouped = Dictionary(grouping: loadedVotes, by: { $0.identityStatement })
-            identityStatement = grouped.max(by: { $0.value.count < $1.value.count })?.key ?? ""
-        }
+        allVotes = loadedVotes
     }
 }
 
@@ -303,47 +289,118 @@ private struct LawCard: View {
                 }
             }
         }
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.05), radius: 3, y: 1)
     }
 }
 
-// MARK: - Identity Hero Card
+// MARK: - Identity Carousel
 
-private struct IdentityHeroCard: View {
-    let statement: String
-    let votes: Int
-    let onEdit: () -> Void
+private struct IdentityCarousel: View {
+    let habits: [Habit]
+    let votes: [IdentityVote]
+    let onHabitTap: (Habit) -> Void
+
+    struct IdentityGroup: Identifiable {
+        let id: String
+        let statement: String
+        let habits: [Habit]
+        let evidenceCount: Int
+    }
+
+    private var groups: [IdentityGroup] {
+        let withCraving = habits.filter { !($0.craving ?? "").isEmpty }
+        let grouped = Dictionary(grouping: withCraving, by: { $0.craving! })
+        return grouped.map { key, value in
+            let count = votes.filter { $0.identityStatement == key }.count
+            return IdentityGroup(id: key, statement: key, habits: value, evidenceCount: count)
+        }
+        .sorted { $0.evidenceCount > $1.evidenceCount }
+    }
+
+    var body: some View {
+        if groups.isEmpty {
+            emptyCard
+        } else if groups.count == 1 {
+            IdentityCard(group: groups[0], onHabitTap: onHabitTap)
+        } else {
+            TabView {
+                ForEach(groups) { group in
+                    IdentityCard(group: group, onHabitTap: onHabitTap)
+                        .padding(.bottom, 24)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .automatic))
+            .frame(height: 240)
+        }
+    }
+
+    private var emptyCard: some View {
+        VStack(spacing: 12) {
+            Text("I am becoming")
+                .font(.caption.bold())
+                .foregroundStyle(Color("Teal"))
+                .textCase(.uppercase)
+                .kerning(0.8)
+            Text("Who do you want to become?")
+                .font(.title3.bold())
+                .foregroundStyle(Color("Stone500"))
+                .multilineTextAlignment(.center)
+            Text("Add a \"Why\" to any habit to build your identity here.")
+                .font(.caption)
+                .foregroundStyle(Color("Stone500").opacity(0.7))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 16)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(20)
+        .background(Color("CardBackground"))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+    }
+}
+
+// MARK: - Identity Card
+
+private struct IdentityCard: View {
+    let group: IdentityCarousel.IdentityGroup
+    let onHabitTap: (Habit) -> Void
 
     var body: some View {
         VStack(spacing: 16) {
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 Text("I am becoming")
                     .font(.caption.bold())
                     .foregroundStyle(Color("Teal"))
                     .textCase(.uppercase)
                     .kerning(0.8)
+                Text("someone who \(group.statement.lowercased())")
+                    .font(.title3.bold())
+                    .foregroundStyle(Color("Stone950"))
+                    .multilineTextAlignment(.center)
+            }
 
-                if statement.isEmpty {
-                    Text("Who do you want to become?")
-                        .font(.title3.bold())
-                        .foregroundStyle(Color("Stone500"))
-                        .multilineTextAlignment(.center)
-                } else {
-                    Text("someone who \(statement.lowercased())")
-                        .font(.title3.bold())
-                        .foregroundStyle(Color("Stone950"))
-                        .multilineTextAlignment(.center)
+            // Habit chips
+            HStack(spacing: 8) {
+                ForEach(group.habits) { habit in
+                    Button { onHabitTap(habit) } label: {
+                        Text("\(habit.emoji) \(habit.name)")
+                            .font(.caption.bold())
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Color("CardBackground").opacity(0.7))
+                            .foregroundStyle(Color("Stone950"))
+                            .clipShape(Capsule())
+                            .overlay(Capsule().strokeBorder(Color("Teal").opacity(0.3), lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
                 }
             }
 
-            // Vote evidence
-            if votes > 0 {
+            if group.evidenceCount > 0 {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(Color("Teal"))
-                    Text("\(votes) habit completion\(votes == 1 ? "" : "s") as evidence")
+                    Text("\(group.evidenceCount) completion\(group.evidenceCount == 1 ? "" : "s") as evidence")
                         .font(.subheadline)
                         .foregroundStyle(Color("Stone950"))
                 }
@@ -352,112 +409,16 @@ private struct IdentityHeroCard: View {
                 .background(Color("TealLight"))
                 .clipShape(Capsule())
             }
-
-            Button(action: onEdit) {
-                Label(statement.isEmpty ? "Set your identity" : "Edit", systemImage: "pencil")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(Color("Teal"))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(Color.white.opacity(0.8))
-                    .clipShape(Capsule())
-                    .overlay(Capsule().strokeBorder(Color("Teal").opacity(0.3), lineWidth: 1))
-            }
         }
         .frame(maxWidth: .infinity)
         .padding(20)
         .background(
-            statement.isEmpty
-                ? AnyShapeStyle(Color.white)
-                : AnyShapeStyle(LinearGradient(
-                    colors: [Color("TealLight"), Color("TealLight").opacity(0.3)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
+            LinearGradient(
+                colors: [Color("TealLight"), Color("TealLight").opacity(0.3)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         )
         .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.06), radius: 4, y: 2)
-    }
-}
-
-// MARK: - Edit Identity Sheet
-
-private struct EditIdentitySheet: View {
-    @Binding var statement: String
-    @Environment(\.dismiss) private var dismiss
-    @State private var draft = ""
-
-    private let suggestions = [
-        "reads every day", "exercises consistently", "sleeps 8 hours",
-        "eats healthy", "meditates daily", "journals regularly",
-    ]
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("I am someone who…")
-                            .font(.caption.bold())
-                            .foregroundStyle(Color("Stone500"))
-                            .textCase(.uppercase)
-                            .kerning(0.5)
-
-                        TextField("e.g. exercises consistently", text: $draft)
-                            .padding(14)
-                            .background(Color("Stone100"))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .padding(.horizontal, 20)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Suggestions")
-                            .font(.caption)
-                            .foregroundStyle(Color("Stone500"))
-                            .padding(.horizontal, 20)
-
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(suggestions, id: \.self) { s in
-                                    Button { draft = s } label: {
-                                        Text(s)
-                                            .font(.subheadline)
-                                            .padding(.horizontal, 14)
-                                            .padding(.vertical, 8)
-                                            .background(draft == s ? Color("Teal") : Color("Stone100"))
-                                            .foregroundStyle(draft == s ? Color.white : Color("Stone950"))
-                                            .clipShape(Capsule())
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                            .padding(.horizontal, 20)
-                        }
-                    }
-                }
-                .padding(.top, 16)
-            }
-            .background(Color("Stone100").ignoresSafeArea())
-            .navigationTitle("Your Identity")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        let trimmed = draft.trimmingCharacters(in: .whitespaces)
-                        if !trimmed.isEmpty {
-                            statement = trimmed
-                            UserDefaults.standard.set(trimmed, forKey: "onboardingIdentityStatement")
-                        }
-                        dismiss()
-                    }
-                    .fontWeight(.semibold)
-                    .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
-                }
-            }
-            .onAppear { draft = statement }
-        }
     }
 }
