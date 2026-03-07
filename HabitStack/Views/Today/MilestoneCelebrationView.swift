@@ -7,6 +7,7 @@ struct MilestoneCelebrationView: View {
 
     private var milestoneName: String {
         switch streakDays {
+        case 0: return "Perfect Day"
         case 7: return "Week Warrior"
         case 14: return "Two Weeks Strong"
         case 21: return "Habit Forming"
@@ -19,6 +20,7 @@ struct MilestoneCelebrationView: View {
 
     private var milestoneEmoji: String {
         switch streakDays {
+        case 0: return "⭐"
         case 7: return "🔥"
         case 14: return "⚡"
         case 21: return "🌱"
@@ -42,17 +44,28 @@ struct MilestoneCelebrationView: View {
                     .font(.title.bold())
                     .foregroundStyle(Color("Stone950"))
 
-                Text("\(streakDays) days of \(habitName)")
-                    .font(.subheadline)
-                    .foregroundStyle(Color("Stone500"))
+                if streakDays > 0 {
+                    Text("\(streakDays) days of \(habitName)")
+                        .font(.subheadline)
+                        .foregroundStyle(Color("Stone500"))
+                }
             }
 
-            Text("Every rep makes you more of the person you want to become.")
-                .font(.body)
-                .foregroundStyle(Color("Stone500"))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-                .padding(.top, 24)
+            if streakDays == 0 {
+                Text("Every habit. Every day. That's identity.")
+                    .font(.body)
+                    .foregroundStyle(Color("Stone500"))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 24)
+            } else {
+                Text("Every rep makes you more of the person you want to become.")
+                    .font(.body)
+                    .foregroundStyle(Color("Stone500"))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 24)
+            }
 
             Spacer()
 
