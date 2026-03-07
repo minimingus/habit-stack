@@ -29,6 +29,7 @@
 		49F60F45CE88FE31CB00F4A2 /* IdentityStatementBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320AB53D1D73CD148764A43 /* IdentityStatementBanner.swift */; };
 		4B4CF58799D9246ADDD68697 /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BF875B257BFB51BDF46E89 /* HeatmapView.swift */; };
 		4C6FB6509E5EC772632EABF6 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D42396C55B3521646C4658A /* HapticManager.swift */; };
+		504D7EA641DAF8C6967D1042 /* MilestoneCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86416A3BAFD5F3B6EE48C7CD /* MilestoneCelebrationView.swift */; };
 		50728D0D73E13B89BC38272F /* HabitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1BBAC76D5403D2986F2F7D /* HabitService.swift */; };
 		5273D5B700B0BCD9A4B753F6 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FAC45140B0AD889BE25FBC /* SignUpView.swift */; };
 		5532DEAD4B019B888C75E315 /* WeeklyReflectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA90EF2F41E82ACBEBE054B /* WeeklyReflectionView.swift */; };
@@ -121,6 +122,7 @@
 		7E7009EA0C484B59A8366E25 /* StreakService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakService.swift; sourceTree = "<group>"; };
 		7E96D1CFE959ABE3BD61704E /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
 		80C4128FE58A56F292D713ED /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.plist; sourceTree = "<group>"; };
+		86416A3BAFD5F3B6EE48C7CD /* MilestoneCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneCelebrationView.swift; sourceTree = "<group>"; };
 		8755D5F7B381A50FF2E2AB54 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
 		8B3A238D3815F241DD164337 /* RevenueCatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueCatManager.swift; sourceTree = "<group>"; };
 		95ADFDFC1B987B20BC879E17 /* HabitWizardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWizardViewModel.swift; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 				6548DB26D57BF808B91201CC /* HabitDetailView.swift */,
 				40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */,
 				D320AB53D1D73CD148764A43 /* IdentityStatementBanner.swift */,
+				86416A3BAFD5F3B6EE48C7CD /* MilestoneCelebrationView.swift */,
 				A2644443501BB2AA34A352F0 /* NeverMissTwiceBanner.swift */,
 				186088F433E12ABBF455C717 /* ProgressRingView.swift */,
 				978B04D383502B53C766F257 /* TodayView.swift */,
@@ -543,6 +546,7 @@
 				4B4CF58799D9246ADDD68697 /* HeatmapView.swift in Sources */,
 				49F60F45CE88FE31CB00F4A2 /* IdentityStatementBanner.swift in Sources */,
 				D073D6E11234F3AA6925EAE7 /* IdentityVote.swift in Sources */,
+				504D7EA641DAF8C6967D1042 /* MilestoneCelebrationView.swift in Sources */,
 				FAE8116E8C03314D17E24D3A /* NeverMissTwiceBanner.swift in Sources */,
 				111BBA4571D2D73A013AF8A6 /* NotificationManager.swift in Sources */,
 				B10B2375CC48DB039B27C2E4 /* NotificationPermissionView.swift in Sources */,
