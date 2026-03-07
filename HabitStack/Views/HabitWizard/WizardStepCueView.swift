@@ -3,6 +3,7 @@ import SwiftUI
 struct WizardStepCueView: View {
     @Bindable var viewModel: HabitWizardViewModel
     @AppStorage("habitCountAdvisoryDismissed") private var advisoryDismissed = false
+    @State private var showTemplateLibrary = false
 
     private static let defaultCues = [
         "After I wake up",
@@ -12,6 +13,12 @@ struct WizardStepCueView: View {
         "After dinner",
         "Before bed",
     ]
+
+    private var filteredCues: [String] {
+        let q = viewModel.cue.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return Self.defaultCues }
+        return Self.defaultCues.filter { $0.localizedCaseInsensitiveContains(q) }
+    }
 
     private let colors = ["#0D9488", "#6366F1", "#F59E0B", "#EF4444", "#10B981",
                           "#3B82F6", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316"]
@@ -72,6 +79,16 @@ struct WizardStepCueView: View {
                         }
                         .padding(.horizontal, 24)
                     }
+
+                    Button {
+                        showTemplateLibrary = true
+                    } label: {
+                        Text("See all templates →")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color("Teal"))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 24)
                 }
 
                 FormSection(title: "Habit Name") {
@@ -126,22 +143,25 @@ struct WizardStepCueView: View {
 
                 FormSection(title: "Cue") {
                     VStack(alignment: .leading, spacing: 10) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(Self.defaultCues, id: \.self) { suggestion in
-                                    Button {
-                                        viewModel.cue = suggestion
-                                    } label: {
-                                        Text(suggestion)
-                                            .font(.subheadline)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 7)
-                                            .background(viewModel.cue == suggestion ? Color("Teal") : Color("Stone100"))
-                                            .foregroundStyle(viewModel.cue == suggestion ? .white : Color("Stone950"))
-                                            .clipShape(Capsule())
+                        if !filteredCues.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(filteredCues, id: \.self) { suggestion in
+                                        Button {
+                                            viewModel.cue = suggestion
+                                        } label: {
+                                            Text(suggestion)
+                                                .font(.subheadline)
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 7)
+                                                .background(viewModel.cue == suggestion ? Color("Teal") : Color("Stone100"))
+                                                .foregroundStyle(viewModel.cue == suggestion ? .white : Color("Stone950"))
+                                                .clipShape(Capsule())
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
                                 }
+                                .animation(.easeInOut(duration: 0.2), value: filteredCues)
                             }
                         }
                         TextField("After I...", text: $viewModel.cue)
@@ -167,6 +187,12 @@ struct WizardStepCueView: View {
                 }
             }
             .padding(24)
+        }
+        .sheet(isPresented: $showTemplateLibrary) {
+            HabitTemplateLibraryView { template in
+                viewModel.prefill(from: template)
+                showTemplateLibrary = false
+            }
         }
     }
 

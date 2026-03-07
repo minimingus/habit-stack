@@ -7,7 +7,6 @@ struct TodayView: View {
     @State private var selectedTemplate: HabitTemplate? = nil
     @State private var editingHabit: Habit?
     @State private var selectedTab: Int = 0
-    @State private var showAddOptions = false
 
     var body: some View {
         NavigationStack {
@@ -128,7 +127,7 @@ struct TodayView: View {
 
                 // FAB
                 Button {
-                    showAddOptions = true
+                    showHabitWizard = true
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2.bold())
@@ -140,11 +139,6 @@ struct TodayView: View {
                 }
                 .padding(.trailing, 24)
                 .padding(.bottom, 24)
-                .confirmationDialog("Add Habit", isPresented: $showAddOptions) {
-                    Button("Browse Templates") { showTemplateLibrary = true }
-                    Button("Create Personal") { showHabitWizard = true }
-                    Button("Cancel", role: .cancel) {}
-                }
             }
             .navigationTitle("Today")
             .task { await viewModel.loadToday() }
