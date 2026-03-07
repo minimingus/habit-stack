@@ -8,13 +8,14 @@ struct HabitFrictionSheet: View {
     @State private var tinyVersion: String
     @State private var reminderEnabled: Bool
     @State private var reminderTime: Date
+    @FocusState private var tinyFocused: Bool
 
     init(habit: Habit, onSave: @escaping () -> Void) {
         self.habit = habit
         self.onSave = onSave
         _tinyVersion = State(initialValue: habit.tinyVersion ?? "")
         _reminderEnabled = State(initialValue: habit.reminderEnabled)
-        _reminderTime = State(initialValue: habit.reminderTime ?? Date())
+        _reminderTime = State(initialValue: habit.reminderTime ?? Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date())
     }
 
     var body: some View {
@@ -25,6 +26,7 @@ struct HabitFrictionSheet: View {
                         .font(.subheadline.bold())
                         .foregroundStyle(Color("Stone500"))
                     TextField("e.g. Just put on my shoes", text: $tinyVersion)
+                        .focused($tinyFocused)
                         .padding(12)
                         .background(Color("Stone100"))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -46,6 +48,12 @@ struct HabitFrictionSheet: View {
             }
             .padding(20)
             .background(Color("AppBackground").ignoresSafeArea())
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    Button("Done") { tinyFocused = false }
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            }
             .navigationTitle("Set up \(habit.name)")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -63,13 +71,22 @@ struct HabitFrictionSheet: View {
         .presentationDetents([.medium])
     }
 
+    @MainActor
     private func save() async {
+        let trimmed = tinyVersion.trimmingCharacters(in: .whitespaces)
+        let tinyChanged = trimmed != (habit.tinyVersion ?? "")
+        let reminderChanged = reminderEnabled != habit.reminderEnabled || (reminderEnabled && reminderTime != habit.reminderTime)
+        guard tinyChanged || reminderChanged else { dismiss(); return }
         var updated = habit
-        updated.tinyVersion = tinyVersion.trimmingCharacters(in: .whitespaces).isEmpty ? nil : tinyVersion.trimmingCharacters(in: .whitespaces)
+        updated.tinyVersion = trimmed.isEmpty ? nil : trimmed
         updated.reminderEnabled = reminderEnabled
         updated.reminderTime = reminderEnabled ? reminderTime : nil
-        try? await HabitService.shared.updateHabit(updated)
-        onSave()
-        dismiss()
+        do {
+            try await HabitService.shared.updateHabit(updated)
+            onSave()
+            dismiss()
+        } catch {
+            // silently ignore — sheet stays open, data unchanged
+        }
     }
 }
