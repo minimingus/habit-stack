@@ -132,6 +132,7 @@ final class TodayViewModel {
                     let completedHabit = self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
                     self.topIdentityStatement = completedHabit?.habit.craving
                     self.showXPToastRotated()
+                    // checkMilestone must run before checkPerfectDay — perfect day guards on !showMilestone
                     self.checkMilestone(for: habitId, habitName: habitName, streaks: allStreaks)
                     self.checkPerfectDay()
                     self.checkComeback()
@@ -243,6 +244,12 @@ final class TodayViewModel {
 
     private var todayDateString: String {
         String(ISO8601DateFormatter().string(from: Date()).prefix(10))
+    }
+
+    func dismissNeverMissTwice() {
+        neverMissTwiceDismissed = true
+        neverMissTwiceState = .dismissed
+        showNeverMissTwice = false
     }
 
     func spendStreakShield() async {
