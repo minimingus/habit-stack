@@ -3,30 +3,37 @@ import SwiftUI
 struct StreakCalendarView: View {
     let calendarData: [Date: CalendarDayStatus]
 
-    private var calendar: Calendar {
+    // Single reference date captured at init — avoids midnight disagreement.
+    private let referenceDate: Date = Date()
+
+    private static var calendar: Calendar = {
         var cal = Calendar(identifier: .gregorian)
-        cal.locale = Locale.current
+        cal.firstWeekday = 1 // 1 = Sunday, matching dayLabels order
         return cal
-    }
+    }()
+
+    private static let monthFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "MMMM yyyy"
+        return f
+    }()
 
     private var firstDayOfMonth: Date {
-        let comps = calendar.dateComponents([.year, .month], from: Date())
-        return calendar.date(from: comps) ?? Date()
+        let comps = Self.calendar.dateComponents([.year, .month], from: referenceDate)
+        return Self.calendar.date(from: comps) ?? referenceDate
     }
 
     private var weekdayOffset: Int {
         // .weekday returns 1=Sun … 7=Sat; convert to 0-based Sunday start
-        (calendar.component(.weekday, from: firstDayOfMonth) - 1)
+        (Self.calendar.component(.weekday, from: firstDayOfMonth) - 1)
     }
 
     private var daysInMonth: Range<Int> {
-        calendar.range(of: .day, in: .month, for: Date()) ?? 1..<32
+        Self.calendar.range(of: .day, in: .month, for: referenceDate) ?? 1..<32
     }
 
     private var monthHeaderText: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        return formatter.string(from: firstDayOfMonth)
+        Self.monthFormatter.string(from: firstDayOfMonth)
     }
 
     private let dayLabels = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
@@ -90,10 +97,10 @@ struct StreakCalendarView: View {
     // MARK: - Helpers
 
     private func dayDate(for day: Int) -> Date {
-        var comps = calendar.dateComponents([.year, .month], from: Date())
+        var comps = Self.calendar.dateComponents([.year, .month], from: referenceDate)
         comps.day = day
-        let date = calendar.date(from: comps) ?? Date()
-        return calendar.startOfDay(for: date)
+        let date = Self.calendar.date(from: comps) ?? referenceDate
+        return Self.calendar.startOfDay(for: date)
     }
 }
 
