@@ -1,6 +1,12 @@
 import Foundation
 import Observation
 
+enum CalendarDayStatus {
+    case full     // all habits logged 'done'
+    case partial  // at least one habit logged 'done'
+    case empty    // no habits logged 'done'
+}
+
 @Observable
 final class AnalyticsViewModel {
     var habits: [Habit] = []
@@ -13,6 +19,13 @@ final class AnalyticsViewModel {
     // Cross-habit analytics
     var allHabitsStats: [(habit: Habit, rate: Double)] = []
     var weeklyConsistencyRate: Double = 0
+
+    // Calendar + best time of day
+    var calendarData: [Date: CalendarDayStatus] = [:]
+    var bestTimeOfDay: Habit.TimeOfDay? = nil
+
+    // Collected logs across all habits (populated by loadAllHabitsStats)
+    private var allLogs: [HabitLog] = []
 
     func load() async {
         guard let userId = try? await supabase.auth.session.user.id else { return }
@@ -56,6 +69,7 @@ final class AnalyticsViewModel {
         let formatter = ISO8601DateFormatter()
         let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
         var stats: [(habit: Habit, rate: Double)] = []
+        var collected: [HabitLog] = []
 
         for habit in habits {
             let habitLogs: [HabitLog] = (try? await supabase
@@ -65,15 +79,19 @@ final class AnalyticsViewModel {
                 .gte("logged_at", value: formatter.string(from: weekAgo))
                 .execute()
                 .value) ?? []
+            collected.append(contentsOf: habitLogs)
             let doneCount = habitLogs.filter { $0.status == .done }.count
             stats.append((habit: habit, rate: Double(doneCount) / 7.0))
         }
 
         let avg = stats.isEmpty ? 0.0 : stats.map { $0.rate }.reduce(0, +) / Double(stats.count)
         await MainActor.run {
+            self.allLogs = collected
             self.allHabitsStats = stats.sorted { $0.rate > $1.rate }
             self.weeklyConsistencyRate = avg
         }
+        await loadCalendarData(userId: userId)
+        computeBestTimeOfDay()
     }
 
     // MARK: - Computed analytics
@@ -118,5 +136,67 @@ final class AnalyticsViewModel {
             let date = calendar.date(byAdding: .day, value: -daysAgo, to: today)!
             return (date: date, status: logsByDate[date]?.status)
         }
+    }
+
+    // MARK: - Calendar Data
+
+    func loadCalendarData(userId: UUID) async {
+        let calendar = Calendar.current
+        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: Date()))!
+        let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
+        let formatter = ISO8601DateFormatter()
+
+        let monthLogs: [HabitLog] = (try? await supabase
+            .from("habit_logs")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .gte("logged_at", value: formatter.string(from: startOfMonth))
+            .lte("logged_at", value: formatter.string(from: endOfMonth))
+            .eq("status", value: "done")
+            .execute()
+            .value) ?? []
+
+        guard let range = calendar.range(of: .day, in: .month, for: Date()) else { return }
+        let totalHabits = habits.count
+
+        var result: [Date: CalendarDayStatus] = [:]
+        for day in range {
+            guard let date = calendar.date(bySetting: .day, value: day, of: startOfMonth) else { continue }
+            let dayStart = calendar.startOfDay(for: date)
+            let uniqueDone = Set(monthLogs.filter {
+                calendar.startOfDay(for: $0.loggedAt) == dayStart
+            }.map { $0.habitId })
+            let doneCount = uniqueDone.count
+            let status: CalendarDayStatus
+            if doneCount == totalHabits && totalHabits > 0 {
+                status = .full
+            } else if doneCount > 0 {
+                status = .partial
+            } else {
+                status = .empty
+            }
+            result[dayStart] = status
+        }
+
+        await MainActor.run {
+            self.calendarData = result
+        }
+    }
+
+    // MARK: - Best Time of Day
+
+    private func computeBestTimeOfDay() {
+        guard !habits.isEmpty else { bestTimeOfDay = nil; return }
+        var rates: [Habit.TimeOfDay: Double] = [:]
+        for tod in Habit.TimeOfDay.allCases {
+            let todHabits = habits.filter { $0.timeOfDay == tod }
+            guard !todHabits.isEmpty else { continue }
+            let todIds = Set(todHabits.map { $0.id })
+            let doneLogs = allLogs.filter { todIds.contains($0.habitId) && $0.status == .done }
+            let totalLogs = allLogs.filter { todIds.contains($0.habitId) }
+            guard !totalLogs.isEmpty else { continue }
+            rates[tod] = Double(doneLogs.count) / Double(totalLogs.count)
+        }
+        bestTimeOfDay = rates.max(by: { $0.value < $1.value })?.key
     }
 }
