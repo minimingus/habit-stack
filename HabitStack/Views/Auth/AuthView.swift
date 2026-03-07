@@ -6,6 +6,7 @@ struct AuthView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var showSignUp = false
+    @State private var isDevLoading = false
 
     var body: some View {
         NavigationStack {
@@ -76,6 +77,23 @@ struct AuthView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Teal"), lineWidth: 1.5))
                     }
+
+                    Button {
+                        Task { await devLogin() }
+                    } label: {
+                        Group {
+                            if isDevLoading {
+                                ProgressView().tint(Color("Stone500"))
+                            } else {
+                                Label("Dev Login", systemImage: "bolt.fill")
+                                    .font(.subheadline.bold())
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .foregroundStyle(Color("Stone500"))
+                    }
+                    .disabled(isDevLoading)
                 }
 
                 Spacer()
@@ -85,6 +103,24 @@ struct AuthView: View {
                 SignUpView()
             }
         }
+    }
+
+    private func devLogin() async {
+        isDevLoading = true
+        errorMessage = nil
+        let id = UUID().uuidString.prefix(8).lowercased()
+        let fakeEmail = "dev+\(id)@habitstack.test"
+        let fakePassword = "devpass123"
+        do {
+            let result = try await supabase.auth.signUp(email: fakeEmail, password: fakePassword)
+            if result.session == nil {
+                // Auto-confirm not enabled — fall back to sign-in attempt
+                try await supabase.auth.signIn(email: fakeEmail, password: fakePassword)
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isDevLoading = false
     }
 
     private func signIn() async {
