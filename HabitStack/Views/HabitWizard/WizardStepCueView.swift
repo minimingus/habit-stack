@@ -6,6 +6,13 @@ struct WizardStepCueView: View {
     private let colors = ["#0D9488", "#6366F1", "#F59E0B", "#EF4444", "#10B981",
                           "#3B82F6", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316"]
 
+    private let emojis = [
+        "✅", "💪", "🏃", "📚", "✍️", "🧘", "💤", "🥗", "💧", "🎯",
+        "🌅", "🎵", "📝", "🧠", "❤️", "🌿", "⚡", "🔥", "🎨", "🏋️",
+        "🚴", "🏊", "🍎", "☕", "🌙", "📖", "🎓", "💻", "🌞", "🚶",
+        "🧹", "🙏", "⏰", "🌬️", "🏆", "⭐", "🧪", "💊", "🎸", "🍵"
+    ]
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -14,6 +21,29 @@ struct WizardStepCueView: View {
                         .padding()
                         .background(Color("Stone100"))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+
+                FormSection(title: "Emoji") {
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 8), spacing: 8) {
+                        ForEach(emojis, id: \.self) { emoji in
+                            Button {
+                                viewModel.emoji = emoji
+                            } label: {
+                                Text(emoji)
+                                    .font(.title3)
+                                    .frame(width: 36, height: 36)
+                                    .background(viewModel.emoji == emoji ? Color("TealLight") : Color("Stone100"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .overlay {
+                                        if viewModel.emoji == emoji {
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(Color("Teal"), lineWidth: 2)
+                                        }
+                                    }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
 
                 FormSection(title: "Color") {

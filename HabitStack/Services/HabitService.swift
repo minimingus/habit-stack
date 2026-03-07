@@ -94,6 +94,16 @@ final class HabitService {
         try await supabase.from("habit_logs").insert(log).execute()
     }
 
+    func reorderHabits(_ habits: [Habit]) async throws {
+        for (index, habit) in habits.enumerated() {
+            try await supabase
+                .from("habits")
+                .update(["sort_order": index])
+                .eq("id", value: habit.id.uuidString)
+                .execute()
+        }
+    }
+
     func fetchHistory(habitId: UUID, userId: UUID, days: Int, isPro: Bool) async throws -> [HabitLog] {
         let clampedDays = isPro ? days : min(days, freeTierHistoryDays)
         if !isPro && days > freeTierHistoryDays {

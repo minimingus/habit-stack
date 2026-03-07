@@ -10,6 +10,10 @@ final class AnalyticsViewModel {
     var isLoading = false
     var isPro = false
 
+    // Cross-habit analytics
+    var allHabitsStats: [(habit: Habit, rate: Double)] = []
+    var weeklyConsistencyRate: Double = 0
+
     func load() async {
         guard let userId = try? await supabase.auth.session.user.id else { return }
         isLoading = true
@@ -23,10 +27,11 @@ final class AnalyticsViewModel {
             .execute()
             .value) ?? []
         selectedHabit = selectedHabit ?? habits.first
-        isLoading = false
         if let habit = selectedHabit {
             await loadLogs(for: habit, userId: userId)
         }
+        await loadAllHabitsStats(userId: userId)
+        isLoading = false
     }
 
     func select(habit: Habit) async {
@@ -46,7 +51,60 @@ final class AnalyticsViewModel {
         streak = try? await StreakService.shared.streak(for: habit.id)
     }
 
-    // Heatmap: 35-cell grid (5 weeks)
+    private func loadAllHabitsStats(userId: UUID) async {
+        guard !habits.isEmpty else { return }
+        let formatter = ISO8601DateFormatter()
+        let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        var stats: [(habit: Habit, rate: Double)] = []
+
+        for habit in habits {
+            let habitLogs: [HabitLog] = (try? await supabase
+                .from("habit_logs")
+                .select()
+                .eq("habit_id", value: habit.id.uuidString)
+                .gte("logged_at", value: formatter.string(from: weekAgo))
+                .execute()
+                .value) ?? []
+            let doneCount = habitLogs.filter { $0.status == .done }.count
+            stats.append((habit: habit, rate: Double(doneCount) / 7.0))
+        }
+
+        let avg = stats.isEmpty ? 0.0 : stats.map { $0.rate }.reduce(0, +) / Double(stats.count)
+        await MainActor.run {
+            self.allHabitsStats = stats.sorted { $0.rate > $1.rate }
+            self.weeklyConsistencyRate = avg
+        }
+    }
+
+    // MARK: - Computed analytics
+
+    var strongestHabit: (habit: Habit, rate: Double)? { allHabitsStats.first }
+    var weakestHabit: (habit: Habit, rate: Double)? { allHabitsStats.last }
+
+    /// Completion count per day of week (Mon=0 … Sun=6) for selected habit
+    var dayOfWeekCounts: [(day: String, count: Int)] {
+        let labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        let calendar = Calendar.current
+        let doneLogs = logs.filter { $0.status == .done }
+        var counts = Array(repeating: 0, count: 7)
+        for log in doneLogs {
+            let weekday = calendar.component(.weekday, from: log.loggedAt) // 1=Sun..7=Sat
+            let idx = (weekday + 5) % 7 // convert to Mon=0..Sun=6
+            counts[idx] += 1
+        }
+        return labels.enumerated().map { (i, label) in (day: label, count: counts[i]) }
+    }
+
+    /// 7-day completion rate for the selected habit
+    var selectedHabitWeeklyRate: Double {
+        guard let stat = allHabitsStats.first(where: { $0.habit.id == selectedHabit?.id }) else {
+            return 0
+        }
+        return stat.rate
+    }
+
+    // MARK: - Heatmap
+
     func heatmapData() -> [(date: Date, status: HabitLog.Status?)] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -56,7 +114,6 @@ final class AnalyticsViewModel {
                 return (day, log)
             }
         )
-
         return (0..<35).reversed().map { daysAgo in
             let date = calendar.date(byAdding: .day, value: -daysAgo, to: today)!
             return (date: date, status: logsByDate[date]?.status)

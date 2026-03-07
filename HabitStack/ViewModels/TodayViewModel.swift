@@ -51,6 +51,15 @@ final class TodayViewModel {
         }
     }
 
+    func moveHabits(in timeOfDay: Habit.TimeOfDay, from source: IndexSet, to destination: Int) {
+        guard var group = habitGroups[timeOfDay] else { return }
+        group.move(fromOffsets: source, toOffset: destination)
+        habitGroups[timeOfDay] = group
+        Task {
+            try? await HabitService.shared.reorderHabits(group.map { $0.habit })
+        }
+    }
+
     // MARK: - Load
 
     func loadToday() async {

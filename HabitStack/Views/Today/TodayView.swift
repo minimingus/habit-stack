@@ -76,6 +76,9 @@ struct TodayView: View {
                                         .listRowSeparator(.hidden)
                                         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                                     }
+                                    .onMove { source, destination in
+                                        viewModel.moveHabits(in: timeOfDay, from: source, to: destination)
+                                    }
                                 } header: {
                                     HabitGroupView(timeOfDay: timeOfDay, count: habits.count)
                                 }

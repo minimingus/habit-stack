@@ -3,9 +3,23 @@ import SwiftUI
 struct StreakBarView: View {
     let streak: Streak
 
+    private let milestones = [7, 14, 21, 30, 66, 100]
+
+    private var nextMilestone: Int? {
+        milestones.first { $0 > streak.currentStreak }
+    }
+
+    private var milestoneProgress: Double {
+        guard let next = nextMilestone else { return 1.0 }
+        let prev = milestones.last { $0 < next } ?? 0
+        let span = next - prev
+        let done = streak.currentStreak - prev
+        return span > 0 ? Double(done) / Double(span) : 0
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Streaks & XP")
+            Text("Streaks")
                 .font(.headline)
 
             HStack(spacing: 16) {
@@ -34,25 +48,40 @@ struct StreakBarView: View {
                             .foregroundStyle(Color("Stone950"))
                     }
                 }
-            }
 
-            // Streak bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color("Stone100"))
-                        .frame(height: 8)
-                    if streak.longestStreak > 0 {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color("Teal"))
-                            .frame(
-                                width: geo.size.width * min(1, Double(streak.currentStreak) / Double(streak.longestStreak)),
-                                height: 8
-                            )
+                if let next = nextMilestone {
+                    Divider()
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Next milestone")
+                            .font(.caption)
+                            .foregroundStyle(Color("Stone500"))
+                        Text("\(next - streak.currentStreak) days away")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(Color("Stone950"))
                     }
                 }
             }
-            .frame(height: 8)
+
+            // Progress toward next milestone
+            if let next = nextMilestone {
+                VStack(alignment: .leading, spacing: 4) {
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color("Stone100"))
+                                .frame(height: 8)
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color("Teal"))
+                                .frame(width: geo.size.width * milestoneProgress, height: 8)
+                                .animation(.spring(duration: 0.6), value: milestoneProgress)
+                        }
+                    }
+                    .frame(height: 8)
+                    Text("toward \(next)-day milestone")
+                        .font(.caption2)
+                        .foregroundStyle(Color("Stone500"))
+                }
+            }
         }
         .padding(16)
         .background(Color.white)

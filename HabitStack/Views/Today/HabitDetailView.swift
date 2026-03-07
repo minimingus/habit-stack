@@ -9,6 +9,7 @@ struct HabitDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var showArchiveAlert = false
+    @State private var completionRate: Double? = nil
 
     var body: some View {
         NavigationStack {
@@ -34,12 +35,16 @@ struct HabitDetailView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
 
-                    // Streak stats
+                    // Streak + completion rate stats
                     if let streak {
                         HStack(spacing: 0) {
                             StatCell(label: "Current Streak", value: "\(streak.currentStreak)")
                             Divider().frame(height: 40)
-                            StatCell(label: "Longest Streak", value: "\(streak.longestStreak)")
+                            StatCell(label: "Best Streak", value: "\(streak.longestStreak)")
+                            if let rate = completionRate {
+                                Divider().frame(height: 40)
+                                StatCell(label: "7-day Rate", value: "\(Int(rate * 100))%")
+                            }
                         }
                         .background(Color.white)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -135,6 +140,7 @@ struct HabitDetailView: View {
             }
             .background(Color("Stone100").ignoresSafeArea())
             .navigationTitle("Habit Details")
+            .task { await loadCompletionRate() }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -151,6 +157,21 @@ struct HabitDetailView: View {
                 Text("This habit will be archived and removed from your daily view.")
             }
         }
+    }
+
+    private func loadCompletionRate() async {
+        guard let userId = try? await supabase.auth.session.user.id else { return }
+        let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        let logs: [HabitLog] = (try? await supabase
+            .from("habit_logs")
+            .select()
+            .eq("habit_id", value: habit.id.uuidString)
+            .gte("logged_at", value: ISO8601DateFormatter().string(from: weekAgo))
+            .execute()
+            .value) ?? []
+        let _ = userId
+        let done = logs.filter { $0.status == .done }.count
+        await MainActor.run { self.completionRate = Double(done) / 7.0 }
     }
 
     private func timeString(_ date: Date) -> String {
