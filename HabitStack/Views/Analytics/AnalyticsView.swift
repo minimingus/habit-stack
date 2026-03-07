@@ -24,12 +24,25 @@ struct AnalyticsView: View {
                                 .padding(.horizontal, 16)
                         }
 
-                        // Strongest / weakest
+                        // Strongest / weakest (L10 gate)
                         if viewModel.allHabitsStats.count >= 2 {
                             HabitInsightsCard(
                                 strongest: viewModel.strongestHabit,
-                                weakest: viewModel.weakestHabit
+                                weakest: viewModel.weakestHabit,
+                                bestTimeOfDay: (viewModel.profile?.level ?? 0) >= 10 ? viewModel.bestTimeOfDay : nil
                             )
+                            .overlay(alignment: .topTrailing) {
+                                if (viewModel.profile?.level ?? 0) < 10 {
+                                    Label("Unlock at Level 10", systemImage: "lock.fill")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(Color("Stone500"))
+                                        .clipShape(Capsule())
+                                        .padding(8)
+                                }
+                            }
                             .padding(.horizontal, 16)
                         }
 
@@ -85,6 +98,10 @@ struct AnalyticsView: View {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                         } else {
+                            // Monthly chain calendar
+                            StreakCalendarView(calendarData: viewModel.calendarData)
+                                .padding(.horizontal, 16)
+
                             // Heatmap + legend
                             VStack(alignment: .leading, spacing: 8) {
                                 HeatmapView(
@@ -109,6 +126,11 @@ struct AnalyticsView: View {
                                 DayOfWeekChart(data: viewModel.dayOfWeekCounts)
                                     .padding(.horizontal, 16)
                             }
+
+                            // Achievements
+                            AchievementsView()
+                                .padding(.horizontal, 16)
+                                .padding(.bottom, 16)
                         }
                     }
                 }
@@ -188,6 +210,7 @@ private struct WeeklyConsistencyCard: View {
 private struct HabitInsightsCard: View {
     let strongest: (habit: Habit, rate: Double)?
     let weakest: (habit: Habit, rate: Double)?
+    var bestTimeOfDay: Habit.TimeOfDay? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -213,6 +236,21 @@ private struct HabitInsightsCard: View {
                         rate: w.rate,
                         color: .orange
                     )
+                }
+            }
+
+            if let tod = bestTimeOfDay {
+                Divider()
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .foregroundStyle(Color("Teal"))
+                    Text("Best time of day")
+                        .font(.subheadline)
+                        .foregroundStyle(Color("Stone950"))
+                    Spacer()
+                    Text(tod.rawValue.capitalized)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(Color("Teal"))
                 }
             }
         }

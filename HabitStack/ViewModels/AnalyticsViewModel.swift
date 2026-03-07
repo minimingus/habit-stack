@@ -24,6 +24,9 @@ enum CalendarDayStatus {
     var calendarData: [Date: CalendarDayStatus] = [:]
     var bestTimeOfDay: Habit.TimeOfDay? = nil
 
+    // Profile (for level-gated features)
+    var profile: Profile? = nil
+
     // Collected logs across all habits (populated by loadAllHabitsStats)
     private var allLogs: [HabitLog] = []
 
@@ -44,6 +47,14 @@ enum CalendarDayStatus {
             await loadLogs(for: habit, userId: userId)
         }
         await loadAllHabitsStats(userId: userId)
+        if let profileData = try? await supabase
+            .from("profiles")
+            .select()
+            .eq("id", value: userId.uuidString)
+            .single()
+            .execute() {
+            self.profile = try? profileData.value
+        }
         isLoading = false
     }
 
