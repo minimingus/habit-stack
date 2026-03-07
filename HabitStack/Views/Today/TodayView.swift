@@ -3,8 +3,6 @@ import SwiftUI
 struct TodayView: View {
     @State private var viewModel = TodayViewModel()
     @State private var showHabitWizard = false
-    @State private var showTemplateLibrary = false
-    @State private var selectedTemplate: HabitTemplate? = nil
     @State private var editingHabit: Habit?
     @State private var selectedTab: Int = 0
 
@@ -150,26 +148,14 @@ struct TodayView: View {
                 )
             }
             .sheet(isPresented: $showHabitWizard) {
-                HabitWizardView(template: selectedTemplate) {
+                HabitWizardView {
                     Task { await viewModel.loadToday() }
-                }
-            }
-            .sheet(isPresented: $showTemplateLibrary) {
-                HabitTemplateLibraryView { template in
-                    selectedTemplate = template
-                    showTemplateLibrary = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showHabitWizard = true
-                    }
                 }
             }
             .sheet(item: $editingHabit) { habit in
                 HabitWizardView(editingHabit: habit) {
                     Task { await viewModel.loadToday() }
                 }
-            }
-            .onChange(of: showHabitWizard) { _, isShowing in
-                if !isShowing { selectedTemplate = nil }
             }
         }
     }
