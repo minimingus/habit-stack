@@ -160,7 +160,7 @@ private struct LegendSwatch: View {
             sample[d] = offset % 3 == 0 ? .full : offset % 3 == 1 ? .partial : .empty
         }
     }
-    return StreakCalendarView(calendarData: sample)
+    StreakCalendarView(calendarData: sample)
         .padding()
         .background(Color.black)
 }
