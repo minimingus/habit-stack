@@ -35,12 +35,19 @@ struct TodayView: View {
                             }
 
                             // Never Miss Twice banner
-                            if viewModel.showNeverMissTwice {
+                            if viewModel.neverMissTwiceState != .dismissed {
                                 Section {
-                                    NeverMissTwiceBanner(missedCount: viewModel.neverMissTwiceCount) {
-                                        viewModel.showNeverMissTwice = false
-                                        viewModel.neverMissTwiceDismissed = true
-                                    }
+                                    NeverMissTwiceBanner(
+                                        state: viewModel.neverMissTwiceState,
+                                        missedCount: viewModel.neverMissTwiceCount,
+                                        profile: viewModel.profile,
+                                        onDismiss: {
+                                            viewModel.dismissNeverMissTwice()
+                                        },
+                                        onUseShield: {
+                                            Task { await viewModel.spendStreakShield() }
+                                        }
+                                    )
                                     .listRowBackground(Color.clear)
                                     .listRowSeparator(.hidden)
                                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
