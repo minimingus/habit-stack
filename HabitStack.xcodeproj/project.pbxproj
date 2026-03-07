@@ -76,6 +76,7 @@
 		E2F9D2A1AA4B196A58D21459 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80C4128FE58A56F292D713ED /* Secrets.plist */; };
 		E4A5845F747B3AFD4C51C4DE /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABBFAE4A290BB1187820AC7 /* SupabaseClient.swift */; };
 		E65B35E61C13D59A5EF94206 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B741AFCD42DA4B070087E51 /* RootView.swift */; };
+		ED3123161B88F43BBB58EAC0 /* StreakCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */; };
 		EF99FF8AF9C8628A372D5E27 /* WizardStepRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28D29C48C373421DC70178E /* WizardStepRoutineView.swift */; };
 		F6193540B0870A33C91EC388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A28D864C95319FCAEF8C6F8 /* Assets.xcassets */; };
 		F640C7E943AEAC65485A70CF /* HabitTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8161DC404345213FB00BFF8F /* HabitTimerView.swift */; };
@@ -152,6 +153,7 @@
 		BE0E02981840AFC193CC82D4 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		BF1BBAC76D5403D2986F2F7D /* HabitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitService.swift; sourceTree = "<group>"; };
 		C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
+		C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalendarView.swift; sourceTree = "<group>"; };
 		CD291C1BEA57F1097DB22E35 /* HabitWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWizardView.swift; sourceTree = "<group>"; };
 		D320AB53D1D73CD148764A43 /* IdentityStatementBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityStatementBanner.swift; sourceTree = "<group>"; };
 		D333811368CCDA0A7BA218C9 /* StreakCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalculationTests.swift; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 				2B6A9695532242A11BF5EE09 /* AnalyticsView.swift */,
 				78BF875B257BFB51BDF46E89 /* HeatmapView.swift */,
 				626D3291137D7E27A2415FCA /* StreakBarView.swift */,
+				C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -584,6 +587,7 @@
 				5C1E2CBDB290651AEB66D5BC /* Streak.swift in Sources */,
 				B799447D7D8AB01CF969AAC7 /* StreakBadge.swift in Sources */,
 				9EC8BC1F2FF3AB8F656E03C7 /* StreakBarView.swift in Sources */,
+				ED3123161B88F43BBB58EAC0 /* StreakCalendarView.swift in Sources */,
 				7BBB560D1C599914A4CBA6D1 /* StreakService.swift in Sources */,
 				E4A5845F747B3AFD4C51C4DE /* SupabaseClient.swift in Sources */,
 				302D2902E13C14D83133B7E1 /* TodayView.swift in Sources */,
