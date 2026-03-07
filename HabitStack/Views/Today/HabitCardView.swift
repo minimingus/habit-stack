@@ -125,16 +125,15 @@ struct HabitCardView: View {
                     }
                 }
 
-                if habitWithStatus.isCompleted {
-                    Button { showNote = true } label: {
-                        Image(systemName: "pencil.circle")
-                            .font(.title3)
-                            .foregroundStyle(Color("Stone500").opacity(0.6))
-                    }
-                    .buttonStyle(.plain)
-                    .transition(.opacity)
-                    .animation(.easeInOut(duration: 0.3), value: habitWithStatus.isCompleted)
+                Button { showNote = true } label: {
+                    Image(systemName: "pencil.circle")
+                        .font(.title3)
+                        .foregroundStyle(Color("Stone500").opacity(0.6))
                 }
+                .buttonStyle(.plain)
+                .opacity(habitWithStatus.isCompleted ? 1 : 0)
+                .animation(.easeInOut(duration: 0.3), value: habitWithStatus.isCompleted)
+                .allowsHitTesting(habitWithStatus.isCompleted)
             }
         }
         .padding(.vertical, 14)
