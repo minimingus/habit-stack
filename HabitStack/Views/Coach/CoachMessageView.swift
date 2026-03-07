@@ -15,7 +15,7 @@ struct CoachMessageView: View {
                     .foregroundStyle(isUser ? .white : Color("Stone950"))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 10)
-                    .background(isUser ? Color("Teal") : Color.white)
+                    .background(isUser ? Color("Teal") : Color("CardBackground"))
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
 

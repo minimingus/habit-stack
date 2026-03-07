@@ -69,7 +69,7 @@ struct MilestoneCelebrationView: View {
             .padding(.bottom, 48)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white.ignoresSafeArea())
+        .background(Color("AppBackground").ignoresSafeArea())
         .presentationDetents([.large])
     }
 }

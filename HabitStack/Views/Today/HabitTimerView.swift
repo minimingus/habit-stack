@@ -119,7 +119,7 @@ struct HabitTimerView: View {
                 .foregroundStyle(Color("Stone500"))
                 .padding(.bottom, 32)
         }
-        .background(Color("Stone100").ignoresSafeArea())
+        .background(Color("AppBackground").ignoresSafeArea())
         .onAppear { startTimer() }
         .onDisappear { pauseTimer() }
     }

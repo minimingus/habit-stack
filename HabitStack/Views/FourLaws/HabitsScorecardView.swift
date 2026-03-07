@@ -100,9 +100,8 @@ struct HabitsScorecardView: View {
                                 }
                             }
                         }
-                        .background(Color.white)
+                        .background(Color("CardBackground"))
                         .clipShape(RoundedRectangle(cornerRadius: 14))
-                        .shadow(color: .black.opacity(0.05), radius: 3, y: 1)
                         .padding(.horizontal, 16)
                     }
 
@@ -120,7 +119,7 @@ struct HabitsScorecardView: View {
                 }
                 .padding(.vertical, 12)
             }
-            .background(Color("Stone100").ignoresSafeArea())
+            .background(Color("AppBackground").ignoresSafeArea())
             .navigationTitle("Habits Scorecard")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -259,7 +258,7 @@ private struct ScorecardEntryRow: View {
         switch entry.rating {
         case .positive: return Color("TealLight").opacity(0.25)
         case .negative: return Color.red.opacity(0.04)
-        default: return Color.white
+        default: return Color("CardBackground")
         }
     }
 

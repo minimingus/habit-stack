@@ -154,7 +154,7 @@ struct TypingIndicatorView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(Color.white)
+            .background(Color("CardBackground"))
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
             Spacer()

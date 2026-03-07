@@ -78,7 +78,7 @@ struct DailyInsightCard: View {
                 .buttonStyle(.plain)
             }
             .padding(14)
-            .background(Color.white)
+            .background(Color("CardBackground"))
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .shadow(color: .black.opacity(0.04), radius: 2, y: 1)
             .onAppear {

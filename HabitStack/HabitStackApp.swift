@@ -10,6 +10,7 @@ struct HabitStackApp: App {
         WindowGroup {
             RootView()
                 .environment(rootViewModel)
+                .preferredColorScheme(.dark)
                 .onAppear {
                     RevenueCatManager.shared.configure()
                     PostHogSDK.shared.setup(

@@ -79,7 +79,7 @@ struct CompletionNoteSheet: View {
                 Spacer()
             }
             .padding(20)
-            .background(Color("Stone100").ignoresSafeArea())
+            .background(Color("AppBackground").ignoresSafeArea())
             .navigationTitle("\(habitName) ✓")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

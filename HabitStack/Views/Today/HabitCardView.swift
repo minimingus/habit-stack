@@ -133,10 +133,13 @@ struct HabitCardView: View {
         .background(
             habitWithStatus.isCompleted
                 ? accentColor.opacity(0.07)
-                : Color.white
+                : Color("CardBackground")
         )
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(habitWithStatus.isCompleted ? 0 : 0.05), radius: 3, y: 1)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color.white.opacity(0.07), lineWidth: 0.5)
+        )
         .animation(.easeInOut(duration: 0.25), value: habitWithStatus.isCompleted)
         .overlay(alignment: .top) {
             if showConfetti {

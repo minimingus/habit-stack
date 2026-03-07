@@ -171,7 +171,7 @@ private struct HabitStatChip: View {
                 .frame(width: 64)
         }
         .padding(10)
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
     }

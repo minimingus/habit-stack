@@ -114,7 +114,7 @@ struct AnalyticsView: View {
                 }
                 .padding(.vertical, 16)
             }
-            .background(Color("Stone100").ignoresSafeArea())
+            .background(Color("AppBackground").ignoresSafeArea())
             .navigationTitle("Analytics")
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
@@ -177,7 +177,7 @@ private struct WeeklyConsistencyCard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
     }
@@ -217,7 +217,7 @@ private struct HabitInsightsCard: View {
             }
         }
         .padding(16)
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
     }
@@ -327,7 +327,7 @@ struct DayOfWeekChart: View {
             .frame(height: 90)
         }
         .padding(16)
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
     }

@@ -74,14 +74,14 @@ struct HabitTemplateLibraryView: View {
                             }
                         }
                     }
-                    .background(Color.white)
+                    .background(Color("CardBackground"))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
                     .padding(.horizontal, 16)
                 }
                 .padding(.vertical, 16)
             }
-            .background(Color("Stone100").ignoresSafeArea())
+            .background(Color("AppBackground").ignoresSafeArea())
             .navigationTitle("Habit Templates")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -120,7 +120,7 @@ private struct StarterPackCard: View {
             }
             .padding(14)
             .frame(width: 160, alignment: .leading)
-            .background(Color.white)
+            .background(Color("CardBackground"))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
         }
@@ -146,7 +146,7 @@ private struct CategoryChip: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
-            .background(isSelected ? Color("Teal") : Color.white)
+            .background(isSelected ? Color("Teal") : Color("CardBackground"))
             .foregroundStyle(isSelected ? Color.white : Color("Stone950"))
             .clipShape(Capsule())
             .shadow(color: .black.opacity(isSelected ? 0 : 0.05), radius: 2, y: 1)

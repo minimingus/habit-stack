@@ -51,7 +51,6 @@
 		8E499E29A254FF59EC05C01E /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7A8A722C9F2EC4C353CA55 /* OnboardingContainerView.swift */; };
 		94AC5822A7C51019945FF18C /* CoachService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BC17BB1E3610E60641C444 /* CoachService.swift */; };
 		968E77D686857459156C27FD /* FourLawsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07338F47311998F391D4EC6E /* FourLawsView.swift */; };
-		9B46456FF1990C17259B0D99 /* IdentityStatementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA747F46E1839B2B1C4E6EA /* IdentityStatementView.swift */; };
 		9DE198E2D6E34BB70DBB7C5A /* ProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186088F433E12ABBF455C717 /* ProgressRingView.swift */; };
 		9EC8BC1F2FF3AB8F656E03C7 /* StreakBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626D3291137D7E27A2415FCA /* StreakBarView.swift */; };
 		A05D7DD427F54BD78D8EA8C2 /* AdminSpendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888A1DCE8CBBBE5BA56A043 /* AdminSpendView.swift */; };
@@ -59,6 +58,7 @@
 		A1F5D356D590C8EFF6638B2B /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E28FD5D9277B5D7BD52FD /* Habit.swift */; };
 		A3E36FCFC8FD94C41B2CE46C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AD53D3389F721D32D8E745 /* Profile.swift */; };
 		A83394E8F02EE5617CB59735 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37FC117FAD3655F5BAD8921 /* EmptyStateView.swift */; };
+		AA71C4585EE56353DF4785B5 /* ScorecardOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFBD204BDFFFA15857B2768 /* ScorecardOnboardingView.swift */; };
 		B06982BDC325C22BB6A48BEB /* HabitTemplateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8256A93DF268652D46FD372A /* HabitTemplateLibrary.swift */; };
 		B10B2375CC48DB039B27C2E4 /* NotificationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2218FE1A19531D204189D28A /* NotificationPermissionView.swift */; };
 		B799447D7D8AB01CF969AAC7 /* StreakBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3021DAF6DE8A4CD8DCE85FA8 /* StreakBadge.swift */; };
@@ -110,8 +110,8 @@
 		3021DAF6DE8A4CD8DCE85FA8 /* StreakBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBadge.swift; sourceTree = "<group>"; };
 		34DC5E6193FA3DAC935A9EB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		36CF7AD25FC19A87E9CB0B51 /* DailyInsightCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyInsightCard.swift; sourceTree = "<group>"; };
-		3BA747F46E1839B2B1C4E6EA /* IdentityStatementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityStatementView.swift; sourceTree = "<group>"; };
 		3DA90EF2F41E82ACBEBE054B /* WeeklyReflectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflectionView.swift; sourceTree = "<group>"; };
+		3EFBD204BDFFFA15857B2768 /* ScorecardOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardOnboardingView.swift; sourceTree = "<group>"; };
 		40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitGroupView.swift; sourceTree = "<group>"; };
 		4B741AFCD42DA4B070087E51 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5487F060D6880ECB470D226F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -278,9 +278,9 @@
 		89D4B02457DF248928EEB8FA /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				3BA747F46E1839B2B1C4E6EA /* IdentityStatementView.swift */,
 				2218FE1A19531D204189D28A /* NotificationPermissionView.swift */,
 				FE7A8A722C9F2EC4C353CA55 /* OnboardingContainerView.swift */,
+				3EFBD204BDFFFA15857B2768 /* ScorecardOnboardingView.swift */,
 				73C268BA418892607939025B /* WelcomeView.swift */,
 			);
 			path = Onboarding;
@@ -560,7 +560,6 @@
 				4B4CF58799D9246ADDD68697 /* HeatmapView.swift in Sources */,
 				FEA2DDEEDF636F3A08E2AECB /* HoldCompleteButton.swift in Sources */,
 				49F60F45CE88FE31CB00F4A2 /* IdentityStatementBanner.swift in Sources */,
-				9B46456FF1990C17259B0D99 /* IdentityStatementView.swift in Sources */,
 				D073D6E11234F3AA6925EAE7 /* IdentityVote.swift in Sources */,
 				504D7EA641DAF8C6967D1042 /* MilestoneCelebrationView.swift in Sources */,
 				FAE8116E8C03314D17E24D3A /* NeverMissTwiceBanner.swift in Sources */,
@@ -573,6 +572,7 @@
 				337D3BDAA8883A727C91ECA5 /* RevenueCatManager.swift in Sources */,
 				E65B35E61C13D59A5EF94206 /* RootView.swift in Sources */,
 				3270A6B1E3981B71E38631A1 /* ScorecardEntry.swift in Sources */,
+				AA71C4585EE56353DF4785B5 /* ScorecardOnboardingView.swift in Sources */,
 				2F1D4D965CA751693F631C31 /* Secrets.swift in Sources */,
 				CFBCF88339FA659832B9A4D4 /* SettingsView.swift in Sources */,
 				5273D5B700B0BCD9A4B753F6 /* SignUpView.swift in Sources */,

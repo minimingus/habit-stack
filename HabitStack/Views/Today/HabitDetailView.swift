@@ -46,7 +46,7 @@ struct HabitDetailView: View {
                                 StatCell(label: "7-day Rate", value: "\(Int(rate * 100))%")
                             }
                         }
-                        .background(Color.white)
+                        .background(Color("CardBackground"))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
                         .padding(.horizontal, 16)
@@ -85,7 +85,7 @@ struct HabitDetailView: View {
                             ].compactMap { $0?.isEmpty == false ? $0 : nil }
                         )
                     }
-                    .background(Color.white)
+                    .background(Color("CardBackground"))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
                     .padding(.horizontal, 16)
@@ -138,7 +138,7 @@ struct HabitDetailView: View {
                     .padding(.bottom, 24)
                 }
             }
-            .background(Color("Stone100").ignoresSafeArea())
+            .background(Color("AppBackground").ignoresSafeArea())
             .navigationTitle("Habit Details")
             .task { await loadCompletionRate() }
             .navigationBarTitleDisplayMode(.inline)
@@ -234,6 +234,6 @@ private struct LawRow: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(Color.white)
+        .background(Color("CardBackground"))
     }
 }

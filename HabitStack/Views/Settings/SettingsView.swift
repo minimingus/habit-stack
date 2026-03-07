@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(RootViewModel.self) var rootViewModel
     @State private var showSignOutAlert = false
+    @State private var showResetAlert = false
     @State private var showPaywall = false
     @State private var showAdminSpend = false
     @State private var versionTapCount = 0
@@ -62,6 +63,15 @@ struct SettingsView: View {
                     }
                 }
 
+                // Developer
+                Section("Developer") {
+                    Button(role: .destructive) {
+                        showResetAlert = true
+                    } label: {
+                        Label("Reset App Data", systemImage: "trash")
+                    }
+                }
+
                 // About
                 Section("About") {
                     LabeledContent("Version") {
@@ -99,9 +109,24 @@ struct SettingsView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             }
+            .alert("Reset App Data?", isPresented: $showResetAlert) {
+                Button("Reset", role: .destructive) {
+                    Task { await resetAppData() }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Clears all local data and signs you out. You will need to sign in again.")
+            }
             .sheet(isPresented: $showPaywall) { PaywallView() }
             .sheet(isPresented: $showAdminSpend) { AdminSpendView() }
         }
+    }
+
+    private func resetAppData() async {
+        if let bundleId = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleId)
+        }
+        try? await supabase.auth.signOut()
     }
 
     private func loadProfile() async {

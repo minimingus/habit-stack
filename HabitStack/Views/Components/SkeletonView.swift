@@ -35,7 +35,7 @@ struct SkeletonCard: View {
             Spacer()
         }
         .padding(12)
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
         .onAppear {
