@@ -47,14 +47,13 @@ enum CalendarDayStatus {
             await loadLogs(for: habit, userId: userId)
         }
         await loadAllHabitsStats(userId: userId)
-        if let profileData = try? await supabase
+        self.profile = try? await supabase
             .from("profiles")
             .select()
             .eq("id", value: userId.uuidString)
             .single()
-            .execute() {
-            self.profile = try? profileData.value
-        }
+            .execute()
+            .value
         isLoading = false
     }
 
@@ -97,11 +96,9 @@ enum CalendarDayStatus {
         }
 
         let avg = stats.isEmpty ? 0.0 : stats.map { $0.rate }.reduce(0, +) / Double(stats.count)
-        await MainActor.run {
-            self.allLogs = collected
-            self.allHabitsStats = stats.sorted { $0.rate > $1.rate }
-            self.weeklyConsistencyRate = avg
-        }
+        self.allLogs = collected
+        self.allHabitsStats = stats.sorted { $0.rate > $1.rate }
+        self.weeklyConsistencyRate = avg
         await loadCalendarData(userId: userId)
         computeBestTimeOfDay()
     }
@@ -195,9 +192,7 @@ enum CalendarDayStatus {
             result[dayStart] = status
         }
 
-        await MainActor.run {
-            self.calendarData = result
-        }
+        self.calendarData = result
     }
 
     // MARK: - Best Time of Day
