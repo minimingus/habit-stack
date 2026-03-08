@@ -12,6 +12,7 @@ final class HabitService {
 
     private let freeTierHabitLimit = 5
     private let freeTierHistoryDays = 7
+    private static let iso8601 = ISO8601DateFormatter()
 
     func fetchTodayHabits(userId: UUID) async throws -> [HabitWithStatus] {
         let habits: [Habit] = try await supabase
@@ -77,7 +78,7 @@ final class HabitService {
     func archiveHabit(_ habitId: UUID) async throws {
         try await supabase
             .from("habits")
-            .update(["archived_at": ISO8601DateFormatter().string(from: Date())])
+            .update(["archived_at": Self.iso8601.string(from: Date())])
             .eq("id", value: habitId.uuidString)
             .execute()
         NotificationManager.shared.cancelReminder(for: habitId)

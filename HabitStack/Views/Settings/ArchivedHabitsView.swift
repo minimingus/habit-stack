@@ -9,8 +9,12 @@ import SwiftUI
     func load() async {
         isLoading = true
         defer { isLoading = false }
-        guard let userId = try? await supabase.auth.session.user.id else { return }
-        habits = (try? await HabitService.shared.fetchArchivedHabits(userId: userId)) ?? []
+        do {
+            let userId = try await supabase.auth.session.user.id
+            habits = try await HabitService.shared.fetchArchivedHabits(userId: userId)
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     func restore(_ habit: Habit) async {
