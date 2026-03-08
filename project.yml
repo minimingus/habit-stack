@@ -1,6 +1,6 @@
 name: HabitStack
 options:
-  bundleIdPrefix: com.habitstack
+  bundleIdPrefix: com.tomerab
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "16.0"
@@ -37,7 +37,7 @@ targets:
       path: HabitStack/Info.plist
       properties:
         CFBundleName: HabitStack
-        CFBundleIdentifier: com.habitstack.app
+        CFBundleIdentifier: com.tomerab.habitstack
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         UILaunchStoryboardName: LaunchScreen
@@ -48,7 +48,7 @@ targets:
       base:
         SWIFT_VERSION: "5.10"
         DEVELOPMENT_TEAM: FDLSN3ZJFV
-        PRODUCT_BUNDLE_IDENTIFIER: com.habitstack.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack
 
   HabitStackTests:
     type: bundle.unit-test
