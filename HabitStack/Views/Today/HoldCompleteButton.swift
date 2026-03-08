@@ -80,19 +80,17 @@ struct HoldCompleteButton: View {
         timer?.invalidate()
         let interval = 0.02
         let step = interval / 0.6
-        let t = Timer(timeInterval: interval, repeats: true) { [weak self] t in
-            guard let self else { t.invalidate(); return }
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                self.progress = min(1.0, self.progress + step)
-                if self.progress >= 1.0 {
-                    t.invalidate()
-                    self.timer = nil
-                    self.isPressed = false
+        let t = Timer(timeInterval: interval, repeats: true) { _ in
+            Task { @MainActor in
+                progress = min(1.0, progress + step)
+                if progress >= 1.0 {
+                    timer?.invalidate()
+                    timer = nil
+                    isPressed = false
                     HapticManager.impact(.medium)
                     AudioServicesPlaySystemSound(1104)
-                    self.onComplete()
-                    self.scheduleProgressReset()
+                    onComplete()
+                    scheduleProgressReset()
                 }
             }
         }
@@ -102,10 +100,10 @@ struct HoldCompleteButton: View {
 
     private func scheduleProgressReset() {
         resetTask?.cancel()
-        resetTask = Task { @MainActor [weak self] in
+        resetTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: 100_000_000)
-            guard let self, !Task.isCancelled else { return }
-            withAnimation(.spring(duration: 0.3)) { self.progress = 0 }
+            guard !Task.isCancelled else { return }
+            withAnimation(.spring(duration: 0.3)) { progress = 0 }
         }
     }
 

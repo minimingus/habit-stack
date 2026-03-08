@@ -161,12 +161,13 @@ private struct LegendSwatch: View {
 #Preview {
     let cal = Calendar.current
     let today = cal.startOfDay(for: Date())
-    var sample: [Date: CalendarDayStatus] = [:]
-    for offset in 0..<10 {
-        if let d = cal.date(byAdding: .day, value: -offset, to: today) {
-            sample[d] = offset % 3 == 0 ? .full : offset % 3 == 1 ? .partial : .empty
+    let sample: [Date: CalendarDayStatus] = Dictionary(
+        uniqueKeysWithValues: (0..<10).compactMap { offset in
+            cal.date(byAdding: .day, value: -offset, to: today).map { d in
+                (d, offset % 3 == 0 ? CalendarDayStatus.full : offset % 3 == 1 ? .partial : .empty)
+            }
         }
-    }
+    )
     StreakCalendarView(calendarData: sample)
         .padding()
         .background(Color.black)

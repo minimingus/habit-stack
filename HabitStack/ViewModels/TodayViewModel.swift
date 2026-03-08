@@ -233,10 +233,9 @@ final class TodayViewModel {
 
     private func checkComeback() {
         guard neverMissTwiceState == .warning, completedHabits == 1 else { return }
-        withAnimation { neverMissTwiceState = .comeback }
+        neverMissTwiceState = .comeback
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let self else { return }
-            withAnimation { self.neverMissTwiceState = .dismissed }
+            self?.neverMissTwiceState = .dismissed
         }
     }
 
@@ -253,12 +252,9 @@ final class TodayViewModel {
         guard let userId else { return }
         try? await supabase.rpc("spend_streak_shield", params: ["p_user_id": userId.uuidString]).execute()
         await loadToday()
-        await MainActor.run {
-            withAnimation { neverMissTwiceState = .comeback }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                guard let self else { return }
-                withAnimation { self.neverMissTwiceState = .dismissed }
-            }
+        neverMissTwiceState = .comeback
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            self?.neverMissTwiceState = .dismissed
         }
     }
 
