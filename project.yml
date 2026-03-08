@@ -47,7 +47,7 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "5.10"
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: FDLSN3ZJFV
         PRODUCT_BUNDLE_IDENTIFIER: com.habitstack.app
 
   HabitStackTests:

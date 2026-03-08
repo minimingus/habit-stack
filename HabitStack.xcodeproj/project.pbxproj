@@ -481,7 +481,7 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					BAB59418677BF259759EE243 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = FDLSN3ZJFV;
 					};
 				};
 			};
@@ -689,7 +689,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStack/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -725,7 +725,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStack/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
