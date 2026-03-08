@@ -61,3 +61,4 @@ targets:
       base:
         SWIFT_VERSION: "5.10"
         GENERATE_INFOPLIST_FILE: YES
+        DEVELOPMENT_TEAM: FDLSN3ZJFV
