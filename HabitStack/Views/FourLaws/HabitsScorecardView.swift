@@ -20,6 +20,12 @@ struct HabitsScorecardView: View {
         "Evening walk", "Drink water", "Late-night snacking",
     ]
 
+    private var filteredSuggestions: [String] {
+        let q = newBehavior.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return suggestions }
+        return suggestions.filter { $0.localizedCaseInsensitiveContains(q) }
+    }
+
     private var positiveCount: Int { entries.filter { $0.rating == .positive }.count }
     private var neutralCount: Int { entries.filter { $0.rating == .neutral }.count }
     private var negativeCount: Int { entries.filter { $0.rating == .negative }.count }
@@ -57,32 +63,35 @@ struct HabitsScorecardView: View {
                     }
 
                     // Suggestion chips
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(suggestions, id: \.self) { suggestion in
-                                let alreadyAdded = entries.contains { $0.behavior == suggestion }
-                                Button {
-                                    if !alreadyAdded {
-                                        withAnimation {
-                                            entries.append(ScorecardEntry(id: UUID(), behavior: suggestion, rating: nil))
+                    if !filteredSuggestions.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(filteredSuggestions, id: \.self) { suggestion in
+                                    let alreadyAdded = entries.contains { $0.behavior == suggestion }
+                                    Button {
+                                        if !alreadyAdded {
+                                            withAnimation {
+                                                entries.append(ScorecardEntry(id: UUID(), behavior: suggestion, rating: nil))
+                                            }
+                                            ScorecardEntry.save(entries)
+                                            HapticManager.impact(.light)
                                         }
-                                        ScorecardEntry.save(entries)
-                                        HapticManager.impact(.light)
+                                    } label: {
+                                        Text(suggestion)
+                                            .font(.subheadline)
+                                            .foregroundStyle(alreadyAdded ? Color("Stone500").opacity(0.5) : Color("Stone950"))
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 7)
+                                            .background(alreadyAdded ? Color("Stone100").opacity(0.5) : Color("Stone100"))
+                                            .clipShape(Capsule())
                                     }
-                                } label: {
-                                    Text(suggestion)
-                                        .font(.subheadline)
-                                        .foregroundStyle(alreadyAdded ? Color("Stone500").opacity(0.5) : Color("Stone950"))
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 7)
-                                        .background(alreadyAdded ? Color("Stone100").opacity(0.5) : Color("Stone100"))
-                                        .clipShape(Capsule())
+                                    .buttonStyle(.plain)
+                                    .disabled(alreadyAdded)
                                 }
-                                .buttonStyle(.plain)
-                                .disabled(alreadyAdded)
                             }
+                            .animation(.easeInOut(duration: 0.2), value: filteredSuggestions)
+                            .padding(.horizontal, 16)
                         }
-                        .padding(.horizontal, 16)
                     }
 
                     // Entry list

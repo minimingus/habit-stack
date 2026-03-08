@@ -12,6 +12,12 @@ struct WizardStepRewardView: View {
         "5 min of reading",
     ]
 
+    private var filteredRewards: [String] {
+        let q = viewModel.reward.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return Self.rewardSuggestions }
+        return Self.rewardSuggestions.filter { $0.localizedCaseInsensitiveContains(q) }
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -25,22 +31,25 @@ struct WizardStepRewardView: View {
 
                 FormSection(title: "Immediate Reward") {
                     VStack(alignment: .leading, spacing: 10) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(Self.rewardSuggestions, id: \.self) { reward in
-                                    Button {
-                                        viewModel.reward = reward
-                                    } label: {
-                                        Text(reward)
-                                            .font(.subheadline)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 7)
-                                            .background(viewModel.reward == reward ? Color("Teal") : Color("Stone100"))
-                                            .foregroundStyle(viewModel.reward == reward ? .white : Color("Stone950"))
-                                            .clipShape(Capsule())
+                        if !filteredRewards.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(filteredRewards, id: \.self) { reward in
+                                        Button {
+                                            viewModel.reward = reward
+                                        } label: {
+                                            Text(reward)
+                                                .font(.subheadline)
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 7)
+                                                .background(viewModel.reward == reward ? Color("Teal") : Color("Stone100"))
+                                                .foregroundStyle(viewModel.reward == reward ? .white : Color("Stone950"))
+                                                .clipShape(Capsule())
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
                                 }
+                                .animation(.easeInOut(duration: 0.2), value: filteredRewards)
                             }
                         }
                         TextField("Or add a personal reward…", text: $viewModel.reward)

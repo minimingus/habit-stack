@@ -14,6 +14,12 @@ struct WizardStepCravingView: View {
         "learns continuously",
     ]
 
+    private var filteredIdentities: [String] {
+        let q = viewModel.craving.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return Self.identitySuggestions }
+        return Self.identitySuggestions.filter { $0.localizedCaseInsensitiveContains(q) }
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -27,22 +33,25 @@ struct WizardStepCravingView: View {
 
                 FormSection(title: "I am becoming the type of person who…") {
                     VStack(alignment: .leading, spacing: 10) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(Self.identitySuggestions, id: \.self) { suggestion in
-                                    Button {
-                                        viewModel.craving = suggestion
-                                    } label: {
-                                        Text(suggestion)
-                                            .font(.subheadline)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 7)
-                                            .background(viewModel.craving == suggestion ? Color("Teal") : Color("Stone100"))
-                                            .foregroundStyle(viewModel.craving == suggestion ? .white : Color("Stone950"))
-                                            .clipShape(Capsule())
+                        if !filteredIdentities.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(filteredIdentities, id: \.self) { suggestion in
+                                        Button {
+                                            viewModel.craving = suggestion
+                                        } label: {
+                                            Text(suggestion)
+                                                .font(.subheadline)
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 7)
+                                                .background(viewModel.craving == suggestion ? Color("Teal") : Color("Stone100"))
+                                                .foregroundStyle(viewModel.craving == suggestion ? .white : Color("Stone950"))
+                                                .clipShape(Capsule())
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
                                 }
+                                .animation(.easeInOut(duration: 0.2), value: filteredIdentities)
                             }
                         }
                         TextField("Or add a personal identity…", text: $viewModel.craving)
