@@ -47,6 +47,7 @@
 		69D41D1BBBE30970597B9BC4 /* HabitTemplateLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2AB016818D0FB56E202366 /* HabitTemplateLibraryView.swift */; };
 		6DD7B6E603B0253E3E41C025 /* Secrets.example.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */; };
 		6E95083A105E86F942A0786F /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99311980A85509AB5E78DA /* AuthView.swift */; };
+		6F35AEF61E62E81FA7234A29 /* ArchivedHabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68772CACACD02DE7B5F4C05 /* ArchivedHabitsView.swift */; };
 		72A034D36C5F502C4A2B796B /* HabitWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD291C1BEA57F1097DB22E35 /* HabitWizardView.swift */; };
 		7BBB560D1C599914A4CBA6D1 /* StreakService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7009EA0C484B59A8366E25 /* StreakService.swift */; };
 		8E499E29A254FF59EC05C01E /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7A8A722C9F2EC4C353CA55 /* OnboardingContainerView.swift */; };
@@ -152,6 +153,7 @@
 		A8AFE8166EBAD62E550456DC /* CoachMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMessage.swift; sourceTree = "<group>"; };
 		ACE3C2B8DAA04AF39ABA92F8 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		AF7BC4B416240934E80EB921 /* HabitTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTemplate.swift; sourceTree = "<group>"; };
+		B68772CACACD02DE7B5F4C05 /* ArchivedHabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedHabitsView.swift; sourceTree = "<group>"; };
 		BE0E02981840AFC193CC82D4 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		BF1BBAC76D5403D2986F2F7D /* HabitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitService.swift; sourceTree = "<group>"; };
 		C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				9888A1DCE8CBBBE5BA56A043 /* AdminSpendView.swift */,
+				B68772CACACD02DE7B5F4C05 /* ArchivedHabitsView.swift */,
 				20BAE61EE75FF2E3DA6BD9C2 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -538,6 +541,7 @@
 				A05D7DD427F54BD78D8EA8C2 /* AdminSpendView.swift in Sources */,
 				3E4C06587E482120DBB98066 /* AnalyticsView.swift in Sources */,
 				439A9EBB8783546C0F535AE5 /* AnalyticsViewModel.swift in Sources */,
+				6F35AEF61E62E81FA7234A29 /* ArchivedHabitsView.swift in Sources */,
 				6E95083A105E86F942A0786F /* AuthView.swift in Sources */,
 				63B1C3768BBEF80A1E30D447 /* CheckButton.swift in Sources */,
 				60418B4F938E97625EF932BC /* CoachMessage.swift in Sources */,

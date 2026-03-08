@@ -63,6 +63,13 @@ struct SettingsView: View {
                     }
                 }
 
+                // Data
+                Section("Data") {
+                    NavigationLink("Archived Habits") {
+                        ArchivedHabitsView()
+                    }
+                }
+
                 // Developer
                 Section("Developer") {
                     Button(role: .destructive) {

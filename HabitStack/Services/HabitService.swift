@@ -83,6 +83,25 @@ final class HabitService {
         NotificationManager.shared.cancelReminder(for: habitId)
     }
 
+    func fetchArchivedHabits(userId: UUID) async throws -> [Habit] {
+        return try await supabase
+            .from("habits")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .not("archived_at", operator: .is, value: "null")
+            .order("archived_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    func restoreHabit(_ habitId: UUID) async throws {
+        try await supabase
+            .from("habits")
+            .update(["archived_at": nil as String?])
+            .eq("id", value: habitId.uuidString)
+            .execute()
+    }
+
     func logHabit(habitId: UUID, userId: UUID, status: HabitLog.Status) async throws {
         let log = HabitLog(
             id: UUID(),
