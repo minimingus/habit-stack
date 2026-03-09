@@ -18,9 +18,13 @@ final class HabitWizardViewModel {
     var tinyVersion: String = ""
     var anchorHabitId: UUID? = nil
     var frequency: Habit.Frequency = .daily
+    // Custom frequency: set of weekday ints (1=Sun, 2=Mon … 7=Sat, matching Calendar.weekday)
+    var customDays: Set<Int> = [2, 3, 4, 5, 6]   // Mon–Fri default
     var timeOfDay: Habit.TimeOfDay = .allDay
     var reminderEnabled: Bool = false
     var reminderTime: Date = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
+    // Up to 2 extra reminders (in addition to the primary reminderTime)
+    var extraReminderTimes: [Date] = []
     var durationEnabled: Bool = false
     var durationMinutes: Int = 10
     var isQuantified: Bool = false
@@ -32,6 +36,7 @@ final class HabitWizardViewModel {
     var editingHabitId: UUID?
     var isSaving: Bool = false
     var errorMessage: String?
+    var savedHabitId: UUID?
     var suggestedCues: [String] = []
     var replacingBehavior: String? = nil
 
@@ -68,6 +73,12 @@ final class HabitWizardViewModel {
         timeOfDay = habit.timeOfDay
         reminderEnabled = habit.reminderEnabled
         if let rt = habit.reminderTime { reminderTime = rt }
+        if let days = UserDefaults.standard.array(forKey: "customDays_\(habit.id.uuidString)") as? [Int] {
+            customDays = Set(days)
+        }
+        if let extras = UserDefaults.standard.array(forKey: "extraReminders_\(habit.id.uuidString)") as? [Double] {
+            extraReminderTimes = extras.map { Date(timeIntervalSince1970: $0) }
+        }
         let saved = UserDefaults.standard.integer(forKey: "habitDuration_\(habit.id.uuidString)")
         if saved > 0 { durationEnabled = true; durationMinutes = saved }
         isQuantified = UserDefaults.standard.bool(forKey: "habitQuantified_\(habit.id.uuidString)")
@@ -108,8 +119,10 @@ final class HabitWizardViewModel {
     }
 
     func save(userId: UUID) async throws {
+        let habitId = editingHabitId ?? UUID()
+        savedHabitId = habitId
         let habit = Habit(
-            id: editingHabitId ?? UUID(),
+            id: habitId,
             userId: userId,
             name: name.trimmingCharacters(in: .whitespaces),
             emoji: emoji,
@@ -148,6 +161,19 @@ final class HabitWizardViewModel {
         } else {
             UserDefaults.standard.removeObject(forKey: "habitQuantified_\(habit.id.uuidString)")
             UserDefaults.standard.removeObject(forKey: "habitTargetCount_\(habit.id.uuidString)")
+        }
+
+        if frequency == .custom {
+            UserDefaults.standard.set(Array(customDays), forKey: "customDays_\(habit.id.uuidString)")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "customDays_\(habit.id.uuidString)")
+        }
+
+        let extraKey = "extraReminders_\(habit.id.uuidString)"
+        if reminderEnabled && !extraReminderTimes.isEmpty {
+            UserDefaults.standard.set(extraReminderTimes.map { $0.timeIntervalSince1970 }, forKey: extraKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: extraKey)
         }
     }
 }

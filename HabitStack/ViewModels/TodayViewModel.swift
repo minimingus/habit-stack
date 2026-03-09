@@ -89,7 +89,10 @@ final class TodayViewModel {
             let now = Date()
             await MainActor.run {
                 self.streaks = Dictionary(uniqueKeysWithValues: allStreaks.map { ($0.habitId, $0) })
-                let active = habits.filter { $0.habit.pausedUntil == nil || $0.habit.pausedUntil! <= now }
+                let active = habits.filter {
+                    ($0.habit.pausedUntil == nil || $0.habit.pausedUntil! <= now) &&
+                    self.isScheduledToday($0.habit)
+                }
                 self.pausedHabits = habits
                     .filter { $0.habit.pausedUntil != nil && $0.habit.pausedUntil! > now }
                     .map { $0.habit }
@@ -280,6 +283,20 @@ final class TodayViewModel {
             if let hour = typicalCompletionHour(for: hw.habit.id) {
                 NotificationManager.shared.schedulePredictiveNudge(for: hw.habit, typicalHour: hour)
             }
+        }
+    }
+
+    // MARK: - Frequency filter
+
+    private func isScheduledToday(_ habit: Habit) -> Bool {
+        let weekday = Calendar.current.component(.weekday, from: Date()) // 1=Sun…7=Sat
+        switch habit.frequency {
+        case .daily:    return true
+        case .weekdays: return weekday >= 2 && weekday <= 6
+        case .weekends: return weekday == 1 || weekday == 7
+        case .custom:
+            let days = UserDefaults.standard.array(forKey: "customDays_\(habit.id.uuidString)") as? [Int] ?? []
+            return days.isEmpty || days.contains(weekday)
         }
     }
 

@@ -9,11 +9,11 @@ struct CompletionNoteSheet: View {
     @State private var note = ""
     @FocusState private var focused: Bool
 
-    private static let quickOptions = [
-        ("💪", "Crushed it"),
-        ("😌", "Felt good"),
-        ("😤", "Tough but done"),
-        ("😐", "Just checked it off"),
+    private static let quickOptions: [(symbol: String, color: Color, label: String)] = [
+        ("flame.fill",           .orange,          "Crushed it"),
+        ("hand.thumbsup.fill",   Color("Teal"),    "Felt good"),
+        ("bolt.fill",            .yellow,           "Tough but done"),
+        ("checkmark.circle",     Color("Stone500"), "Just checked it off"),
     ]
 
     private var noteKey: String {
@@ -32,27 +32,29 @@ struct CompletionNoteSheet: View {
                         .foregroundStyle(Color("Stone500"))
 
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                        ForEach(Self.quickOptions, id: \.1) { emoji, label in
+                        ForEach(Self.quickOptions, id: \.label) { option in
                             Button {
-                                note = "\(emoji) \(label)"
+                                note = option.label
                                 save()
                             } label: {
                                 HStack(spacing: 8) {
-                                    Text(emoji).font(.title3)
-                                    Text(label)
+                                    Image(systemName: option.symbol)
+                                        .font(.title3)
+                                        .foregroundStyle(option.color)
+                                    Text(option.label)
                                         .font(.subheadline)
                                         .foregroundStyle(Color("Stone950"))
                                     Spacer()
                                 }
                                 .padding(12)
                                 .background(
-                                    note.contains(label) ? Color("TealLight") : Color("Stone100")
+                                    note.contains(option.label) ? Color("TealLight") : Color("Stone100")
                                 )
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 10)
                                         .strokeBorder(
-                                            note.contains(label) ? Color("Teal") : Color.clear,
+                                            note.contains(option.label) ? Color("Teal") : Color.clear,
                                             lineWidth: 1.5
                                         )
                                 )

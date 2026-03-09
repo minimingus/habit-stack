@@ -4,6 +4,11 @@ struct WizardStepRoutineView: View {
     @Bindable var viewModel: HabitWizardViewModel
 
     var body: some View {
+    // Calendar weekday convention: 1=Sun, 2=Mon … 7=Sat
+    private static let weekdays: [(label: String, value: Int)] = [
+        ("S", 1), ("M", 2), ("T", 3), ("W", 4), ("T", 5), ("F", 6), ("S", 7)
+    ]
+
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -55,12 +60,20 @@ struct WizardStepRoutineView: View {
                 }
 
                 FormSection(title: "Frequency") {
-                    Picker("Frequency", selection: $viewModel.frequency) {
-                        ForEach(Habit.Frequency.allCases, id: \.self) { f in
-                            Text(f.rawValue.capitalized).tag(f)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Picker("Frequency", selection: $viewModel.frequency) {
+                            ForEach(Habit.Frequency.allCases, id: \.self) { f in
+                                Text(f.rawValue.capitalized).tag(f)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+
+                        if viewModel.frequency == .custom {
+                            CustomDayPicker(selectedDays: $viewModel.customDays)
+                                .transition(.opacity.combined(with: .move(edge: .top)))
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .animation(.easeInOut(duration: 0.2), value: viewModel.frequency)
                 }
 
                 FormSection(title: "Timer (optional)") {
@@ -94,6 +107,50 @@ struct WizardStepRoutineView: View {
                 }
             }
             .padding(24)
+        }
+    }
+}
+
+// MARK: - Custom Day Picker
+
+private struct CustomDayPicker: View {
+    @Binding var selectedDays: Set<Int>
+
+    // 1=Sun, 2=Mon … 7=Sat
+    private let days: [(label: String, value: Int)] = [
+        ("S", 1), ("M", 2), ("T", 3), ("W", 4), ("T", 5), ("F", 6), ("S", 7)
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Select days")
+                .font(.caption)
+                .foregroundStyle(Color("Stone500"))
+            HStack(spacing: 6) {
+                ForEach(days, id: \.value) { day in
+                    let selected = selectedDays.contains(day.value)
+                    Button {
+                        if selected {
+                            selectedDays.remove(day.value)
+                        } else {
+                            selectedDays.insert(day.value)
+                        }
+                    } label: {
+                        Text(day.label)
+                            .font(.caption.bold())
+                            .frame(width: 34, height: 34)
+                            .background(selected ? Color("Teal") : Color("Stone100"))
+                            .foregroundStyle(selected ? .white : Color("Stone500"))
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            if selectedDays.isEmpty {
+                Text("Select at least one day")
+                    .font(.caption)
+                    .foregroundStyle(.red.opacity(0.7))
+            }
         }
     }
 }

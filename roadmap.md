@@ -9,10 +9,11 @@ Status: ✅ Done · 🔄 In Progress · ⬜ Planned
 
 | Status | Feature | Notes |
 |--------|---------|-------|
-| ⬜ | Multiple reminders per habit | Wizard Step 4 allows adding 2–3 reminder times; stored as array in DB; each scheduled independently |
-| ⬜ | Fix "Custom" frequency | Currently a no-op; should open a day-picker (Mon/Tue/Wed…) and store selected days; habit only appears on chosen days |
-| ⬜ | "Crushing it" / mood feedback response | After user rates weekly reflection or mood, app responds with a contextual message or animation (not silent) |
-| ⬜ | Hold-to-complete increments count by 1 | For count-based habits, hold gesture should add 1 to count (not jump to target); removes surprise full-completion |
+| ✅ | Multiple reminders per habit | Wizard Step 4 allows adding up to 2 extra reminder times; stored in UserDefaults; each scheduled independently |
+| ✅ | Fix "Custom" frequency | CustomDayPicker (S M T W T F S) in wizard; stored in UserDefaults; TodayViewModel filters by isScheduledToday |
+| ✅ | "Crushing it" / mood feedback response | WeekMood enum (crushing/good/tough/rough) with SF Symbol, ReflectionResponseView with contextual message |
+| ✅ | Hold-to-complete increments count by 1 | Hold gesture adds 1 to currentCount for quantified habits; auto-completes at target |
+| ⬜ | Old habits → new habits transition | Scorecard "no habits" bug: after onboarding scorecard, Today shows no habits (wizard creates one but page is empty); surface old/bad habits as candidates for replacement; Atomic Habits: replace the old routine, keep the same cue+reward |
 
 ---
 

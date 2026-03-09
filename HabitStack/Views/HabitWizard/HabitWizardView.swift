@@ -126,6 +126,16 @@ struct HabitWizardView: View {
         viewModel.isSaving = true
         do {
             try await viewModel.save(userId: userId)
+            // Schedule extra reminders after successful save
+            if viewModel.reminderEnabled, let habitId = viewModel.savedHabitId,
+               !viewModel.extraReminderTimes.isEmpty {
+                let habits = try? await supabase
+                    .from("habits").select().eq("id", value: habitId.uuidString)
+                    .limit(1).execute().value as [Habit]
+                if let habit = habits?.first {
+                    NotificationManager.shared.scheduleExtraReminders(for: habit, times: viewModel.extraReminderTimes)
+                }
+            }
             await MainActor.run {
                 if !viewModel.isEditing {
                     envTipText = environmentTip(name: viewModel.name, cue: viewModel.cue)

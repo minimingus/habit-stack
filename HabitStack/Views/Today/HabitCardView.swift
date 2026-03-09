@@ -242,11 +242,16 @@ struct HabitCardView: View {
                 isCompleted: habitWithStatus.isCompleted,
                 accentColor: accentColor,
                 onComplete: {
-                    currentCount = targetCount
+                    // Hold adds 1 (same as tapping +); auto-completes when target is reached
+                    guard currentCount < targetCount else { return }
+                    currentCount += 1
                     UserDefaults.standard.set(currentCount, forKey: todayCountKey)
-                    onToggle()
-                    withAnimation { showConfetti = true }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { showConfetti = false }
+                    HapticManager.impact(.light)
+                    if currentCount >= targetCount && !habitWithStatus.isCompleted {
+                        onToggle()
+                        withAnimation { showConfetti = true }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { showConfetti = false }
+                    }
                 },
                 onUncomplete: {
                     currentCount = 0

@@ -51,23 +51,60 @@ struct WizardStepRewardView: View {
                     }
                 }
 
-                FormSection(title: "Reminder") {
+                FormSection(title: "Reminders") {
                     VStack(alignment: .leading, spacing: 12) {
                         Toggle("Enable daily reminder", isOn: $viewModel.reminderEnabled)
                             .tint(Color("Teal"))
 
                         if viewModel.reminderEnabled {
                             DatePicker(
-                                "Reminder time",
+                                "Primary time",
                                 selection: $viewModel.reminderTime,
                                 displayedComponents: .hourAndMinute
                             )
                             .tint(Color("Teal"))
+
+                            ForEach(viewModel.extraReminderTimes.indices, id: \.self) { index in
+                                HStack {
+                                    DatePicker(
+                                        "Extra #\(index + 1)",
+                                        selection: Binding(
+                                            get: { viewModel.extraReminderTimes[index] },
+                                            set: { viewModel.extraReminderTimes[index] = $0 }
+                                        ),
+                                        displayedComponents: .hourAndMinute
+                                    )
+                                    .tint(Color("Teal"))
+                                    Button {
+                                        viewModel.extraReminderTimes.remove(at: index)
+                                    } label: {
+                                        Image(systemName: "minus.circle.fill")
+                                            .foregroundStyle(.red.opacity(0.7))
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+
+                            if viewModel.extraReminderTimes.count < 2 {
+                                Button {
+                                    let next = Calendar.current.date(
+                                        byAdding: .hour, value: 1,
+                                        to: viewModel.extraReminderTimes.last ?? viewModel.reminderTime
+                                    ) ?? viewModel.reminderTime
+                                    viewModel.extraReminderTimes.append(next)
+                                } label: {
+                                    Label("Add another reminder", systemImage: "plus.circle")
+                                        .font(.subheadline)
+                                        .foregroundStyle(Color("Teal"))
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
                     .padding()
                     .background(Color("Stone100"))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .animation(.easeInOut(duration: 0.2), value: viewModel.extraReminderTimes.count)
                 }
             }
             .padding(24)

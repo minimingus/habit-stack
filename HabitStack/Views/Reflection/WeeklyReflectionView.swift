@@ -1,5 +1,39 @@
 import SwiftUI
 
+private enum WeekMood: String, CaseIterable {
+    case crushing  = "Crushing it 🔥"
+    case good      = "Felt good 👍"
+    case tough     = "Tough week 💪"
+    case rough     = "Rough week 😓"
+
+    var symbol: String {
+        switch self {
+        case .crushing: return "flame.fill"
+        case .good:     return "hand.thumbsup.fill"
+        case .tough:    return "bolt.fill"
+        case .rough:    return "cloud.rain.fill"
+        }
+    }
+
+    var symbolColor: Color {
+        switch self {
+        case .crushing: return .orange
+        case .good:     return Color("Teal")
+        case .tough:    return .yellow
+        case .rough:    return Color("Stone500")
+        }
+    }
+
+    var response: String {
+        switch self {
+        case .crushing: return "That's the compound effect in action. Keep stacking those reps — your future self is watching."
+        case .good:     return "Consistency over intensity, every time. You showed up and that's what builds identity."
+        case .tough:    return "Grit is a skill. You practised it this week. Hard weeks make easy weeks possible."
+        case .rough:    return "Every champion has off weeks. The rule is simple: never miss twice. You've already started."
+        }
+    }
+}
+
 struct WeeklyReflectionView: View {
     let habitStats: [(name: String, emoji: String, completionRate: Double)]
     let onDismiss: () -> Void
@@ -8,11 +42,21 @@ struct WeeklyReflectionView: View {
     @State private var easiest = ""
     @State private var hardest = ""
     @State private var adjustment = ""
+    @State private var selectedMood: WeekMood? = nil
+    @State private var savedMood: WeekMood? = nil   // non-nil = show response screen
     @FocusState private var focusedField: Field?
 
     private enum Field { case easiest, hardest, adjustment }
 
     var body: some View {
+        if let mood = savedMood {
+            ReflectionResponseView(mood: mood, onDone: onDismiss)
+        } else {
+            formBody
+        }
+    }
+
+    private var formBody: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
@@ -27,6 +71,43 @@ struct WeeklyReflectionView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
+
+                    // Mood picker
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("How was your week overall?")
+                            .font(.headline)
+                            .padding(.horizontal, 20)
+                        LazyVGrid(
+                            columns: [GridItem(.flexible()), GridItem(.flexible())],
+                            spacing: 10
+                        ) {
+                            ForEach(WeekMood.allCases, id: \.self) { mood in
+                                Button { selectedMood = mood } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: mood.symbol)
+                                            .foregroundStyle(mood.symbolColor)
+                                        Text(mood.rawValue)
+                                            .font(.subheadline)
+                                            .foregroundStyle(Color("Stone950"))
+                                        Spacer()
+                                    }
+                                    .padding(12)
+                                    .background(selectedMood == mood ? Color("TealLight") : Color("Stone100"))
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(
+                                                selectedMood == mood ? Color("Teal") : Color.clear,
+                                                lineWidth: 1.5
+                                            )
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .animation(.easeInOut(duration: 0.15), value: selectedMood)
+                    }
 
                     // Completion stats
                     if !habitStats.isEmpty {
@@ -105,11 +186,11 @@ struct WeeklyReflectionView: View {
     }
 
     private func save() {
-        // Store answers locally in UserDefaults
         let reflection: [String: String] = [
             "easiest": easiest,
             "hardest": hardest,
             "adjustment": adjustment,
+            "mood": selectedMood?.rawValue ?? "",
             "date": ISO8601DateFormatter().string(from: Date())
         ]
         var history = UserDefaults.standard.array(forKey: "weeklyReflections") as? [[String: String]] ?? []
@@ -117,7 +198,59 @@ struct WeeklyReflectionView: View {
         UserDefaults.standard.set(history, forKey: "weeklyReflections")
         UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "lastWeeklyReflectionDate")
         HapticManager.notification(.success)
-        onDismiss()
+        if let mood = selectedMood {
+            savedMood = mood   // show response screen
+        } else {
+            onDismiss()
+        }
+    }
+}
+
+// MARK: - Response screen
+
+private struct ReflectionResponseView: View {
+    let mood: WeekMood
+    let onDone: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            VStack(spacing: 20) {
+                ZStack {
+                    Circle()
+                        .fill(mood.symbolColor.opacity(0.15))
+                        .frame(width: 80, height: 80)
+                    Image(systemName: mood.symbol)
+                        .font(.system(size: 34))
+                        .foregroundStyle(mood.symbolColor)
+                }
+
+                VStack(spacing: 10) {
+                    Text(mood.rawValue)
+                        .font(.title2.bold())
+                        .foregroundStyle(Color("Stone950"))
+                    Text(mood.response)
+                        .font(.body)
+                        .foregroundStyle(Color("Stone500"))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                }
+            }
+            .padding(.horizontal, 32)
+
+            Spacer()
+
+            Button("Done", action: onDone)
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color("Teal"))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .padding(.horizontal, 32)
+                .padding(.bottom, 48)
+        }
+        .background(Color("AppBackground").ignoresSafeArea())
     }
 }
 

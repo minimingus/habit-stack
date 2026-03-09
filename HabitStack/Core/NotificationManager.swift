@@ -146,6 +146,38 @@ final class NotificationManager {
         center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
     }
 
+    // MARK: - Extra reminders
+
+    func scheduleExtraReminders(for habit: Habit, times: [Date], streak: Streak? = nil) {
+        cancelExtraReminders(for: habit.id)
+        for (index, time) in times.prefix(2).enumerated() {
+            let content = UNMutableNotificationContent()
+            content.title = "\(habit.emoji) \(habit.name)"
+            if let streak, streak.currentStreak > 0 {
+                content.body = "Don't break your \(streak.currentStreak)-day streak!"
+            } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
+                content.body = "Takes just 2 minutes: \(tiny)"
+            } else {
+                content.body = "Time for your habit!"
+            }
+            content.sound = .default
+            var components = Calendar.current.dateComponents([.hour, .minute], from: time)
+            components.second = 0
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            let request = UNNotificationRequest(
+                identifier: "extra_reminder_\(habit.id.uuidString)_\(index)",
+                content: content,
+                trigger: trigger
+            )
+            UNUserNotificationCenter.current().add(request)
+        }
+    }
+
+    func cancelExtraReminders(for habitId: UUID) {
+        let identifiers = (0..<2).map { "extra_reminder_\(habitId.uuidString)_\($0)" }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+    }
+
     func cancelPredictiveNudge(for habitId: UUID) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(
             withIdentifiers: ["predictive_nudge_\(habitId.uuidString)"]
