@@ -34,25 +34,17 @@ struct WizardStepCravingView: View {
                 FormSection(title: "I am becoming the type of person who…") {
                     VStack(alignment: .leading, spacing: 10) {
                         if !filteredIdentities.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(filteredIdentities, id: \.self) { suggestion in
-                                        Button {
-                                            viewModel.craving = suggestion
-                                        } label: {
-                                            Text(suggestion)
-                                                .font(.subheadline)
-                                                .padding(.horizontal, 12)
-                                                .padding(.vertical, 7)
-                                                .background(viewModel.craving == suggestion ? Color("Teal") : Color("Stone100"))
-                                                .foregroundStyle(viewModel.craving == suggestion ? .white : Color("Stone950"))
-                                                .clipShape(Capsule())
-                                        }
-                                        .buttonStyle(.plain)
+                            ChipGrid(spacing: 8) {
+                                ForEach(filteredIdentities, id: \.self) { suggestion in
+                                    SuggestionChip(
+                                        label: suggestion,
+                                        isSelected: viewModel.craving == suggestion
+                                    ) {
+                                        viewModel.craving = suggestion
                                     }
                                 }
-                                .animation(.easeInOut(duration: 0.2), value: filteredIdentities)
                             }
+                            .animation(.easeInOut(duration: 0.2), value: filteredIdentities)
                         }
                         TextField("Or add a personal identity…", text: $viewModel.craving)
                             .padding()

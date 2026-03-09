@@ -2,15 +2,18 @@ import SwiftUI
 
 struct HabitTemplateLibraryView: View {
     let onSelect: (HabitTemplate) -> Void
+    var activeHabitNames: Set<String> = []
     @Environment(\.dismiss) private var dismiss
 
     @State private var selectedCategory: HabitCategory? = nil
 
+    private func isActive(_ template: HabitTemplate) -> Bool {
+        activeHabitNames.contains(template.name.lowercased())
+    }
+
     private var filteredTemplates: [HabitTemplate] {
-        if let category = selectedCategory {
-            return HabitTemplateLibrary.templates(for: category)
-        }
-        return HabitTemplateLibrary.all
+        let base = selectedCategory.map { HabitTemplateLibrary.templates(for: $0) } ?? HabitTemplateLibrary.all
+        return base.filter { !isActive($0) }
     }
 
     var body: some View {
@@ -30,11 +33,13 @@ struct HabitTemplateLibraryView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
                                 ForEach(HabitTemplateLibrary.starterPacks) { pack in
-                                    StarterPackCard(pack: pack) {
-                                        // Select first template from pack as entry point
-                                        if let first = pack.templates.first {
-                                            onSelect(first)
-                                            dismiss()
+                                    let available = pack.templates.filter { !isActive($0) }
+                                    if !available.isEmpty {
+                                        StarterPackCard(pack: pack) {
+                                            if let first = available.first {
+                                                onSelect(first)
+                                                dismiss()
+                                            }
                                         }
                                     }
                                 }

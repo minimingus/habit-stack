@@ -222,33 +222,41 @@ struct HabitCardView: View {
     @ViewBuilder
     private var quantifiedButton: some View {
         VStack(spacing: 4) {
-            ZStack {
-                Circle()
-                    .stroke(Color("Stone100"), lineWidth: 3)
-                    .frame(width: 56, height: 56)
-
-                Circle()
-                    .trim(from: 0, to: min(1.0, Double(currentCount) / Double(targetCount)))
-                    .stroke(accentColor, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                    .frame(width: 56, height: 56)
-                    .animation(.easeInOut(duration: 0.2), value: currentCount)
-
-                if habitWithStatus.isCompleted {
-                    Image(systemName: "checkmark")
-                        .font(.title3.bold())
-                        .foregroundStyle(accentColor)
-                } else {
-                    VStack(spacing: 0) {
-                        Text("\(currentCount)")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(Color("Stone950"))
-                        Text("/\(targetCount)")
-                            .font(.system(size: 10))
-                            .foregroundStyle(Color("Stone500"))
+            HoldCompleteButton(
+                isCompleted: habitWithStatus.isCompleted,
+                accentColor: accentColor,
+                onComplete: {
+                    currentCount = targetCount
+                    UserDefaults.standard.set(currentCount, forKey: todayCountKey)
+                    onToggle()
+                    withAnimation { showConfetti = true }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { showConfetti = false }
+                },
+                onUncomplete: {
+                    currentCount = 0
+                    UserDefaults.standard.set(currentCount, forKey: todayCountKey)
+                    onToggle()
+                },
+                backgroundProgress: min(1.0, Double(currentCount) / Double(targetCount)),
+                centerLabel: AnyView(
+                    Group {
+                        if habitWithStatus.isCompleted {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundStyle(Color.white)
+                        } else {
+                            VStack(spacing: 0) {
+                                Text("\(currentCount)")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundStyle(Color("Stone950"))
+                                Text("/\(targetCount)")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(Color("Stone500"))
+                            }
+                        }
                     }
-                }
-            }
+                )
+            )
 
             HStack(spacing: 14) {
                 Button {

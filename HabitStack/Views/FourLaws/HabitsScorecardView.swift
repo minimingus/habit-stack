@@ -64,34 +64,40 @@ struct HabitsScorecardView: View {
 
                     // Suggestion chips
                     if !filteredSuggestions.isEmpty {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(filteredSuggestions, id: \.self) { suggestion in
-                                    let alreadyAdded = entries.contains { $0.behavior == suggestion }
-                                    Button {
-                                        if !alreadyAdded {
-                                            withAnimation {
-                                                entries.append(ScorecardEntry(id: UUID(), behavior: suggestion, rating: nil))
-                                            }
-                                            ScorecardEntry.save(entries)
-                                            HapticManager.impact(.light)
+                        ChipGrid(spacing: 8) {
+                            ForEach(filteredSuggestions, id: \.self) { suggestion in
+                                let alreadyAdded = entries.contains { $0.behavior == suggestion }
+                                Button {
+                                    if !alreadyAdded {
+                                        withAnimation {
+                                            entries.append(ScorecardEntry(id: UUID(), behavior: suggestion, rating: nil))
                                         }
-                                    } label: {
+                                        ScorecardEntry.save(entries)
+                                        HapticManager.impact(.light)
+                                    }
+                                } label: {
+                                    HStack(spacing: 5) {
+                                        if alreadyAdded {
+                                            Image(systemName: "checkmark")
+                                                .font(.caption2.bold())
+                                        }
                                         Text(suggestion)
                                             .font(.subheadline)
-                                            .foregroundStyle(alreadyAdded ? Color("Stone500").opacity(0.5) : Color("Stone950"))
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 7)
-                                            .background(alreadyAdded ? Color("Stone100").opacity(0.5) : Color("Stone100"))
-                                            .clipShape(Capsule())
+                                            .fontWeight(alreadyAdded ? .semibold : .regular)
                                     }
-                                    .buttonStyle(.plain)
-                                    .disabled(alreadyAdded)
+                                    .foregroundStyle(alreadyAdded ? Color.white : Color("Stone950"))
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 9)
+                                    .background(alreadyAdded ? Color("Teal") : Color("CardBackground"))
+                                    .clipShape(Capsule())
+                                    .shadow(color: alreadyAdded ? .clear : .black.opacity(0.07), radius: 3, x: 0, y: 1)
                                 }
+                                .buttonStyle(.plain)
+                                .disabled(alreadyAdded)
                             }
-                            .animation(.easeInOut(duration: 0.2), value: filteredSuggestions)
-                            .padding(.horizontal, 16)
                         }
+                        .animation(.easeInOut(duration: 0.2), value: filteredSuggestions)
+                        .padding(.horizontal, 16)
                     }
 
                     // Entry list

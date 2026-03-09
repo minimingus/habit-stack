@@ -90,7 +90,12 @@ struct MainTabView: View {
 
     private func checkWeeklyReflection() async {
         let lastTimestamp = UserDefaults.standard.double(forKey: "lastWeeklyReflectionDate")
-        let last = lastTimestamp > 0 ? Date(timeIntervalSince1970: lastTimestamp) : .distantPast
+        guard lastTimestamp > 0 else {
+            // First launch — start the clock, don't show yet
+            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "lastWeeklyReflectionDate")
+            return
+        }
+        let last = Date(timeIntervalSince1970: lastTimestamp)
         let daysSince = Calendar.current.dateComponents([.day], from: last, to: Date()).day ?? 0
         guard daysSince >= 7 else { return }
 

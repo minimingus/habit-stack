@@ -23,62 +23,31 @@ struct WizardStepCueView: View {
     private let colors = ["#0D9488", "#6366F1", "#F59E0B", "#EF4444", "#10B981",
                           "#3B82F6", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316"]
 
-    private let emojis = [
-        "✅", "💪", "🏃", "📚", "✍️", "🧘", "💤", "🥗", "💧", "🎯",
-        "🌅", "🎵", "📝", "🧠", "❤️", "🌿", "⚡", "🔥", "🎨", "🤸",
-        "🚴", "🏊", "🍎", "☕", "🌙", "📖", "🎓", "💻", "🌞", "🚶",
-        "🧹", "🙏", "⏰", "🌊", "🏆", "⭐", "🫁", "💊", "🎸", "🍵"
-    ]
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 replacementBanner
                 habitCountAdvisory
 
-                // Quick Pick — suggests templates inline
-                VStack(alignment: .leading, spacing: 8) {
+                // Quick Pick — top 8 templates as wrapping chips
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Quick Pick")
                         .font(.caption.bold())
                         .foregroundStyle(Color("Stone500"))
                         .textCase(.uppercase)
                         .kerning(0.5)
-                        .padding(.horizontal, 24)
 
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(HabitTemplateLibrary.all) { template in
-                                Button {
-                                    viewModel.prefill(from: template)
-                                } label: {
-                                    HStack(spacing: 5) {
-                                        Text(template.emoji)
-                                        Text(template.name)
-                                            .font(.subheadline)
-                                            .foregroundStyle(Color("Stone950"))
-                                    }
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 7)
-                                    .background(
-                                        viewModel.name == template.name
-                                            ? Color("TealLight")
-                                            : Color("Stone100")
-                                    )
-                                    .clipShape(Capsule())
-                                    .overlay(
-                                        Capsule().strokeBorder(
-                                            viewModel.name == template.name
-                                                ? Color("Teal")
-                                                : Color.clear,
-                                            lineWidth: 1.5
-                                        )
-                                    )
-                                }
-                                .buttonStyle(.plain)
+                    ChipGrid(spacing: 8) {
+                        ForEach(HabitTemplateLibrary.all.prefix(8)) { template in
+                            SuggestionChip(
+                                label: template.name,
+                                isSelected: viewModel.name == template.name
+                            ) {
+                                viewModel.prefill(from: template)
                             }
                         }
-                        .padding(.horizontal, 24)
                     }
+                    .animation(.easeInOut(duration: 0.2), value: viewModel.name)
 
                     Button {
                         showTemplateLibrary = true
@@ -88,7 +57,6 @@ struct WizardStepCueView: View {
                             .foregroundStyle(Color("Teal"))
                     }
                     .buttonStyle(.plain)
-                    .padding(.horizontal, 24)
                 }
 
                 FormSection(title: "Habit Name") {
@@ -96,29 +64,6 @@ struct WizardStepCueView: View {
                         .padding()
                         .background(Color("Stone100"))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-
-                FormSection(title: "Emoji") {
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 8), spacing: 8) {
-                        ForEach(emojis, id: \.self) { emoji in
-                            Button {
-                                viewModel.emoji = emoji
-                            } label: {
-                                Text(emoji)
-                                    .font(.title3)
-                                    .frame(width: 36, height: 36)
-                                    .background(viewModel.emoji == emoji ? Color("TealLight") : Color("Stone100"))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .overlay {
-                                        if viewModel.emoji == emoji {
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(Color("Teal"), lineWidth: 2)
-                                        }
-                                    }
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
                 }
 
                 FormSection(title: "Color") {
@@ -144,25 +89,17 @@ struct WizardStepCueView: View {
                 FormSection(title: "Cue") {
                     VStack(alignment: .leading, spacing: 10) {
                         if !filteredCues.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(filteredCues, id: \.self) { suggestion in
-                                        Button {
-                                            viewModel.cue = suggestion
-                                        } label: {
-                                            Text(suggestion)
-                                                .font(.subheadline)
-                                                .padding(.horizontal, 12)
-                                                .padding(.vertical, 7)
-                                                .background(viewModel.cue == suggestion ? Color("Teal") : Color("Stone100"))
-                                                .foregroundStyle(viewModel.cue == suggestion ? .white : Color("Stone950"))
-                                                .clipShape(Capsule())
-                                        }
-                                        .buttonStyle(.plain)
+                            ChipGrid(spacing: 8) {
+                                ForEach(filteredCues, id: \.self) { suggestion in
+                                    SuggestionChip(
+                                        label: suggestion,
+                                        isSelected: viewModel.cue == suggestion
+                                    ) {
+                                        viewModel.cue = suggestion
                                     }
                                 }
-                                .animation(.easeInOut(duration: 0.2), value: filteredCues)
                             }
+                            .animation(.easeInOut(duration: 0.2), value: filteredCues)
                         }
                         TextField("After I...", text: $viewModel.cue)
                             .padding()
@@ -189,10 +126,13 @@ struct WizardStepCueView: View {
             .padding(24)
         }
         .sheet(isPresented: $showTemplateLibrary) {
-            HabitTemplateLibraryView { template in
-                viewModel.prefill(from: template)
-                showTemplateLibrary = false
-            }
+            HabitTemplateLibraryView(
+                onSelect: { template in
+                    viewModel.prefill(from: template)
+                    showTemplateLibrary = false
+                },
+                activeHabitNames: Set(viewModel.existingHabits.map { $0.name.lowercased() })
+            )
         }
     }
 

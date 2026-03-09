@@ -32,25 +32,17 @@ struct WizardStepRewardView: View {
                 FormSection(title: "Immediate Reward") {
                     VStack(alignment: .leading, spacing: 10) {
                         if !filteredRewards.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(filteredRewards, id: \.self) { reward in
-                                        Button {
-                                            viewModel.reward = reward
-                                        } label: {
-                                            Text(reward)
-                                                .font(.subheadline)
-                                                .padding(.horizontal, 12)
-                                                .padding(.vertical, 7)
-                                                .background(viewModel.reward == reward ? Color("Teal") : Color("Stone100"))
-                                                .foregroundStyle(viewModel.reward == reward ? .white : Color("Stone950"))
-                                                .clipShape(Capsule())
-                                        }
-                                        .buttonStyle(.plain)
+                            ChipGrid(spacing: 8) {
+                                ForEach(filteredRewards, id: \.self) { reward in
+                                    SuggestionChip(
+                                        label: reward,
+                                        isSelected: viewModel.reward == reward
+                                    ) {
+                                        viewModel.reward = reward
                                     }
                                 }
-                                .animation(.easeInOut(duration: 0.2), value: filteredRewards)
                             }
+                            .animation(.easeInOut(duration: 0.2), value: filteredRewards)
                         }
                         TextField("Or add a personal reward…", text: $viewModel.reward)
                             .padding()
