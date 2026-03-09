@@ -65,6 +65,7 @@
 		A83394E8F02EE5617CB59735 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37FC117FAD3655F5BAD8921 /* EmptyStateView.swift */; };
 		AA71C4585EE56353DF4785B5 /* ScorecardOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFBD204BDFFFA15857B2768 /* ScorecardOnboardingView.swift */; };
 		AAA7B746B6B1F5C065D086C2 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9121C20AB6F47275C0566F94 /* AchievementsView.swift */; };
+		B02BA02F264D539FAE174860 /* WhatsNewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65919B8623ED58E44238628 /* WhatsNewSheet.swift */; };
 		B06982BDC325C22BB6A48BEB /* HabitTemplateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8256A93DF268652D46FD372A /* HabitTemplateLibrary.swift */; };
 		B10B2375CC48DB039B27C2E4 /* NotificationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2218FE1A19531D204189D28A /* NotificationPermissionView.swift */; };
 		B799447D7D8AB01CF969AAC7 /* StreakBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3021DAF6DE8A4CD8DCE85FA8 /* StreakBadge.swift */; };
@@ -81,6 +82,7 @@
 		E2F9D2A1AA4B196A58D21459 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80C4128FE58A56F292D713ED /* Secrets.plist */; };
 		E4A5845F747B3AFD4C51C4DE /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABBFAE4A290BB1187820AC7 /* SupabaseClient.swift */; };
 		E65B35E61C13D59A5EF94206 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B741AFCD42DA4B070087E51 /* RootView.swift */; };
+		E806A38F572498F607D660FE /* WhatsNewRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C811B14B68AE8BA06CBC5E9A /* WhatsNewRegistry.swift */; };
 		ED3123161B88F43BBB58EAC0 /* StreakCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */; };
 		EF99FF8AF9C8628A372D5E27 /* WizardStepRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28D29C48C373421DC70178E /* WizardStepRoutineView.swift */; };
 		F6193540B0870A33C91EC388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A28D864C95319FCAEF8C6F8 /* Assets.xcassets */; };
@@ -154,6 +156,7 @@
 		A28D29C48C373421DC70178E /* WizardStepRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardStepRoutineView.swift; sourceTree = "<group>"; };
 		A2E74505815490CAFA130C12 /* Streak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streak.swift; sourceTree = "<group>"; };
 		A37FC117FAD3655F5BAD8921 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		A65919B8623ED58E44238628 /* WhatsNewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewSheet.swift; sourceTree = "<group>"; };
 		A8AFE8166EBAD62E550456DC /* CoachMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMessage.swift; sourceTree = "<group>"; };
 		ACD61DB8F246734A51625910 /* PauseHabitSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseHabitSheet.swift; sourceTree = "<group>"; };
 		ACE3C2B8DAA04AF39ABA92F8 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
@@ -163,6 +166,7 @@
 		BF1BBAC76D5403D2986F2F7D /* HabitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitService.swift; sourceTree = "<group>"; };
 		C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalendarView.swift; sourceTree = "<group>"; };
+		C811B14B68AE8BA06CBC5E9A /* WhatsNewRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewRegistry.swift; sourceTree = "<group>"; };
 		CD291C1BEA57F1097DB22E35 /* HabitWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWizardView.swift; sourceTree = "<group>"; };
 		CE2B17F9D1133576CAE8F22D /* ChipGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipGrid.swift; sourceTree = "<group>"; };
 		D320AB53D1D73CD148764A43 /* IdentityStatementBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityStatementBanner.swift; sourceTree = "<group>"; };
@@ -263,6 +267,7 @@
 				8B3A238D3815F241DD164337 /* RevenueCatManager.swift */,
 				DA3E8AB40BC7350CDDC68688 /* Secrets.swift */,
 				7ABBFAE4A290BB1187820AC7 /* SupabaseClient.swift */,
+				C811B14B68AE8BA06CBC5E9A /* WhatsNewRegistry.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -290,6 +295,14 @@
 				C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		87289DFDA29E30F452330C16 /* WhatsNew */ = {
+			isa = PBXGroup;
+			children = (
+				A65919B8623ED58E44238628 /* WhatsNewSheet.swift */,
+			);
+			path = WhatsNew;
 			sourceTree = "<group>";
 		};
 		89D4B02457DF248928EEB8FA /* Onboarding */ = {
@@ -360,6 +373,7 @@
 				C4E1015AFFCB2E36A057469B /* Reflection */,
 				1A66CA6D7C0DE873027C3D44 /* Settings */,
 				CE802E4212FB96043D58F2A6 /* Today */,
+				87289DFDA29E30F452330C16 /* WhatsNew */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -617,6 +631,8 @@
 				11716BCEBF1F69EA17D30BD5 /* TodayViewModel.swift in Sources */,
 				5532DEAD4B019B888C75E315 /* WeeklyReflectionView.swift in Sources */,
 				C1AEA691FF45C42C0441E276 /* WelcomeView.swift in Sources */,
+				E806A38F572498F607D660FE /* WhatsNewRegistry.swift in Sources */,
+				B02BA02F264D539FAE174860 /* WhatsNewSheet.swift in Sources */,
 				1CC5276C010FFBEA3C69FD5C /* WizardStepCravingView.swift in Sources */,
 				FF7941E0904319D282276995 /* WizardStepCueView.swift in Sources */,
 				C2A25D8E35BA73D6D79BED0D /* WizardStepRewardView.swift in Sources */,

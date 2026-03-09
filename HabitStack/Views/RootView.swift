@@ -57,6 +57,9 @@ struct RootView: View {
 struct MainTabView: View {
     @State private var showWeeklyReflection = false
     @State private var habitStats: [(name: String, emoji: String, completionRate: Double)] = []
+    @State private var showWhatsNew = false
+    @State private var unseenFeatures: [WhatsNewFeature] = []
+    private let whatsNewService = WhatsNewService()
 
     var body: some View {
         TabView {
@@ -73,8 +76,22 @@ struct MainTabView: View {
         }
         .tint(Color("Teal"))
         .task {
+            whatsNewService.bootstrapIfNeeded()
             NotificationManager.shared.scheduleInactiveUserReminder()
             await checkWeeklyReflection()
+            let unseen = whatsNewService.unseenFeatures()
+            if !unseen.isEmpty {
+                unseenFeatures = unseen
+                showWhatsNew = true
+            }
+        }
+        .sheet(isPresented: $showWhatsNew) {
+            WhatsNewSheet(features: unseenFeatures) {
+                whatsNewService.markAllSeen(unseenFeatures)
+                showWhatsNew = false
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showWeeklyReflection) {
             WeeklyReflectionView(habitStats: habitStats, onDismiss: {
