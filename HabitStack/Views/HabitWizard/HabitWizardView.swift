@@ -4,10 +4,12 @@ struct HabitWizardView: View {
     var template: HabitTemplate? = nil
     var editingHabit: Habit? = nil
     var replacingBehavior: String? = nil
+    var editingStreak: Int = 0
     let onSave: () -> Void
 
     @State private var viewModel = HabitWizardViewModel()
     @State private var showPaywall = false
+    @AppStorage("streakSafeHintDismissed") private var streakSafeHintDismissed = false
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -44,13 +46,38 @@ struct HabitWizardView: View {
                     }
                 }
             }
-            // Step indicator
+            // Step indicator + streak-safe hint
             .safeAreaInset(edge: .top) {
-                StepIndicator(
-                    total: HabitWizardViewModel.WizardStep.allCases.count,
-                    current: viewModel.currentStep.rawValue
-                )
-                .padding(.top, 8)
+                VStack(spacing: 0) {
+                    StepIndicator(
+                        total: HabitWizardViewModel.WizardStep.allCases.count,
+                        current: viewModel.currentStep.rawValue
+                    )
+                    .padding(.top, 8)
+
+                    if viewModel.isEditing && editingStreak > 0 && !streakSafeHintDismissed {
+                        HStack(spacing: 10) {
+                            Image(systemName: "flame.fill")
+                                .foregroundStyle(Color("Teal"))
+                            Text("Your \(editingStreak)-day streak is safe — editing never resets it.")
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                            Spacer()
+                            Button {
+                                withAnimation { streakSafeHintDismissed = true }
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(Color("Stone500"))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color("TealLight").opacity(0.5))
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                }
             }
         }
         .interactiveDismissDisabled(true)

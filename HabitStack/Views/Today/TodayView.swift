@@ -184,7 +184,10 @@ struct TodayView: View {
                 }
             }
             .sheet(item: $editingHabit) { habit in
-                HabitWizardView(editingHabit: habit) {
+                HabitWizardView(
+                    editingHabit: habit,
+                    editingStreak: viewModel.streaks[habit.id]?.currentStreak ?? 0
+                ) {
                     Task { await viewModel.loadToday() }
                 }
             }
