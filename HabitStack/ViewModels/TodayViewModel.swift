@@ -97,6 +97,7 @@ final class TodayViewModel {
                 self.profile = profiles.first
                 self.checkNeverMissTwice(streaks: allStreaks)
                 self.scheduleRetentionNotifications(habits: active, streaks: allStreaks)
+                self.schedulePredictiveNudges(for: active)
                 self.updateWidgetData()
             }
         } catch {
@@ -138,6 +139,8 @@ final class TodayViewModel {
                 self.profile = profiles.first
                 self.updateWidgetData()
                 if newStatus == .done {
+                    self.recordCompletionHour(for: habitId)
+                    NotificationManager.shared.cancelPredictiveNudge(for: habitId)
                     self.lastCompletedHabitName = habitName
                     let completedHabit = self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
                     self.topIdentityStatement = completedHabit?.habit.craving
@@ -252,6 +255,32 @@ final class TodayViewModel {
 
     private var todayDateString: String {
         String(ISO8601DateFormatter().string(from: Date()).prefix(10))
+    }
+
+    // MARK: - Predictive nudge helpers
+
+    private func recordCompletionHour(for habitId: UUID) {
+        let key = "completionHours_\(habitId.uuidString)"
+        var hours = UserDefaults.standard.array(forKey: key) as? [Int] ?? []
+        hours.append(Calendar.current.component(.hour, from: Date()))
+        if hours.count > 14 { hours.removeFirst(hours.count - 14) }
+        UserDefaults.standard.set(hours, forKey: key)
+    }
+
+    private func typicalCompletionHour(for habitId: UUID) -> Int? {
+        let key = "completionHours_\(habitId.uuidString)"
+        let hours = UserDefaults.standard.array(forKey: key) as? [Int] ?? []
+        guard hours.count >= 5 else { return nil }
+        let counts = Dictionary(grouping: hours, by: { $0 }).mapValues { $0.count }
+        return counts.max(by: { $0.value < $1.value })?.key
+    }
+
+    private func schedulePredictiveNudges(for habits: [HabitWithStatus]) {
+        for hw in habits where !hw.isCompleted {
+            if let hour = typicalCompletionHour(for: hw.habit.id) {
+                NotificationManager.shared.schedulePredictiveNudge(for: hw.habit, typicalHour: hour)
+            }
+        }
     }
 
     private func updateWidgetData() {

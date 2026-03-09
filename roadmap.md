@@ -26,7 +26,7 @@ Status: ✅ Done · 🔄 In Progress · ⬜ Planned
 |--------|---------|-------|
 | ✅ | Home screen widget | Progress ring + incomplete count. WidgetKit, no server calls needed |
 | ✅ | Streak safe on edit callout | One-time banner in wizard header: "{N}-day streak is safe — editing never resets it." |
-| ⬜ | Compact card mode | Settings toggle to shrink habit cards to single row (no subtitle, smaller button) |
+| ✅ | Compact card mode | Settings toggle to shrink habit cards to single row (no subtitle, smaller button) |
 | ⬜ | Batch time-group complete | Long-press time-of-day header ("Morning") → confirm → marks all habits in group done |
 | ✅ | Streak share card | After milestone sheet, offer Share button → ImageRenderer card (name, streak, identity) |
 
@@ -37,8 +37,8 @@ Status: ✅ Done · 🔄 In Progress · ⬜ Planned
 | Status | Feature | Notes |
 |--------|---------|-------|
 | ⬜ | Siri Shortcuts | AppIntents: "Hey Siri, log my morning run" — completion without unlocking |
-| ⬜ | Habit insight cards in Analytics | Best day of week, current vs longest streak delta, "on track for X-day milestone" countdown |
-| ⬜ | Environment design prompt | One-time tip after habit creation: "To make this obvious: [cue-derived tip]" |
+| ✅ | Habit insight cards in Analytics | Best day of week, current vs longest streak delta, "on track for X-day milestone" countdown |
+| ✅ | Environment design prompt | One-time tip after habit creation: "To make this obvious: [cue-derived tip]" |
 | ⬜ | Habit difficulty log | After completing, optionally rate 1–3 (easy/medium/hard); surfaces as effort trend in Analytics |
 
 ---
@@ -78,7 +78,7 @@ Status: ✅ Done · 🔄 In Progress · ⬜ Planned
 | Status | Feature | Notes |
 |--------|---------|-------|
 | ⬜ | 4-week completion trend line | Is the user improving or declining? |
-| ⬜ | Predictive nudge | If user typically completes at 8 AM and hasn't by 10 AM, send a reminder |
+| ✅ | Predictive nudge | If user typically completes at 8 AM and hasn't by 10 AM, send a reminder |
 | ⬜ | Habit correlation | "Users who complete morning run also tend to complete journaling" |
 
 ---

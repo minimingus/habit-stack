@@ -108,6 +108,31 @@ enum CalendarDayStatus {
     var strongestHabit: (habit: Habit, rate: Double)? { allHabitsStats.first }
     var weakestHabit: (habit: Habit, rate: Double)? { allHabitsStats.last }
 
+    /// Day label with the highest completion count for the selected habit
+    var bestDayOfWeek: String? {
+        let best = dayOfWeekCounts.max(by: { $0.count < $1.count })
+        guard let best, best.count > 0 else { return nil }
+        return best.day
+    }
+
+    /// current − longest streak (negative = below personal best, 0 = at PB)
+    var streakDelta: Int {
+        guard let streak else { return 0 }
+        return streak.currentStreak - streak.longestStreak
+    }
+
+    private let milestoneTargets = [7, 14, 21, 30, 66, 100]
+
+    var nextMilestoneTarget: Int? {
+        guard let streak else { return nil }
+        return milestoneTargets.first { $0 > streak.currentStreak }
+    }
+
+    var daysToNextMilestone: Int? {
+        guard let streak, let target = nextMilestoneTarget else { return nil }
+        return target - streak.currentStreak
+    }
+
     /// Completion count per day of week (Mon=0 … Sun=6) for selected habit
     var dayOfWeekCounts: [(day: String, count: Int)] {
         let labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]

@@ -127,6 +127,18 @@ struct AnalyticsView: View {
                                     .padding(.horizontal, 16)
                             }
 
+                            // Per-habit streak insights
+                            if viewModel.streak != nil {
+                                HabitStreakInsightCard(
+                                    bestDay: viewModel.bestDayOfWeek,
+                                    streakDelta: viewModel.streakDelta,
+                                    currentStreak: viewModel.streak?.currentStreak ?? 0,
+                                    daysToMilestone: viewModel.daysToNextMilestone,
+                                    nextMilestone: viewModel.nextMilestoneTarget
+                                )
+                                .padding(.horizontal, 16)
+                            }
+
                             // Achievements
                             AchievementsView()
                                 .padding(.horizontal, 16)
@@ -322,6 +334,85 @@ private struct LegendItem: View {
                         .stroke(Color("Stone500").opacity(0.2), lineWidth: 0.5)
                 )
             Text(label)
+        }
+    }
+}
+
+// MARK: - Habit Streak Insight Card
+
+struct HabitStreakInsightCard: View {
+    let bestDay: String?
+    let streakDelta: Int
+    let currentStreak: Int
+    let daysToMilestone: Int?
+    let nextMilestone: Int?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Streak Insights")
+                .font(.headline)
+                .foregroundStyle(Color("Stone950"))
+
+            VStack(spacing: 8) {
+                // Best day of week
+                if let bestDay {
+                    InsightRow(
+                        icon: "calendar",
+                        iconColor: Color("Teal"),
+                        text: "You complete this most on **\(bestDay)**"
+                    )
+                }
+
+                // vs personal best
+                if currentStreak > 0 {
+                    if streakDelta == 0 {
+                        InsightRow(
+                            icon: "trophy.fill",
+                            iconColor: .orange,
+                            text: "**At your personal best** — keep the chain going!"
+                        )
+                    } else {
+                        InsightRow(
+                            icon: "arrow.up.right",
+                            iconColor: Color("Stone500"),
+                            text: "**\(abs(streakDelta)) days** behind your personal best"
+                        )
+                    }
+                }
+
+                // Countdown to next milestone
+                if let days = daysToMilestone, let target = nextMilestone {
+                    InsightRow(
+                        icon: "flag.fill",
+                        iconColor: Color("Teal"),
+                        text: "**\(days) more days** to reach the \(target)-day milestone"
+                    )
+                }
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color("CardBackground"))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+    }
+}
+
+private struct InsightRow: View {
+    let icon: String
+    let iconColor: Color
+    let text: LocalizedStringKey
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: icon)
+                .font(.subheadline)
+                .foregroundStyle(iconColor)
+                .frame(width: 20)
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(Color("Stone950"))
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

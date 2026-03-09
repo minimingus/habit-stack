@@ -9,6 +9,8 @@ struct HabitWizardView: View {
 
     @State private var viewModel = HabitWizardViewModel()
     @State private var showPaywall = false
+    @State private var showEnvTip = false
+    @State private var envTipText = ""
     @AppStorage("streakSafeHintDismissed") private var streakSafeHintDismissed = false
     @Environment(\.dismiss) private var dismiss
 
@@ -102,6 +104,12 @@ struct HabitWizardView: View {
             Text(viewModel.errorMessage ?? "")
         }
         .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showEnvTip, onDismiss: {
+            onSave()
+            dismiss()
+        }) {
+            EnvDesignTipSheet(habitName: viewModel.name, tipText: envTipText)
+        }
     }
 
     private var stepTitle: String {
@@ -119,8 +127,13 @@ struct HabitWizardView: View {
         do {
             try await viewModel.save(userId: userId)
             await MainActor.run {
-                onSave()
-                dismiss()
+                if !viewModel.isEditing {
+                    envTipText = environmentTip(name: viewModel.name, cue: viewModel.cue)
+                    showEnvTip = true
+                } else {
+                    onSave()
+                    dismiss()
+                }
             }
         } catch HabitServiceError.freeTierHabitLimit {
             await MainActor.run { showPaywall = true }
@@ -128,6 +141,14 @@ struct HabitWizardView: View {
             await MainActor.run { viewModel.errorMessage = error.localizedDescription }
         }
         viewModel.isSaving = false
+    }
+
+    private func environmentTip(name: String, cue: String) -> String {
+        let c = cue.trimmingCharacters(in: .whitespaces)
+        if c.isEmpty {
+            return "Place a visual reminder for \"\(name)\" somewhere you'll see it every day — a sticky note, an object on your desk, or a phone wallpaper."
+        }
+        return "To make \"\(name)\" obvious: put a cue right where \"\(c)\" happens so you can't miss it. Out of sight = out of mind."
     }
 }
 

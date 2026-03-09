@@ -120,6 +120,47 @@ final class NotificationManager {
         center.add(UNNotificationRequest(identifier: "miss-2-days", content: content, trigger: trigger))
     }
 
+    // MARK: - Predictive nudge
+
+    /// Schedule a one-off nudge for today at `typicalHour + 2` if that time hasn't passed yet.
+    func schedulePredictiveNudge(for habit: Habit, typicalHour: Int) {
+        let identifier = "predictive_nudge_\(habit.id.uuidString)"
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [identifier])
+
+        let nudgeHour = typicalHour + 2
+        guard nudgeHour <= 22 else { return } // don't nudge after 10 PM
+
+        let currentHour = Calendar.current.component(.hour, from: Date())
+        guard currentHour < nudgeHour else { return } // nudge time already passed today
+
+        let content = UNMutableNotificationContent()
+        content.title = "\(habit.emoji) \(habit.name)"
+        content.body = "You usually do this around \(formatHour(typicalHour)). Don't break the chain!"
+        content.sound = .default
+
+        var comps = DateComponents()
+        comps.hour = nudgeHour
+        comps.minute = 0
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+    }
+
+    func cancelPredictiveNudge(for habitId: UUID) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(
+            withIdentifiers: ["predictive_nudge_\(habitId.uuidString)"]
+        )
+    }
+
+    private func formatHour(_ hour: Int) -> String {
+        switch hour {
+        case 0: return "midnight"
+        case 12: return "noon"
+        case 1..<12: return "\(hour) AM"
+        default: return "\(hour - 12) PM"
+        }
+    }
+
     func uploadDeviceToken(_ token: Data) async {
         let tokenString = token.map { String(format: "%02.2hhx", $0) }.joined()
         guard let userId = try? await supabase.auth.session.user.id else { return }

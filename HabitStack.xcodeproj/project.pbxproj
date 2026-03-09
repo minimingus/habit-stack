@@ -56,6 +56,7 @@
 		74C4CF31BB8641E873ACC787 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C3CBCA6628EA918B676B0AA /* SwiftUI.framework */; };
 		7BBB560D1C599914A4CBA6D1 /* StreakService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7009EA0C484B59A8366E25 /* StreakService.swift */; };
 		7CF77053CF810D24A6F3A30C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0710092D60DD015AC55FE38 /* WidgetKit.framework */; };
+		85534F40A7F07FE3025B00FE /* EnvDesignTipSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DF7CE62F4114ABEA3E43D4 /* EnvDesignTipSheet.swift */; };
 		8E499E29A254FF59EC05C01E /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7A8A722C9F2EC4C353CA55 /* OnboardingContainerView.swift */; };
 		94AC5822A7C51019945FF18C /* CoachService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BC17BB1E3610E60641C444 /* CoachService.swift */; };
 		968E77D686857459156C27FD /* FourLawsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07338F47311998F391D4EC6E /* FourLawsView.swift */; };
@@ -158,6 +159,7 @@
 		6548DB26D57BF808B91201CC /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
 		6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.example.plist; sourceTree = "<group>"; };
 		689304489B1311A7EF416882 /* IdentityVote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVote.swift; sourceTree = "<group>"; };
+		68DF7CE62F4114ABEA3E43D4 /* EnvDesignTipSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvDesignTipSheet.swift; sourceTree = "<group>"; };
 		6C3CBCA6628EA918B676B0AA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		6D44E33453C575119AEB7761 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
 		6D7AC66A652B7E92253C6A2E /* HabitFrictionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitFrictionSheet.swift; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 		55305FB6A4F038F9A0781A9C /* HabitWizard */ = {
 			isa = PBXGroup;
 			children = (
+				68DF7CE62F4114ABEA3E43D4 /* EnvDesignTipSheet.swift */,
 				2F2AB016818D0FB56E202366 /* HabitTemplateLibraryView.swift */,
 				CD291C1BEA57F1097DB22E35 /* HabitWizardView.swift */,
 				0E18B7B03B31A417C89BEA96 /* WizardStepCravingView.swift */,
@@ -671,6 +674,7 @@
 				47EB742F01ADE2C79B220688 /* ConfettiView.swift in Sources */,
 				624356B11FE6BF7563982897 /* DailyInsightCard.swift in Sources */,
 				A83394E8F02EE5617CB59735 /* EmptyStateView.swift in Sources */,
+				85534F40A7F07FE3025B00FE /* EnvDesignTipSheet.swift in Sources */,
 				20884FF6D4CE08C05128607B /* FeatureFlags.swift in Sources */,
 				D02DC7ABE6DBCD331202DB44 /* FormSection.swift in Sources */,
 				968E77D686857459156C27FD /* FourLawsView.swift in Sources */,
