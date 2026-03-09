@@ -15,6 +15,7 @@ final class HabitService {
     private static let iso8601 = ISO8601DateFormatter()
 
     func fetchTodayHabits(userId: UUID) async throws -> [HabitWithStatus] {
+        // Fetch all non-archived habits; TodayViewModel splits active vs paused
         let habits: [Habit] = try await supabase
             .from("habits")
             .select()
@@ -101,6 +102,62 @@ final class HabitService {
             .update(["archived_at": nil as String?])
             .eq("id", value: habitId.uuidString)
             .execute()
+    }
+
+    func pauseHabit(_ habitId: UUID, until: Date) async throws {
+        try await supabase
+            .from("habits")
+            .update(["paused_until": Self.iso8601.string(from: until)])
+            .eq("id", value: habitId.uuidString)
+            .execute()
+        NotificationManager.shared.cancelReminder(for: habitId)
+    }
+
+    /// Resumes a paused habit and inserts 'skipped' logs for every day in the
+    /// pause window so the streak is preserved.
+    func resumeHabit(_ habitId: UUID, userId: UUID, pausedUntil: Date) async throws {
+        // Clear the pause
+        try await supabase
+            .from("habits")
+            .update(["paused_until": nil as String?])
+            .eq("id", value: habitId.uuidString)
+            .execute()
+
+        // Insert skipped logs for each missed day to protect the streak.
+        // Find last logged date from streaks to know where the gap starts.
+        struct StreakRow: Decodable {
+            let lastLoggedDate: Date?
+            enum CodingKeys: String, CodingKey { case lastLoggedDate = "last_logged_date" }
+        }
+        let rows: [StreakRow] = (try? await supabase
+            .from("streaks")
+            .select("last_logged_date")
+            .eq("habit_id", value: habitId.uuidString)
+            .execute()
+            .value) ?? []
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let gapStart: Date
+        if let last = rows.first?.lastLoggedDate {
+            gapStart = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: last))!
+        } else {
+            return // no prior streak, nothing to protect
+        }
+
+        // Insert a skipped log for each day from gapStart up to (not including) today
+        var day = gapStart
+        while day < today {
+            let log = HabitLog(
+                id: UUID(),
+                habitId: habitId,
+                userId: userId,
+                loggedAt: day,
+                status: .skipped
+            )
+            try? await supabase.from("habit_logs").insert(log).execute()
+            day = calendar.date(byAdding: .day, value: 1, to: day)!
+        }
     }
 
     func logHabit(habitId: UUID, userId: UUID, status: HabitLog.Status) async throws {

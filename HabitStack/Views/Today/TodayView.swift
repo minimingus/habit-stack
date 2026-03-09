@@ -86,7 +86,10 @@ struct TodayView: View {
                                             onArchive: { Task {
                                                 try? await HabitService.shared.archiveHabit(habitWithStatus.habit.id)
                                                 await viewModel.loadToday()
-                                            }}
+                                            }},
+                                            onPause: { until in
+                                                Task { await viewModel.pauseHabit(habitWithStatus.habit, until: until) }
+                                            }
                                         )
                                         .listRowSeparator(.hidden)
                                         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
@@ -96,6 +99,27 @@ struct TodayView: View {
                                     }
                                 } header: {
                                     HabitGroupView(timeOfDay: timeOfDay, count: habits.count)
+                                }
+                            }
+                            // Paused habits section
+                            if !viewModel.pausedHabits.isEmpty {
+                                Section {
+                                    ForEach(viewModel.pausedHabits) { habit in
+                                        PausedHabitRow(habit: habit) {
+                                            Task { await viewModel.resumeHabit(habit) }
+                                        }
+                                        .listRowSeparator(.hidden)
+                                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                                    }
+                                } header: {
+                                    HStack {
+                                        Image(systemName: "pause.circle.fill")
+                                            .foregroundStyle(Color("Stone500"))
+                                        Text("Paused")
+                                            .font(.subheadline.bold())
+                                            .foregroundStyle(Color("Stone500"))
+                                    }
+                                    .padding(.vertical, 4)
                                 }
                             }
                         }

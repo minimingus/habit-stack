@@ -7,8 +7,10 @@ struct HabitCardView: View {
     let onToggle: () -> Void
     let onEdit: () -> Void
     let onArchive: () -> Void
+    let onPause: (Date) -> Void
 
     @State private var showArchiveAlert = false
+    @State private var showPauseSheet = false
     @State private var showConfetti = false
     @State private var showDetail = false
     @State private var showNote = false
@@ -158,7 +160,8 @@ struct HabitCardView: View {
             }
         }
         .contextMenu {
-            Button { onEdit() } label: { Label("Edit Habit", systemImage: "pencil") }
+            Button { onEdit() } label: { Label("Edit", systemImage: "pencil") }
+            Button { showPauseSheet = true } label: { Label("Pause", systemImage: "pause.circle") }
             Button(role: .destructive) { showArchiveAlert = true } label: { Label("Archive", systemImage: "archivebox") }
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -207,6 +210,12 @@ struct HabitCardView: View {
             HabitFrictionSheet(habit: habit, onSave: {
                 // card will reflect changes on next loadToday
             })
+        }
+        .sheet(isPresented: $showPauseSheet) {
+            PauseHabitSheet(habitName: habit.name) { until in
+                onPause(until)
+            }
+            .presentationDetents([.medium])
         }
         .onAppear {
             durationMinutes = UserDefaults.standard.integer(forKey: durationKey)

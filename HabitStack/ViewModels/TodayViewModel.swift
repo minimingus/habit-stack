@@ -10,6 +10,7 @@ private let milestoneValues: Set<Int> = [7, 14, 21, 30, 66, 100]
 @Observable
 final class TodayViewModel {
     var habitGroups: [Habit.TimeOfDay: [HabitWithStatus]] = [:]
+    var pausedHabits: [Habit] = []
     var isLoading = false
     var errorMessage: String?
     var streaks: [UUID: Streak] = [:]
@@ -33,6 +34,8 @@ final class TodayViewModel {
 
     var totalHabits: Int { habitGroups.values.flatMap { $0 }.count }
     var completedHabits: Int { habitGroups.values.flatMap { $0 }.filter { $0.isCompleted }.count }
+
+    var isPaused: Bool { !pausedHabits.isEmpty }
     var progress: Double {
         guard totalHabits > 0 else { return 0 }
         return Double(completedHabits) / Double(totalHabits)
@@ -82,12 +85,17 @@ final class TodayViewModel {
                 .limit(1)
                 .execute()
                 .value) ?? []
+            let now = Date()
             await MainActor.run {
                 self.streaks = Dictionary(uniqueKeysWithValues: allStreaks.map { ($0.habitId, $0) })
-                self.habitGroups = Dictionary(grouping: habits, by: { $0.habit.timeOfDay })
+                let active = habits.filter { $0.habit.pausedUntil == nil || $0.habit.pausedUntil! <= now }
+                self.pausedHabits = habits
+                    .filter { $0.habit.pausedUntil != nil && $0.habit.pausedUntil! > now }
+                    .map { $0.habit }
+                self.habitGroups = Dictionary(grouping: active, by: { $0.habit.timeOfDay })
                 self.profile = profiles.first
                 self.checkNeverMissTwice(streaks: allStreaks)
-                self.scheduleRetentionNotifications(habits: habits, streaks: allStreaks)
+                self.scheduleRetentionNotifications(habits: active, streaks: allStreaks)
             }
         } catch {
             await MainActor.run { errorMessage = error.localizedDescription }
@@ -241,6 +249,17 @@ final class TodayViewModel {
 
     private var todayDateString: String {
         String(ISO8601DateFormatter().string(from: Date()).prefix(10))
+    }
+
+    func pauseHabit(_ habit: Habit, until: Date) async {
+        try? await HabitService.shared.pauseHabit(habit.id, until: until)
+        await loadToday()
+    }
+
+    func resumeHabit(_ habit: Habit) async {
+        guard let userId else { return }
+        try? await HabitService.shared.resumeHabit(habit.id, userId: userId, pausedUntil: habit.pausedUntil ?? Date())
+        await loadToday()
     }
 
     func dismissNeverMissTwice() {

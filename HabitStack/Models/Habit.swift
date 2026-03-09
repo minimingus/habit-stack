@@ -17,6 +17,7 @@ struct Habit: Codable, Identifiable, Hashable {
     var reminderEnabled: Bool
     var reminderTime: Date?
     var archivedAt: Date?
+    var pausedUntil: Date?
     var sortOrder: Int
     var createdAt: Date
 
@@ -48,6 +49,7 @@ struct Habit: Codable, Identifiable, Hashable {
         case reminderEnabled = "reminder_enabled"
         case reminderTime = "reminder_time"
         case archivedAt = "archived_at"
+        case pausedUntil = "paused_until"
         case sortOrder = "sort_order"
         case createdAt = "created_at"
     }
