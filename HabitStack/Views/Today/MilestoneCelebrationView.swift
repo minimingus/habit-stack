@@ -5,6 +5,9 @@ struct MilestoneCelebrationView: View {
     let habitName: String
     let onDismiss: () -> Void
 
+    @State private var showShareSheet = false
+    @State private var shareUIImage: UIImage?
+
     private var milestoneName: String {
         switch streakDays {
         case 0: return "Perfect Day"
@@ -69,14 +72,28 @@ struct MilestoneCelebrationView: View {
 
             Spacer()
 
-            Button(action: onDismiss) {
-                Text("Keep Going")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color("Teal"))
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+            VStack(spacing: 12) {
+                Button(action: onDismiss) {
+                    Text("Keep Going")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color("Teal"))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+
+                Button {
+                    renderShareCard()
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(Color("Teal"))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color("TealLight"))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 48)
@@ -84,5 +101,32 @@ struct MilestoneCelebrationView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("AppBackground").ignoresSafeArea())
         .presentationDetents([.large])
+        .sheet(isPresented: $showShareSheet) {
+            if let img = shareUIImage {
+                ShareSheet(items: [img])
+            }
+        }
     }
+
+    @MainActor
+    private func renderShareCard() {
+        let card = StreakShareCard(
+            streakDays: streakDays,
+            habitName: habitName,
+            milestoneName: milestoneName,
+            milestoneEmoji: milestoneEmoji
+        )
+        let renderer = ImageRenderer(content: card)
+        renderer.scale = 3.0
+        shareUIImage = renderer.uiImage
+        showShareSheet = true
+    }
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
 }

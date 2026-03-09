@@ -62,6 +62,7 @@
 		A1F5D356D590C8EFF6638B2B /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E28FD5D9277B5D7BD52FD /* Habit.swift */; };
 		A3E36FCFC8FD94C41B2CE46C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AD53D3389F721D32D8E745 /* Profile.swift */; };
 		A593075BE43FB7D58C1989F4 /* PausedHabitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCFB97F033F399539FA5185 /* PausedHabitRow.swift */; };
+		A6AD28164116AA8EA873CA1E /* StreakShareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619B5479D502BADA36DFDD9F /* StreakShareCard.swift */; };
 		A83394E8F02EE5617CB59735 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37FC117FAD3655F5BAD8921 /* EmptyStateView.swift */; };
 		AA71C4585EE56353DF4785B5 /* ScorecardOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFBD204BDFFFA15857B2768 /* ScorecardOnboardingView.swift */; };
 		AAA7B746B6B1F5C065D086C2 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9121C20AB6F47275C0566F94 /* AchievementsView.swift */; };
@@ -125,6 +126,7 @@
 		4B741AFCD42DA4B070087E51 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5487F060D6880ECB470D226F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		5D42396C55B3521646C4658A /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		619B5479D502BADA36DFDD9F /* StreakShareCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakShareCard.swift; sourceTree = "<group>"; };
 		626D3291137D7E27A2415FCA /* StreakBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBarView.swift; sourceTree = "<group>"; };
 		6548DB26D57BF808B91201CC /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
 		6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.example.plist; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 				7FCFB97F033F399539FA5185 /* PausedHabitRow.swift */,
 				ACD61DB8F246734A51625910 /* PauseHabitSheet.swift */,
 				186088F433E12ABBF455C717 /* ProgressRingView.swift */,
+				619B5479D502BADA36DFDD9F /* StreakShareCard.swift */,
 				978B04D383502B53C766F257 /* TodayView.swift */,
 				F2BC204FC6086DE968CA7BA5 /* XPHeaderView.swift */,
 			);
@@ -626,6 +629,7 @@
 				9EC8BC1F2FF3AB8F656E03C7 /* StreakBarView.swift in Sources */,
 				ED3123161B88F43BBB58EAC0 /* StreakCalendarView.swift in Sources */,
 				7BBB560D1C599914A4CBA6D1 /* StreakService.swift in Sources */,
+				A6AD28164116AA8EA873CA1E /* StreakShareCard.swift in Sources */,
 				E4A5845F747B3AFD4C51C4DE /* SupabaseClient.swift in Sources */,
 				302D2902E13C14D83133B7E1 /* TodayView.swift in Sources */,
 				11716BCEBF1F69EA17D30BD5 /* TodayViewModel.swift in Sources */,
