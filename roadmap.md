@@ -25,7 +25,7 @@ Status: ✅ Done · 🔄 In Progress · ⬜ Planned
 | Status | Feature | Notes |
 |--------|---------|-------|
 | ⬜ | Home screen widget | Progress ring + incomplete count. WidgetKit, no server calls needed |
-| ⬜ | Streak safe on edit callout | Show "Your streak is safe" one-time tooltip when user opens Edit on a habit with a streak |
+| ✅ | Streak safe on edit callout | One-time banner in wizard header: "{N}-day streak is safe — editing never resets it." |
 | ⬜ | Compact card mode | Settings toggle to shrink habit cards to single row (no subtitle, smaller button) |
 | ⬜ | Batch time-group complete | Long-press time-of-day header ("Morning") → confirm → marks all habits in group done |
 | ⬜ | Streak share card | After milestone sheet, offer Share button → ImageRenderer card (name, streak, identity) |

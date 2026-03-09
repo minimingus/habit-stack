@@ -41,6 +41,12 @@ enum WhatsNewRegistry {
             title: "Weekly Reflection",
             body: "Once a week the app prompts you to reflect on what's working and what to adjust. Honest reflection is the fastest way to improve."
         ),
+        WhatsNewFeature(
+            id: "v1-streak-safe-edit",
+            emoji: "🔥",
+            title: "Edit Safely",
+            body: "Editing a habit never resets your streak. Change the name, time, or cue any time — your progress stays intact."
+        ),
     ]
 }
 
