@@ -9,6 +9,7 @@ struct SettingsView: View {
     @State private var versionTapCount = 0
     @State private var profile: Profile?
     @State private var userEmail: String?
+    @AppStorage("compactCardMode") private var compactCardMode = false
 
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
@@ -61,6 +62,14 @@ struct SettingsView: View {
                             UIApplication.shared.open(url)
                         }
                     }
+                }
+
+                // Appearance
+                Section("Appearance") {
+                    Toggle(isOn: $compactCardMode) {
+                        Label("Compact Cards", systemImage: "rectangle.compress.vertical")
+                    }
+                    .tint(Color("Teal"))
                 }
 
                 // Data

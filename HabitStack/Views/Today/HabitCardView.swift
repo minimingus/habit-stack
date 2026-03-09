@@ -9,6 +9,7 @@ struct HabitCardView: View {
     let onArchive: () -> Void
     let onPause: (Date) -> Void
 
+    @AppStorage("compactCardMode") private var compactCardMode = false
     @State private var showArchiveAlert = false
     @State private var showPauseSheet = false
     @State private var showConfetti = false
@@ -60,42 +61,46 @@ struct HabitCardView: View {
             Button { showDetail = true } label: {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 6) {
-                        ZStack {
-                            Circle()
-                                .fill(accentColor)
-                                .frame(width: 40, height: 40)
-                            Text(String(habit.name.prefix(1)).uppercased())
-                                .font(.headline.bold())
-                                .foregroundStyle(.white)
+                        if !compactCardMode {
+                            ZStack {
+                                Circle()
+                                    .fill(accentColor)
+                                    .frame(width: 40, height: 40)
+                                Text(String(habit.name.prefix(1)).uppercased())
+                                    .font(.headline.bold())
+                                    .foregroundStyle(.white)
+                            }
                         }
                         Text(habit.name)
                             .font(.headline)
                             .foregroundStyle(Color("Stone950"))
                     }
 
-                    if let anchorName {
-                        Text("↳ After \(anchorName)")
-                            .font(.caption)
-                            .foregroundStyle(Color("Stone500"))
-                    }
-
-                    if let tiny = habit.tinyVersion, !tiny.isEmpty {
-                        Text(tiny)
-                            .font(.caption)
-                            .foregroundStyle(Color("Stone500"))
-                    }
-
-                    if hasFriction {
-                        Button { showFrictionSheet = true } label: {
-                            Text("Needs setup")
-                                .font(.caption.bold())
-                                .foregroundStyle(.orange)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(Color.orange.opacity(0.12))
-                                .clipShape(Capsule())
+                    if !compactCardMode {
+                        if let anchorName {
+                            Text("↳ After \(anchorName)")
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
                         }
-                        .buttonStyle(.plain)
+
+                        if let tiny = habit.tinyVersion, !tiny.isEmpty {
+                            Text(tiny)
+                                .font(.caption)
+                                .foregroundStyle(Color("Stone500"))
+                        }
+
+                        if hasFriction {
+                            Button { showFrictionSheet = true } label: {
+                                Text("Needs setup")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.orange)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 3)
+                                    .background(Color.orange.opacity(0.12))
+                                    .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -106,7 +111,7 @@ struct HabitCardView: View {
             VStack(alignment: .trailing, spacing: 6) {
                 HStack(spacing: 8) {
                     // Timer button (timed habits only)
-                    if durationMinutes > 0 && !habitWithStatus.isCompleted {
+                    if durationMinutes > 0 && !habitWithStatus.isCompleted && !compactCardMode {
                         Button { showTimer = true } label: {
                             HStack(spacing: 3) {
                                 Image(systemName: "timer")
@@ -127,18 +132,20 @@ struct HabitCardView: View {
                     }
                 }
 
-                Button { showNote = true } label: {
-                    Image(systemName: "pencil.circle")
-                        .font(.title3)
-                        .foregroundStyle(Color("Stone500").opacity(0.6))
+                if !compactCardMode {
+                    Button { showNote = true } label: {
+                        Image(systemName: "pencil.circle")
+                            .font(.title3)
+                            .foregroundStyle(Color("Stone500").opacity(0.6))
+                    }
+                    .buttonStyle(.plain)
+                    .opacity(habitWithStatus.isCompleted ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.3), value: habitWithStatus.isCompleted)
+                    .allowsHitTesting(habitWithStatus.isCompleted)
                 }
-                .buttonStyle(.plain)
-                .opacity(habitWithStatus.isCompleted ? 1 : 0)
-                .animation(.easeInOut(duration: 0.3), value: habitWithStatus.isCompleted)
-                .allowsHitTesting(habitWithStatus.isCompleted)
             }
         }
-        .padding(.vertical, 14)
+        .padding(.vertical, compactCardMode ? 8 : 14)
         .padding(.horizontal, 14)
         .background(
             habitWithStatus.isCompleted
