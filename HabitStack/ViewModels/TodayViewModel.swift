@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import WidgetKit
 
 enum NeverMissTwiceState {
     case warning, comeback, dismissed
@@ -96,6 +97,7 @@ final class TodayViewModel {
                 self.profile = profiles.first
                 self.checkNeverMissTwice(streaks: allStreaks)
                 self.scheduleRetentionNotifications(habits: active, streaks: allStreaks)
+                self.updateWidgetData()
             }
         } catch {
             await MainActor.run { errorMessage = error.localizedDescription }
@@ -134,6 +136,7 @@ final class TodayViewModel {
             await MainActor.run {
                 self.streaks = Dictionary(uniqueKeysWithValues: allStreaks.map { ($0.habitId, $0) })
                 self.profile = profiles.first
+                self.updateWidgetData()
                 if newStatus == .done {
                     self.lastCompletedHabitName = habitName
                     let completedHabit = self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
@@ -249,6 +252,13 @@ final class TodayViewModel {
 
     private var todayDateString: String {
         String(ISO8601DateFormatter().string(from: Date()).prefix(10))
+    }
+
+    private func updateWidgetData() {
+        let defaults = UserDefaults(suiteName: "group.com.tomerab.habitstack") ?? .standard
+        defaults.set(completedHabits, forKey: "widget.completedCount")
+        defaults.set(totalHabits, forKey: "widget.totalCount")
+        WidgetCenter.shared.reloadTimelines(ofKind: "HabitProgressWidget")
     }
 
     func pauseHabit(_ habit: Habit, until: Date) async {

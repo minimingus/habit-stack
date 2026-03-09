@@ -26,13 +26,6 @@ targets:
       - path: HabitStack/Assets.xcassets
       - path: HabitStack/Secrets.plist
         optional: true
-    dependencies:
-      - package: Supabase
-        product: Supabase
-      - package: RevenueCat
-        product: RevenueCat
-      - package: PostHog
-        product: PostHog
     info:
       path: HabitStack/Info.plist
       properties:
@@ -44,11 +37,43 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         NSCameraUsageDescription: Used for profile photos
+    dependencies:
+      - package: Supabase
+        product: Supabase
+      - package: RevenueCat
+        product: RevenueCat
+      - package: PostHog
+        product: PostHog
+      - target: HabitStackWidget
+        embed: true
     settings:
       base:
         SWIFT_VERSION: "5.10"
         DEVELOPMENT_TEAM: FDLSN3ZJFV
         PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack
+        CODE_SIGN_ENTITLEMENTS: HabitStack/HabitStack.entitlements
+
+  HabitStackWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: HabitStackWidget
+    dependencies:
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    info:
+      path: HabitStackWidget/Info.plist
+      properties:
+        CFBundleDisplayName: HabitStack Widget
+        CFBundleIdentifier: com.tomerab.habitstack.widget
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        SWIFT_VERSION: "5.10"
+        DEVELOPMENT_TEAM: FDLSN3ZJFV
+        PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack.widget
+        CODE_SIGN_ENTITLEMENTS: HabitStackWidget/HabitStackWidget.entitlements
 
   HabitStackTests:
     type: bundle.unit-test

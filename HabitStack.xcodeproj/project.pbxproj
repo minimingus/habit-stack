@@ -30,6 +30,7 @@
 		455F709ECA6E5DFE5BF67DC6 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 0A812E7121CDC5E04CE0D684 /* RevenueCat */; };
 		47EB742F01ADE2C79B220688 /* ConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */; };
 		49F60F45CE88FE31CB00F4A2 /* IdentityStatementBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320AB53D1D73CD148764A43 /* IdentityStatementBanner.swift */; };
+		49FB92324B10D849218E0357 /* HabitStackWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FD270019FD1B3209E184F9 /* HabitStackWidget.swift */; };
 		4B4CF58799D9246ADDD68697 /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BF875B257BFB51BDF46E89 /* HeatmapView.swift */; };
 		4C6FB6509E5EC772632EABF6 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D42396C55B3521646C4658A /* HapticManager.swift */; };
 		504D7EA641DAF8C6967D1042 /* MilestoneCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86416A3BAFD5F3B6EE48C7CD /* MilestoneCelebrationView.swift */; };
@@ -47,11 +48,14 @@
 		668D57A3A722D47DE1C51C45 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F281294986393E1A8729EF /* SkeletonView.swift */; };
 		68503B3604E69328A033492D /* XPHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BC204FC6086DE968CA7BA5 /* XPHeaderView.swift */; };
 		69D41D1BBBE30970597B9BC4 /* HabitTemplateLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2AB016818D0FB56E202366 /* HabitTemplateLibraryView.swift */; };
+		6CDBF1E1B29369152326F312 /* HabitStackWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9CAFFE310EEFAC09F422B2A0 /* HabitStackWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6DD7B6E603B0253E3E41C025 /* Secrets.example.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */; };
 		6E95083A105E86F942A0786F /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99311980A85509AB5E78DA /* AuthView.swift */; };
 		6F35AEF61E62E81FA7234A29 /* ArchivedHabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68772CACACD02DE7B5F4C05 /* ArchivedHabitsView.swift */; };
 		72A034D36C5F502C4A2B796B /* HabitWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD291C1BEA57F1097DB22E35 /* HabitWizardView.swift */; };
+		74C4CF31BB8641E873ACC787 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C3CBCA6628EA918B676B0AA /* SwiftUI.framework */; };
 		7BBB560D1C599914A4CBA6D1 /* StreakService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7009EA0C484B59A8366E25 /* StreakService.swift */; };
+		7CF77053CF810D24A6F3A30C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0710092D60DD015AC55FE38 /* WidgetKit.framework */; };
 		8E499E29A254FF59EC05C01E /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7A8A722C9F2EC4C353CA55 /* OnboardingContainerView.swift */; };
 		94AC5822A7C51019945FF18C /* CoachService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BC17BB1E3610E60641C444 /* CoachService.swift */; };
 		968E77D686857459156C27FD /* FourLawsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07338F47311998F391D4EC6E /* FourLawsView.swift */; };
@@ -101,7 +105,28 @@
 			remoteGlobalIDString = BAB59418677BF259759EE243;
 			remoteInfo = HabitStack;
 		};
+		2F5E38676AA04157B011AF0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2278DE30C305A927ADD33A25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC46CC5F03681EF13EFA047D;
+			remoteInfo = HabitStackWidget;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6B7E8804566F01142F3EF3C4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6CDBF1E1B29369152326F312 /* HabitStackWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		04A9DCE881FFF6905BBF977C /* CompletionNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionNoteSheet.swift; sourceTree = "<group>"; };
@@ -118,6 +143,7 @@
 		2B6A9695532242A11BF5EE09 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		2F2AB016818D0FB56E202366 /* HabitTemplateLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTemplateLibraryView.swift; sourceTree = "<group>"; };
 		3021DAF6DE8A4CD8DCE85FA8 /* StreakBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBadge.swift; sourceTree = "<group>"; };
+		32F4CA89DFDAA815870F01AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		34DC5E6193FA3DAC935A9EB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		36CF7AD25FC19A87E9CB0B51 /* DailyInsightCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyInsightCard.swift; sourceTree = "<group>"; };
 		3DA90EF2F41E82ACBEBE054B /* WeeklyReflectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflectionView.swift; sourceTree = "<group>"; };
@@ -126,11 +152,13 @@
 		4B741AFCD42DA4B070087E51 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5487F060D6880ECB470D226F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		5D42396C55B3521646C4658A /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		60FD270019FD1B3209E184F9 /* HabitStackWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitStackWidget.swift; sourceTree = "<group>"; };
 		619B5479D502BADA36DFDD9F /* StreakShareCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakShareCard.swift; sourceTree = "<group>"; };
 		626D3291137D7E27A2415FCA /* StreakBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBarView.swift; sourceTree = "<group>"; };
 		6548DB26D57BF808B91201CC /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
 		6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.example.plist; sourceTree = "<group>"; };
 		689304489B1311A7EF416882 /* IdentityVote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVote.swift; sourceTree = "<group>"; };
+		6C3CBCA6628EA918B676B0AA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		6D44E33453C575119AEB7761 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
 		6D7AC66A652B7E92253C6A2E /* HabitFrictionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitFrictionSheet.swift; sourceTree = "<group>"; };
 		73C268BA418892607939025B /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -147,12 +175,14 @@
 		8256A93DF268652D46FD372A /* HabitTemplateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTemplateLibrary.swift; sourceTree = "<group>"; };
 		86416A3BAFD5F3B6EE48C7CD /* MilestoneCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneCelebrationView.swift; sourceTree = "<group>"; };
 		8755D5F7B381A50FF2E2AB54 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
+		8784B66DC346C53E0DCEAFC3 /* HabitStack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitStack.entitlements; sourceTree = "<group>"; };
 		8B3A238D3815F241DD164337 /* RevenueCatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueCatManager.swift; sourceTree = "<group>"; };
 		9121C20AB6F47275C0566F94 /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
 		95ADFDFC1B987B20BC879E17 /* HabitWizardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWizardViewModel.swift; sourceTree = "<group>"; };
 		978B04D383502B53C766F257 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		9888A1DCE8CBBBE5BA56A043 /* AdminSpendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminSpendView.swift; sourceTree = "<group>"; };
 		9AF9A8EF7AB4137DFA1DC038 /* HabitStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitStackApp.swift; sourceTree = "<group>"; };
+		9CAFFE310EEFAC09F422B2A0 /* HabitStackWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HabitStackWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DFD365CCD95709EFB974DD8 /* HabitCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCardView.swift; sourceTree = "<group>"; };
 		A2644443501BB2AA34A352F0 /* NeverMissTwiceBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeverMissTwiceBanner.swift; sourceTree = "<group>"; };
 		A28D29C48C373421DC70178E /* WizardStepRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardStepRoutineView.swift; sourceTree = "<group>"; };
@@ -166,6 +196,7 @@
 		B68772CACACD02DE7B5F4C05 /* ArchivedHabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedHabitsView.swift; sourceTree = "<group>"; };
 		BE0E02981840AFC193CC82D4 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		BF1BBAC76D5403D2986F2F7D /* HabitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitService.swift; sourceTree = "<group>"; };
+		C0710092D60DD015AC55FE38 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalendarView.swift; sourceTree = "<group>"; };
 		C811B14B68AE8BA06CBC5E9A /* WhatsNewRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewRegistry.swift; sourceTree = "<group>"; };
@@ -175,6 +206,7 @@
 		D333811368CCDA0A7BA218C9 /* StreakCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalculationTests.swift; sourceTree = "<group>"; };
 		DA3E8AB40BC7350CDDC68688 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		DE31C8D6D28A369F72A3BF27 /* CoachViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachViewModel.swift; sourceTree = "<group>"; };
+		DEACFD07E01FEB3C38FFB37F /* HabitStackWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitStackWidget.entitlements; sourceTree = "<group>"; };
 		E293D67F5C77FC88273764B5 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
 		E6AD53D3389F721D32D8E745 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		E886FDF535F38513C2500F76 /* CheckButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckButton.swift; sourceTree = "<group>"; };
@@ -191,6 +223,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		239B8A536F10CC8764838FE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CF77053CF810D24A6F3A30C /* WidgetKit.framework in Frameworks */,
+				74C4CF31BB8641E873ACC787 /* SwiftUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		76A03D6881D49E63F08B85F6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -243,10 +284,20 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		24F8EA9BB4552D3F43C3F4C5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6C3CBCA6628EA918B676B0AA /* SwiftUI.framework */,
+				C0710092D60DD015AC55FE38 /* WidgetKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		26F060CA9A27979DDDF4EB33 /* HabitStack */ = {
 			isa = PBXGroup;
 			children = (
 				0A28D864C95319FCAEF8C6F8 /* Assets.xcassets */,
+				8784B66DC346C53E0DCEAFC3 /* HabitStack.entitlements */,
 				9AF9A8EF7AB4137DFA1DC038 /* HabitStackApp.swift */,
 				34DC5E6193FA3DAC935A9EB7 /* Info.plist */,
 				6840DBB7FDAA4C05E25DFF1D /* Secrets.example.plist */,
@@ -297,6 +348,16 @@
 				C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		756706D20599FC5FD397980F /* HabitStackWidget */ = {
+			isa = PBXGroup;
+			children = (
+				DEACFD07E01FEB3C38FFB37F /* HabitStackWidget.entitlements */,
+				60FD270019FD1B3209E184F9 /* HabitStackWidget.swift */,
+				32F4CA89DFDAA815870F01AC /* Info.plist */,
+			);
+			path = HabitStackWidget;
 			sourceTree = "<group>";
 		};
 		87289DFDA29E30F452330C16 /* WhatsNew */ = {
@@ -400,6 +461,8 @@
 			children = (
 				26F060CA9A27979DDDF4EB33 /* HabitStack */,
 				C14ACBD9ED034F23247433B6 /* HabitStackTests */,
+				756706D20599FC5FD397980F /* HabitStackWidget */,
+				24F8EA9BB4552D3F43C3F4C5 /* Frameworks */,
 				F68045A98950F76CCD70FBDA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -450,6 +513,7 @@
 			children = (
 				FE851F29FC26185825544981 /* HabitStack.app */,
 				EC5FC5AED9021DAA1F75118B /* HabitStackTests.xctest */,
+				9CAFFE310EEFAC09F422B2A0 /* HabitStackWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -482,10 +546,12 @@
 				A91FE50E089B50B6D06F2572 /* Sources */,
 				328545D0E4BC803011BC0285 /* Resources */,
 				76A03D6881D49E63F08B85F6 /* Frameworks */,
+				6B7E8804566F01142F3EF3C4 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D0BE2543EE7CE89F5EEFDA7D /* PBXTargetDependency */,
 			);
 			name = HabitStack;
 			packageProductDependencies = (
@@ -496,6 +562,24 @@
 			productName = HabitStack;
 			productReference = FE851F29FC26185825544981 /* HabitStack.app */;
 			productType = "com.apple.product-type.application";
+		};
+		BC46CC5F03681EF13EFA047D /* HabitStackWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 94A197EF088D8396EC255DA3 /* Build configuration list for PBXNativeTarget "HabitStackWidget" */;
+			buildPhases = (
+				E4FF22DE88D46BC93DF1A43B /* Sources */,
+				239B8A536F10CC8764838FE7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HabitStackWidget;
+			packageProductDependencies = (
+			);
+			productName = HabitStackWidget;
+			productReference = 9CAFFE310EEFAC09F422B2A0 /* HabitStackWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -510,6 +594,9 @@
 						DevelopmentTeam = FDLSN3ZJFV;
 					};
 					BAB59418677BF259759EE243 = {
+						DevelopmentTeam = FDLSN3ZJFV;
+					};
+					BC46CC5F03681EF13EFA047D = {
 						DevelopmentTeam = FDLSN3ZJFV;
 					};
 				};
@@ -535,6 +622,7 @@
 			targets = (
 				BAB59418677BF259759EE243 /* HabitStack */,
 				1088ACD5DAD8A1658E3DEDD4 /* HabitStackTests */,
+				BC46CC5F03681EF13EFA047D /* HabitStackWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -645,9 +733,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E4FF22DE88D46BC93DF1A43B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49FB92324B10D849218E0357 /* HabitStackWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D0BE2543EE7CE89F5EEFDA7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC46CC5F03681EF13EFA047D /* HabitStackWidget */;
+			targetProxy = 2F5E38676AA04157B011AF0F /* PBXContainerItemProxy */;
+		};
 		E711B6A8EFDEA4F7286C7F13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BAB59418677BF259759EE243 /* HabitStack */;
@@ -723,6 +824,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HabitStack/HabitStack.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStack/Info.plist;
@@ -760,6 +862,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HabitStack/HabitStack.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStack/Info.plist;
@@ -768,6 +871,42 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tomerab.habitstack;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9C817CB28AB50664708F3BBC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HabitStackWidget/HabitStackWidget.entitlements;
+				DEVELOPMENT_TEAM = FDLSN3ZJFV;
+				INFOPLIST_FILE = HabitStackWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tomerab.habitstack.widget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9E90993E4CF56E7B783B16DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HabitStackWidget/HabitStackWidget.entitlements;
+				DEVELOPMENT_TEAM = FDLSN3ZJFV;
+				INFOPLIST_FILE = HabitStackWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tomerab.habitstack.widget;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -866,6 +1005,15 @@
 			buildConfigurations = (
 				7EDF6B1557542570F27EE1B3 /* Debug */,
 				E86EC71082DD3E06DC4DA3EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		94A197EF088D8396EC255DA3 /* Build configuration list for PBXNativeTarget "HabitStackWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E90993E4CF56E7B783B16DA /* Debug */,
+				9C817CB28AB50664708F3BBC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
