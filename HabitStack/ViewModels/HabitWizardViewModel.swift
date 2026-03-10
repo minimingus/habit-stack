@@ -57,6 +57,10 @@ final class HabitWizardViewModel {
         cue = "When I feel like \(behavior)"
     }
 
+    func prefill(stackingAfter behavior: String) {
+        cue = "After I \(behavior)"
+    }
+
     func prefill(from habit: Habit) {
         isEditing = true
         editingHabitId = habit.id

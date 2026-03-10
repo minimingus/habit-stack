@@ -10,6 +10,8 @@ struct HabitsScorecardView: View {
     @State private var newBehavior = ""
     @State private var replacingBehavior: String? = nil
     @State private var showReplaceWizard = false
+    @State private var stackingBehavior: String? = nil
+    @State private var showStackWizard = false
     @FocusState private var inputFocused: Bool
     @Environment(\.dismiss) private var dismiss
 
@@ -108,7 +110,8 @@ struct HabitsScorecardView: View {
                                     entry: entry,
                                     onRatingChanged: { setRating($0, for: entry.id) },
                                     onDelete: { deleteEntry(id: entry.id) },
-                                    onReplace: { replacingBehavior = entry.behavior; showReplaceWizard = true }
+                                    onReplace: { replacingBehavior = entry.behavior; showReplaceWizard = true },
+                                    onStack: { stackingBehavior = entry.behavior; showStackWizard = true }
                                 )
                                 if entry.id != entries.last?.id {
                                     Divider().padding(.leading, 16)
@@ -171,6 +174,11 @@ struct HabitsScorecardView: View {
                 }
             }
         }
+        .sheet(isPresented: $showStackWizard, onDismiss: { stackingBehavior = nil }) {
+            if let behavior = stackingBehavior {
+                HabitWizardView(stackingAfterBehavior: behavior) { }
+            }
+        }
     }
 
     // MARK: - Actions
@@ -208,6 +216,7 @@ private struct ScorecardEntryRow: View {
     let onRatingChanged: (ScorecardEntry.Rating?) -> Void
     let onDelete: () -> Void
     let onReplace: () -> Void
+    let onStack: () -> Void
 
     var body: some View {
         HStack(spacing: 10) {
@@ -223,7 +232,15 @@ private struct ScorecardEntryRow: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if entry.rating == .negative {
                     Button { onReplace() } label: {
-                        Label("Replace it", systemImage: "arrow.right")
+                        Label("Replace it", systemImage: "arrow.triangle.2.circlepath")
+                            .font(.caption.bold())
+                            .foregroundStyle(.red.opacity(0.7))
+                    }
+                    .buttonStyle(.plain)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                } else if entry.rating == .positive {
+                    Button { onStack() } label: {
+                        Label("Stack on it", systemImage: "arrow.right")
                             .font(.caption.bold())
                             .foregroundStyle(Color("Teal"))
                     }

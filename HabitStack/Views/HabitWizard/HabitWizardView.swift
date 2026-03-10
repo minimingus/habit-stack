@@ -4,6 +4,7 @@ struct HabitWizardView: View {
     var template: HabitTemplate? = nil
     var editingHabit: Habit? = nil
     var replacingBehavior: String? = nil
+    var stackingAfterBehavior: String? = nil
     var editingStreak: Int = 0
     let onSave: () -> Void
 
@@ -93,6 +94,9 @@ struct HabitWizardView: View {
             }
             if let behavior = replacingBehavior {
                 viewModel.prefill(replacing: behavior)
+            }
+            if let behavior = stackingAfterBehavior {
+                viewModel.prefill(stackingAfter: behavior)
             }
         }
         .alert("Couldn't Save Habit", isPresented: Binding(

@@ -5,6 +5,7 @@ struct TodayView: View {
     @State private var showHabitWizard = false
     @State private var editingHabit: Habit?
     @State private var selectedTab: Int = 0
+    @State private var showScorecard = false
 
     var body: some View {
         NavigationStack {
@@ -13,13 +14,24 @@ struct TodayView: View {
                     if viewModel.isLoading {
                         SkeletonView()
                     } else if viewModel.totalHabits == 0 {
-                        EmptyStateView(
-                            icon: "checkmark.circle",
-                            headline: "No habits yet",
-                            subtext: "Start with just one habit. Small beats ambitious.",
-                            cta: "Add Habit",
-                            onCTA: { showHabitWizard = true }
-                        )
+                        let hasScorecard = !ScorecardEntry.load().isEmpty
+                        if hasScorecard {
+                            EmptyStateView(
+                                icon: "clipboard",
+                                headline: "Your inventory is ready",
+                                subtext: "You mapped your daily behaviors. Pick one to replace or stack onto — that's how new habits stick.",
+                                cta: "Review my behaviors →",
+                                onCTA: { showScorecard = true }
+                            )
+                        } else {
+                            EmptyStateView(
+                                icon: "checkmark.circle",
+                                headline: "No habits yet",
+                                subtext: "Start with just one habit. Small beats ambitious.",
+                                cta: "Add Habit",
+                                onCTA: { showHabitWizard = true }
+                            )
+                        }
                     } else {
                         List {
                             // XP Header (includes identity statement inline)
@@ -182,6 +194,11 @@ struct TodayView: View {
                 HabitWizardView {
                     Task { await viewModel.loadToday() }
                 }
+            }
+            .sheet(isPresented: $showScorecard, onDismiss: {
+                Task { await viewModel.loadToday() }
+            }) {
+                HabitsScorecardView()
             }
             .sheet(item: $editingHabit) { habit in
                 HabitWizardView(
