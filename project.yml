@@ -50,6 +50,7 @@ targets:
       base:
         SWIFT_VERSION: "5.10"
         DEVELOPMENT_TEAM: FDLSN3ZJFV
+        CODE_SIGN_STYLE: Automatic
         PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack
         CODE_SIGN_ENTITLEMENTS: HabitStack/HabitStack.entitlements
 
@@ -72,6 +73,7 @@ targets:
       base:
         SWIFT_VERSION: "5.10"
         DEVELOPMENT_TEAM: FDLSN3ZJFV
+        CODE_SIGN_STYLE: Automatic
         PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack.widget
         CODE_SIGN_ENTITLEMENTS: HabitStackWidget/HabitStackWidget.entitlements
 

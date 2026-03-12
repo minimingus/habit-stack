@@ -598,9 +598,11 @@
 					};
 					BAB59418677BF259759EE243 = {
 						DevelopmentTeam = FDLSN3ZJFV;
+						ProvisioningStyle = Automatic;
 					};
 					BC46CC5F03681EF13EFA047D = {
 						DevelopmentTeam = FDLSN3ZJFV;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -830,6 +832,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HabitStack/HabitStack.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStack/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -868,6 +871,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HabitStack/HabitStack.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStack/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -885,6 +889,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = HabitStackWidget/HabitStackWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStackWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -903,6 +908,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = HabitStackWidget/HabitStackWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FDLSN3ZJFV;
 				INFOPLIST_FILE = HabitStackWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
