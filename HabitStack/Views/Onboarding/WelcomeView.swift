@@ -8,7 +8,7 @@ struct WelcomeView: View {
             Spacer()
 
             VStack(spacing: 16) {
-                Text("HabitStack")
+                Text("Better You")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(Color("Teal"))
 

@@ -54,7 +54,7 @@ struct StreakShareCard: View {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.caption)
                         .foregroundStyle(Color(hex: "#0D9488"))
-                    Text("HabitStack")
+                    Text("Better You")
                         .font(.caption.bold())
                         .foregroundStyle(Color(hex: "#94a3b8"))
                 }
