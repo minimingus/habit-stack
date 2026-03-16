@@ -20,7 +20,7 @@ struct FourLawsView: View {
                     )
                     .padding(.horizontal, 16)
 
-                    // MARK: 2. Habits Scorecard — prominent action
+                    // MARK: 2. Daily Review — prominent action
                     Button { showScorecard = true } label: {
                         HStack(spacing: 16) {
                             ZStack {
