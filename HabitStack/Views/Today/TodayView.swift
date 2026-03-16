@@ -28,7 +28,7 @@ struct TodayView: View {
                                 icon: "checkmark.circle",
                                 headline: "No habits yet",
                                 subtext: "Start with just one habit. Small beats ambitious.",
-                                cta: "Add Habit",
+                                cta: "Adopt a Habit",
                                 onCTA: { showHabitWizard = true }
                             )
                         }
