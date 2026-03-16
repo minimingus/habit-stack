@@ -100,7 +100,7 @@ struct IdentityToastView: View {
         HStack(spacing: 6) {
             Image(systemName: "person.fill.checkmark")
                 .foregroundStyle(.white)
-            Text("Vote cast: I am someone who \(statement.lowercased())")
+            Text("Vote cast: I want to become someone who \(statement.lowercased())")
                 .font(.caption.bold())
                 .foregroundStyle(.white)
                 .lineLimit(2)
