@@ -31,7 +31,7 @@ struct WizardStepCravingView: View {
                         .foregroundStyle(Color("Stone500"))
                 }
 
-                FormSection(title: "I am becoming the type of person who…") {
+                FormSection(title: "Who do you want to become?") {
                     VStack(alignment: .leading, spacing: 10) {
                         if !filteredIdentities.isEmpty {
                             ChipGrid(spacing: 8) {
