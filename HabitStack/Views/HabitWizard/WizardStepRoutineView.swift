@@ -4,11 +4,6 @@ struct WizardStepRoutineView: View {
     @Bindable var viewModel: HabitWizardViewModel
 
     var body: some View {
-    // Calendar weekday convention: 1=Sun, 2=Mon … 7=Sat
-    private static let weekdays: [(label: String, value: Int)] = [
-        ("S", 1), ("M", 2), ("T", 3), ("W", 4), ("T", 5), ("F", 6), ("S", 7)
-    ]
-
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
