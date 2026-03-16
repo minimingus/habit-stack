@@ -11,13 +11,26 @@ struct MilestoneCelebrationView: View {
     private var milestoneName: String {
         switch streakDays {
         case 0: return "Perfect Day"
-        case 7: return "Week Warrior"
-        case 14: return "Two Weeks Strong"
+        case 7: return "One Week In"
+        case 14: return "Showing Up Daily"
         case 21: return "Habit Forming"
-        case 30: return "One Month Champion"
+        case 30: return "One Month of Showing Up"
         case 66: return "Automatic"
-        case 100: return "Centurion"
-        default: return "\(streakDays)-Day Streak"
+        case 100: return "100 Days of Consistency"
+        default: return "\(streakDays) Days of Showing Up"
+        }
+    }
+
+    private var milestoneMessage: String {
+        switch streakDays {
+        case 0: return "Every habit. Every day. That's consistency."
+        case 7: return "Seven days of showing up. Consistency beats motivation every time."
+        case 14: return "Two weeks of daily practice. The habit is taking root."
+        case 21: return "Three weeks of showing up. Consistency is becoming your default."
+        case 30: return "One month of daily action. This is who you are now."
+        case 66: return "66 days. Showing up has become automatic."
+        case 100: return "100 days of consistency. Not a streak — a lifestyle."
+        default: return "Consistent action compounds. Keep showing up."
         }
     }
 
@@ -54,21 +67,12 @@ struct MilestoneCelebrationView: View {
                 }
             }
 
-            if streakDays == 0 {
-                Text("Every habit. Every day. That's identity.")
-                    .font(.body)
-                    .foregroundStyle(Color("Stone500"))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-                    .padding(.top, 24)
-            } else {
-                Text("Every rep makes you more of the person you want to become.")
-                    .font(.body)
-                    .foregroundStyle(Color("Stone500"))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-                    .padding(.top, 24)
-            }
+            Text(milestoneMessage)
+                .font(.body)
+                .foregroundStyle(Color("Stone500"))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+                .padding(.top, 24)
 
             Spacer()
 
