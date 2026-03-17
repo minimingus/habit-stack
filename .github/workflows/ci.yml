@@ -70,7 +70,7 @@ jobs:
           xcodebuild build-for-testing \
             -project HabitStack.xcodeproj \
             -scheme HabitStack \
-            -destination "platform=iOS Simulator,name=iPhone 16" \
+            -destination "platform=iOS Simulator,OS=latest,name=iPhone 16" \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
@@ -80,6 +80,6 @@ jobs:
           xcodebuild test-without-building \
             -project HabitStack.xcodeproj \
             -scheme HabitStackTests \
-            -destination "platform=iOS Simulator,name=iPhone 16" \
+            -destination "platform=iOS Simulator,OS=latest,name=iPhone 16" \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
