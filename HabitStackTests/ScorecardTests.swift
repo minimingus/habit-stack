@@ -1,6 +1,31 @@
 import Testing
 @testable import HabitStack
 
+// MARK: - ScorecardService (implementation lives here until project.pbxproj is regenerated via xcodegen)
+
+enum ScorecardDimension { case sleep, movement, mind, growth }
+
+struct ScorecardResult {
+    let sleep: Int
+    let movement: Int
+    let mind: Int
+    let growth: Int
+    let recommended: ScorecardDimension
+}
+
+enum ScorecardService {
+    static func calculate(sleep: Int, movement: Int, mind: Int, growth: Int) -> ScorecardResult {
+        // Priority order for tie-breaking: sleep > movement > mind > growth
+        let ranked: [(ScorecardDimension, Int)] = [
+            (.sleep, sleep), (.movement, movement), (.mind, mind), (.growth, growth)
+        ]
+        let minScore = ranked.map(\.1).min() ?? 0
+        let recommended = ranked.first(where: { $0.1 == minScore })!.0
+        return ScorecardResult(sleep: sleep, movement: movement, mind: mind, growth: growth,
+                               recommended: recommended)
+    }
+}
+
 @Suite("Scorecard Service Tests")
 struct ScorecardTests {
 

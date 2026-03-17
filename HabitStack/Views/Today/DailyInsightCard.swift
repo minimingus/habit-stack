@@ -21,7 +21,7 @@ struct DailyInsightCard: View {
         "Each habit not only gets results but also teaches you something far more important: to trust yourself.",
         "The secret to getting results that last is to never stop making improvements.",
         "When you fall in love with the process rather than the product, you don't have to wait to give yourself permission to be happy.",
-        "Reduce the friction associated with good behaviors. Increase the friction associated with bad behaviors.",
+        "Reduce the friction associated with good behaviors. Increase the friction associated with habits you want to change.",
         "The 2-Minute Rule: Make it so easy you can't say no.",
         "Your current habits are perfectly designed to deliver your current results.",
         "Environment is the invisible hand that shapes human behavior.",
@@ -31,7 +31,7 @@ struct DailyInsightCard: View {
         "A habit must be established before it can be improved.",
         "Implementation intention: I will [behavior] at [time] in [location].",
         "Habit stacking: After I [current habit], I will [new habit].",
-        "The costs of your bad habits are in the future. The rewards are in the present.",
+        "The costs of habits you want to change are in the future. The rewards are in the present.",
         "It's not about any single accomplishment. It is about the cycle of endless refinement and continuous improvement.",
         "You should be far more concerned with your current trajectory than with your current results.",
     ]
