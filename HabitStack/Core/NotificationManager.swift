@@ -21,7 +21,7 @@ final class NotificationManager {
         content.title = "\(habit.emoji) \(habit.name)"
 
         if let streak, streak.currentStreak > 0 {
-            content.body = "Don't break your \(streak.currentStreak)-day streak!"
+            content.body = "Keep your \(streak.currentStreak)-day consistency going."
         } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
             content.body = "Takes just 2 minutes: \(tiny)"
         } else {
@@ -77,11 +77,11 @@ final class NotificationManager {
         guard !habits.isEmpty else { return }
         let content = UNMutableNotificationContent()
         if habits.count == 1 {
-            content.title = "Streak at risk"
-            content.body = "Don't break your \(habits[0].streak)-day streak for \(habits[0].name)."
+            content.title = "Keep your consistency going"
+            content.body = "Stay consistent with \(habits[0].name) — \(habits[0].streak) days and counting."
         } else {
-            content.title = "Streaks at risk"
-            content.body = "\(habits.count) habits with active streaks are waiting for you."
+            content.title = "Stay consistent today"
+            content.body = "\(habits.count) habits are waiting. Consistency is built one day at a time."
         }
         content.sound = .default
         var comps = DateComponents()
@@ -136,7 +136,7 @@ final class NotificationManager {
 
         let content = UNMutableNotificationContent()
         content.title = "\(habit.emoji) \(habit.name)"
-        content.body = "You usually do this around \(formatHour(typicalHour)). Don't break the chain!"
+        content.body = "You usually do this around \(formatHour(typicalHour)). Stay consistent today!"
         content.sound = .default
 
         var comps = DateComponents()
@@ -154,7 +154,7 @@ final class NotificationManager {
             let content = UNMutableNotificationContent()
             content.title = "\(habit.emoji) \(habit.name)"
             if let streak, streak.currentStreak > 0 {
-                content.body = "Don't break your \(streak.currentStreak)-day streak!"
+                content.body = "Keep your \(streak.currentStreak)-day consistency going."
             } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
                 content.body = "Takes just 2 minutes: \(tiny)"
             } else {
