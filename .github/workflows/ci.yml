@@ -35,15 +35,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Homebrew
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /usr/local/Cellar/mint
+          key: brew-mint-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: brew-mint-${{ runner.os }}-
+
       - name: Install Mint
         run: brew install mint
+
+      - name: Cache Mint packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.mint
+          key: mint-${{ runner.os }}-${{ hashFiles('Mintfile', '.github/workflows/ci.yml') }}
+          restore-keys: mint-${{ runner.os }}-
 
       - name: Install XcodeGen
         run: mint install yonaskolb/XcodeGen
 
       - name: Write Secrets.plist
         run: |
-          cat > HabitStack/Secrets.plist <<EOF
+          cat > HabitStack/Secrets.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -54,10 +70,19 @@ jobs:
             <key>PostHogAPIKey</key><string>${{ secrets.POSTHOG_API_KEY }}</string>
           </dict>
           </plist>
-          EOF
+          PLIST
 
       - name: Generate Xcode project
         run: mint run xcodegen generate
+
+      - name: Cache SPM packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+            ~/Library/Caches/org.swift.swiftpm
+          key: spm-${{ runner.os }}-${{ hashFiles('**/Package.resolved', 'project.yml') }}
+          restore-keys: spm-${{ runner.os }}-
 
       - name: Resolve SPM packages
         run: xcodebuild -resolvePackageDependencies -project HabitStack.xcodeproj -scheme HabitStack
