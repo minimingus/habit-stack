@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 /// Onboarding Screen 1: "Imagine Your Future Self"
 struct OnboardingVisionView: View {
@@ -69,6 +70,7 @@ struct OnboardingVisionView: View {
         .onAppear {
             showText = true
             pulseAnimation = true
+            PostHogSDK.shared.capture("onboarding_started")
         }
     }
 }

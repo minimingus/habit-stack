@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 /// Onboarding Screen 4: "Swipe to Adopt Habits"
 struct OnboardingHabitSwipeView: View {
@@ -89,12 +90,20 @@ struct OnboardingHabitSwipeView: View {
     }
     
     private func skipHabit(at index: Int) {
+        PostHogSDK.shared.capture("onboarding_habit_swiped", properties: [
+            "habit_name": suggestedHabits[index].name,
+            "direction": "skipped"
+        ])
         withAnimation {
             currentIndex += 1
         }
     }
-    
+
     private func adoptHabit(at index: Int) {
+        PostHogSDK.shared.capture("onboarding_habit_swiped", properties: [
+            "habit_name": suggestedHabits[index].name,
+            "direction": "adopted"
+        ])
         withAnimation {
             adoptedHabits.append(suggestedHabits[index])
             currentIndex += 1

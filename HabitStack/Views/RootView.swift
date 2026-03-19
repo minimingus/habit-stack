@@ -1,6 +1,7 @@
 import SwiftUI
 import Supabase
 import Observation
+import PostHog
 
 @Observable
 final class RootViewModel {
@@ -76,6 +77,7 @@ struct MainTabView: View {
         }
         .tint(Color("Teal"))
         .task {
+            PostHogSDK.shared.capture("app_opened")
             whatsNewService.bootstrapIfNeeded()
             NotificationManager.shared.scheduleInactiveUserReminder()
             await checkWeeklyReflection()
@@ -97,6 +99,7 @@ struct MainTabView: View {
             WeeklyReflectionView(habitStats: habitStats, onDismiss: {
                 showWeeklyReflection = false
             }, onSnooze: {
+                PostHogSDK.shared.capture("weekly_reflection_snoozed")
                 // Set last date to 20h ago so it re-prompts in ~4 hours
                 let snoozeDate = Date().addingTimeInterval(-20 * 3600)
                 UserDefaults.standard.set(snoozeDate.timeIntervalSince1970, forKey: "lastWeeklyReflectionDate")

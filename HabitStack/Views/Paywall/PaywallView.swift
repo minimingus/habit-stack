@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
@@ -96,9 +97,15 @@ struct PaywallView: View {
                         .padding(.bottom, 24)
                 }
             }
+            .onAppear {
+                PostHogSDK.shared.capture("paywall_shown")
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Maybe Later") { dismiss() }
+                    Button("Maybe Later") {
+                        PostHogSDK.shared.capture("paywall_dismissed")
+                        dismiss()
+                    }
                         .foregroundStyle(Color("Stone500"))
                 }
             }
@@ -108,12 +115,15 @@ struct PaywallView: View {
     private func purchase() async {
         isLoading = true
         errorMessage = nil
+        let planName = selectedPlan == .annual ? "annual" : "monthly"
+        PostHogSDK.shared.capture("purchase_started", properties: ["plan": planName])
         do {
             if selectedPlan == .annual {
                 try await RevenueCatManager.shared.purchaseAnnual()
             } else {
                 try await RevenueCatManager.shared.purchaseMonthly()
             }
+            PostHogSDK.shared.capture("purchase_completed", properties: ["plan": planName])
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
@@ -125,6 +135,7 @@ struct PaywallView: View {
         isLoading = true
         do {
             try await RevenueCatManager.shared.restorePurchases()
+            PostHogSDK.shared.capture("purchase_restored")
             dismiss()
         } catch {
             errorMessage = error.localizedDescription

@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 import WidgetKit
+import PostHog
 
 enum NeverMissTwiceState {
     case warning, comeback, dismissed
@@ -129,6 +130,9 @@ final class TodayViewModel {
 
         do {
             try await HabitService.shared.logHabit(habitId: habitId, userId: userId, status: newStatus)
+            if newStatus == .done {
+                PostHogSDK.shared.capture("habit_completed", properties: ["habit_name": habitName])
+            }
             let allStreaks = try await StreakService.shared.fetchStreaks(userId: userId)
             let profiles: [Profile] = (try? await supabase
                 .from("profiles")
@@ -187,6 +191,10 @@ final class TodayViewModel {
         guard !UserDefaults.standard.bool(forKey: key) else { return }
         UserDefaults.standard.set(true, forKey: key)
         UserDefaults.standard.set(true, forKey: "achievement_milestone_\(count)")
+        PostHogSDK.shared.capture("streak_milestone", properties: [
+            "habit_name": habitName,
+            "streak_days": count
+        ])
         milestoneStreak = count
         milestoneHabitName = habitName
         showMilestone = true

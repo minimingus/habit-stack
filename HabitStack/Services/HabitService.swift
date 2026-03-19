@@ -1,5 +1,6 @@
 import Foundation
 import Supabase
+import PostHog
 
 enum HabitServiceError: Error {
     case freeTierHabitLimit
@@ -63,6 +64,10 @@ final class HabitService {
             }
         }
         try await supabase.from("habits").insert(habit).execute()
+        PostHogSDK.shared.capture("habit_created", properties: [
+            "habit_name": habit.name,
+            "time_of_day": habit.timeOfDay.rawValue
+        ])
         NotificationManager.shared.scheduleReminder(for: habit)
     }
 

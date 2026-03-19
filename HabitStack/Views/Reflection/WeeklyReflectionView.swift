@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 private enum WeekMood: String, CaseIterable {
     case steady    = "Steady week ✓"
@@ -197,6 +198,9 @@ struct WeeklyReflectionView: View {
         history.append(reflection)
         UserDefaults.standard.set(history, forKey: "weeklyReflections")
         UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "lastWeeklyReflectionDate")
+        PostHogSDK.shared.capture("weekly_reflection_completed", properties: [
+            "mood": selectedMood?.rawValue ?? "none"
+        ])
         HapticManager.notification(.success)
         if let mood = selectedMood {
             savedMood = mood   // show response screen

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 /// Main onboarding coordinator view
 struct OnboardingFlow: View {
@@ -37,6 +38,9 @@ struct OnboardingFlow: View {
             OnboardingIdentitySelectionView(
                 selectedTraits: $state.selectedTraits
             ) {
+                PostHogSDK.shared.capture("onboarding_identity_selected", properties: [
+                    "traits": Array(state.selectedTraits).map(\.rawValue)
+                ])
                 state.navigate(to: .philosophy)
             }
 
@@ -44,6 +48,7 @@ struct OnboardingFlow: View {
             OnboardingPhilosophyView(
                 selectedTraits: Array(state.selectedTraits)
             ) {
+                PostHogSDK.shared.capture("onboarding_philosophy_completed")
                 state.navigate(to: .habitSwipe)
             }
 
@@ -100,6 +105,11 @@ struct OnboardingFlow: View {
         } catch {
             // Non-fatal — habits can be added later; don't block onboarding completion
         }
+
+        PostHogSDK.shared.capture("onboarding_completed", properties: [
+            "habits_adopted_count": state.adoptedHabits.count,
+            "traits_selected": Array(state.selectedTraits).map(\.rawValue)
+        ])
 
         // Mark onboarding complete and trigger RootView to show main app
         UserDefaults.standard.set(true, forKey: "onboardingComplete")

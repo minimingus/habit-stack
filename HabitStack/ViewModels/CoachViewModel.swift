@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import PostHog
 
 @Observable
 final class CoachViewModel {
@@ -39,6 +40,9 @@ final class CoachViewModel {
             dailyLimit = response.messagesRemainingToday + messagesUsedToday + 1
             messagesUsedToday += 1
             saveTodayUsage()
+            PostHogSDK.shared.capture("coach_message_sent", properties: [
+                "messages_today_count": messagesUsedToday
+            ])
         } catch CoachError.rateLimitReached {
             messages.removeLast()
             persistMessages()
