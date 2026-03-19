@@ -50,13 +50,18 @@ struct StreakShareCard: View {
                 Spacer()
 
                 // Watermark
-                HStack(spacing: 6) {
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.caption)
-                        .foregroundStyle(Color(hex: "#0D9488"))
-                    Text("HabitStack")
-                        .font(.caption.bold())
-                        .foregroundStyle(Color(hex: "#94a3b8"))
+                VStack(spacing: 4) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.caption)
+                            .foregroundStyle(Color(hex: "#0D9488"))
+                        Text("Better You")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color(hex: "#94a3b8"))
+                    }
+                    Text("Download on the App Store")
+                        .font(.system(size: 11, weight: .regular))
+                        .foregroundStyle(Color(hex: "#64748b"))
                 }
                 .padding(.bottom, 24)
             }

@@ -131,13 +131,16 @@ struct MilestoneCelebrationView: View {
         .presentationDetents([.large])
         .sheet(isPresented: $showShareSheet) {
             if let img = shareUIImage {
-                ShareSheet(items: [img])
+                let shareText = "\(habitName) - \(streakDays) day streak! 🔥 Track your habits with Better You: \(Self.appStoreURL)"
+                ShareSheet(items: [img, shareText])
             }
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
     }
+
+    private static let appStoreURL = "https://apps.apple.com/app/better-you"
 
     @MainActor
     private func renderShareCard() {
@@ -150,6 +153,13 @@ struct MilestoneCelebrationView: View {
         let renderer = ImageRenderer(content: card)
         renderer.scale = 3.0
         shareUIImage = renderer.uiImage
+
+        PostHogSDK.shared.capture("streak_card_shared", properties: [
+            "streak_days": streakDays,
+            "habit_name": habitName,
+            "milestone_name": milestoneName
+        ])
+
         showShareSheet = true
     }
 }
