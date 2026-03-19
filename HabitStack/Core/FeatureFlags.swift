@@ -1,3 +1,3 @@
 enum FeatureFlags {
-    static let revenueCatEnabled = false
+    static let revenueCatEnabled = true
 }
