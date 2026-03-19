@@ -4,6 +4,7 @@ import PostHog
 @main
 struct HabitStackApp: App {
     @State private var rootViewModel = RootViewModel()
+    @State private var showQuickComplete = false
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
@@ -16,6 +17,16 @@ struct HabitStackApp: App {
                     PostHogSDK.shared.setup(
                         PostHogConfig(apiKey: Secrets.postHogAPIKey)
                     )
+                }
+                .onOpenURL { url in
+                    if url.host == "quick-complete" {
+                        showQuickComplete = true
+                    }
+                }
+                .sheet(isPresented: $showQuickComplete) {
+                    QuickCompleteView()
+                        .presentationDetents([.medium, .large])
+                        .presentationDragIndicator(.visible)
                 }
         }
     }

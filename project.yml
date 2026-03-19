@@ -37,6 +37,9 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         NSCameraUsageDescription: Used for profile photos
+        CFBundleURLTypes:
+          - CFBundleURLSchemes:
+              - habitstack
     dependencies:
       - package: Supabase
         product: Supabase

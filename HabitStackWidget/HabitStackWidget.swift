@@ -100,6 +100,7 @@ struct HabitProgressWidgetView: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(progress == 1 && entry.total > 0 ? teal : stone500)
         }
+        .widgetURL(URL(string: "habitstack://quick-complete"))
         .containerBackground(bg, for: .widget)
     }
 }
