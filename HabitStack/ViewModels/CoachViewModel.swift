@@ -10,6 +10,7 @@ final class CoachViewModel {
     var dailyLimit: Int = 5
     var errorMessage: String?
     var showPaywall = false
+    var showSoftPaywall = false
 
     private let storageKey = "coachMessages"
     private let usedTodayKey = "coachMessagesUsedToday"
@@ -43,6 +44,10 @@ final class CoachViewModel {
             PostHogSDK.shared.capture("coach_message_sent", properties: [
                 "messages_today_count": messagesUsedToday
             ])
+            if messagesUsedToday == 3 && !RevenueCatManager.shared.isProUser {
+                PostHogSDK.shared.capture("paywall_shown", properties: ["trigger": "coach_3rd_message"])
+                showSoftPaywall = true
+            }
         } catch CoachError.rateLimitReached {
             messages.removeLast()
             persistMessages()

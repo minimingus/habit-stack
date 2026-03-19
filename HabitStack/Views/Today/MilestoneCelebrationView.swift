@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct MilestoneCelebrationView: View {
     let streakDays: Int
@@ -7,6 +8,7 @@ struct MilestoneCelebrationView: View {
 
     @State private var showShareSheet = false
     @State private var shareUIImage: UIImage?
+    @State private var showPaywall = false
 
     private var milestoneName: String {
         switch streakDays {
@@ -76,6 +78,28 @@ struct MilestoneCelebrationView: View {
 
             Spacer()
 
+            // Soft paywall banner for free users
+            if !RevenueCatManager.shared.isProUser {
+                Button {
+                    PostHogSDK.shared.capture("paywall_shown", properties: ["trigger": "streak_milestone"])
+                    showPaywall = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(Color("Teal"))
+                        Text("Unlock unlimited habits with Pro")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(Color("Stone950"))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color("TealLight"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .padding(.horizontal, 32)
+                .padding(.bottom, 8)
+            }
+
             VStack(spacing: 12) {
                 Button(action: onDismiss) {
                     Text("Keep Going")
@@ -109,6 +133,9 @@ struct MilestoneCelebrationView: View {
             if let img = shareUIImage {
                 ShareSheet(items: [img])
             }
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
         }
     }
 

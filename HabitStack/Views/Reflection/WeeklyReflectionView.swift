@@ -215,6 +215,7 @@ struct WeeklyReflectionView: View {
 private struct ReflectionResponseView: View {
     let mood: WeekMood
     let onDone: () -> Void
+    @State private var showPaywall = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -244,6 +245,27 @@ private struct ReflectionResponseView: View {
 
             Spacer()
 
+            if !RevenueCatManager.shared.isProUser {
+                Button {
+                    PostHogSDK.shared.capture("paywall_shown", properties: ["trigger": "post_reflection"])
+                    showPaywall = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundStyle(Color("Teal"))
+                        Text("See your full 5-week journey with Pro")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(Color("Stone950"))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color("TealLight"))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .padding(.horizontal, 32)
+                .padding(.bottom, 8)
+            }
+
             Button("Done", action: onDone)
                 .font(.headline)
                 .foregroundStyle(.white)
@@ -255,6 +277,7 @@ private struct ReflectionResponseView: View {
                 .padding(.bottom, 48)
         }
         .background(Color("AppBackground").ignoresSafeArea())
+        .sheet(isPresented: $showPaywall) { PaywallView() }
     }
 }
 

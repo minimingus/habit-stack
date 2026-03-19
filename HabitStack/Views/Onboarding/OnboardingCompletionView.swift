@@ -7,11 +7,13 @@
 //
 
 import SwiftUI
+import PostHog
 
 /// Onboarding Screen 5: "You're Ready"
 struct OnboardingCompletionView: View {
     let adoptedHabits: [HabitTemplate]
     let onComplete: () -> Void
+    @State private var showPaywall = false
     
     var body: some View {
         VStack(spacing: 30) {
@@ -59,22 +61,43 @@ struct OnboardingCompletionView: View {
             .multilineTextAlignment(.center)
             
             Spacer()
-            
-            Button(action: onComplete) {
-                HStack {
-                    Text("Let's go!")
-                    Image(systemName: "arrow.right")
+
+            VStack(spacing: 12) {
+                Button {
+                    PostHogSDK.shared.capture("paywall_shown", properties: ["trigger": "onboarding_completion"])
+                    showPaywall = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(.yellow)
+                        Text("Start your journey with Pro")
+                            .fontWeight(.semibold)
+                    }
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor.opacity(0.15))
+                    .foregroundColor(.accentColor)
+                    .cornerRadius(12)
                 }
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.accentColor)
-                .foregroundColor(.white)
-                .cornerRadius(12)
+
+                Button(action: onComplete) {
+                    HStack {
+                        Text("Let's go!")
+                        Image(systemName: "arrow.right")
+                    }
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+                .controlSize(.large)
             }
-            .controlSize(.large)
         }
         .padding()
+        .sheet(isPresented: $showPaywall) { PaywallView() }
     }
 }
 

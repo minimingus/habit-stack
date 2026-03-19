@@ -24,7 +24,7 @@ struct CoachView: View {
                             EmptyStateView(
                                 icon: "bubble.left.and.bubble.right",
                                 headline: "Ask your Habit Coach",
-                                subtext: "Get personalized advice based on Atomic Habits methodology."
+                                subtext: "Get personalized advice to build consistency and stay on track."
                             )
                             .frame(minHeight: 300)
                         } else {
@@ -108,6 +108,7 @@ struct CoachView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showPaywall) { PaywallView() }
+            .sheet(isPresented: $viewModel.showSoftPaywall) { PaywallView() }
         }
     }
 }
