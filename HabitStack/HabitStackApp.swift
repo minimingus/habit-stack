@@ -1,5 +1,6 @@
 import SwiftUI
 import PostHog
+import UserNotifications
 
 @main
 struct HabitStackApp: App {
@@ -32,11 +33,12 @@ struct HabitStackApp: App {
     }
 }
 
-final class AppDelegate: NSObject, UIApplicationDelegate {
+final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
         UIApplication.shared.registerForRemoteNotifications()
         return true
     }
@@ -48,5 +50,17 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         Task {
             await NotificationManager.shared.uploadDeviceToken(deviceToken)
         }
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        let userInfo = response.notification.request.content.userInfo
+        if let type = userInfo["type"] as? String, type == "day1_activation" {
+            PostHogSDK.shared.capture("day1_notification_opened")
+        }
+        completionHandler()
     }
 }

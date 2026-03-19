@@ -13,6 +13,7 @@ import PostHog
 struct OnboardingFlow: View {
     @StateObject private var state = OnboardingState()
     @State private var isSaving = false
+    @State private var day1ReminderTime: Date?
 
     var body: some View {
         NavigationStack(path: $state.path) {
@@ -67,7 +68,8 @@ struct OnboardingFlow: View {
 
         case .completion:
             OnboardingCompletionView(
-                adoptedHabits: state.adoptedHabits
+                adoptedHabits: state.adoptedHabits,
+                day1ReminderTime: day1ReminderTime
             ) {
                 Task { await completeOnboarding() }
             }
@@ -119,6 +121,19 @@ struct OnboardingFlow: View {
         // Persist selected identity traits for coach context
         let traitStrings = Array(state.selectedTraits).map(\.rawValue)
         UserDefaults.standard.set(traitStrings, forKey: "selectedIdentityTraits")
+
+        // Schedule Day 1 activation notification
+        if let firstHabit = state.adoptedHabits.first {
+            let scheduledTime = NotificationManager.shared.scheduleDay1Activation(
+                firstHabitName: firstHabit.name
+            )
+            if let scheduledTime {
+                PostHogSDK.shared.capture("day1_notification_scheduled", properties: [
+                    "scheduled_time": ISO8601DateFormatter().string(from: scheduledTime)
+                ])
+                day1ReminderTime = scheduledTime
+            }
+        }
 
         // Mark onboarding complete and trigger RootView to show main app
         UserDefaults.standard.set(true, forKey: "onboardingComplete")

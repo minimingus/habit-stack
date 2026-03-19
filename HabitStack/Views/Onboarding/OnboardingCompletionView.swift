@@ -12,6 +12,7 @@ import PostHog
 /// Onboarding Screen 5: "You're Ready"
 struct OnboardingCompletionView: View {
     let adoptedHabits: [HabitTemplate]
+    var day1ReminderTime: Date?
     let onComplete: () -> Void
     @State private var showPaywall = false
     
@@ -59,7 +60,20 @@ struct OnboardingCompletionView: View {
                     .padding(.top, 8)
             }
             .multilineTextAlignment(.center)
-            
+
+            if let day1ReminderTime {
+                HStack(spacing: 6) {
+                    Image(systemName: "bell.fill")
+                        .font(.caption)
+                        .foregroundColor(.accentColor)
+                    Text("We'll remind you tomorrow at \(day1ReminderTime.formatted(date: .omitted, time: .shortened)) to start your first habit.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal)
+                .multilineTextAlignment(.center)
+            }
+
             Spacer()
 
             VStack(spacing: 12) {

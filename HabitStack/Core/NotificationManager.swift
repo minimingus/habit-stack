@@ -146,6 +146,41 @@ final class NotificationManager {
         center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
     }
 
+    // MARK: - Day 1 activation
+
+    /// Schedule a one-time notification for the user's first day after onboarding.
+    /// Fires at the first habit's reminder time tomorrow, or 8 AM if none set.
+    /// Returns the scheduled time for UI display, or nil if scheduling failed.
+    @discardableResult
+    func scheduleDay1Activation(firstHabitName: String, reminderTime: Date? = nil) -> Date? {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["day1-activation"])
+
+        let calendar = Calendar.current
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()) else { return nil }
+
+        var fireComponents = calendar.dateComponents([.year, .month, .day], from: tomorrow)
+        if let reminderTime {
+            let timeComps = calendar.dateComponents([.hour, .minute], from: reminderTime)
+            fireComponents.hour = timeComps.hour
+            fireComponents.minute = timeComps.minute
+        } else {
+            fireComponents.hour = 8
+            fireComponents.minute = 0
+        }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Your first day starts now"
+        content.body = "Time to check off \(firstHabitName). You've got this."
+        content.sound = .default
+        content.userInfo = ["type": "day1_activation"]
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: fireComponents, repeats: false)
+        center.add(UNNotificationRequest(identifier: "day1-activation", content: content, trigger: trigger))
+
+        return calendar.date(from: fireComponents)
+    }
+
     // MARK: - Extra reminders
 
     func scheduleExtraReminders(for habit: Habit, times: [Date], streak: Streak? = nil) {
