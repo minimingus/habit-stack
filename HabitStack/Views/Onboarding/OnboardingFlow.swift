@@ -57,6 +57,11 @@ struct OnboardingFlow: View {
                 selectedTraits: Array(state.selectedTraits),
                 adoptedHabits: $state.adoptedHabits
             ) {
+                state.navigate(to: .notifications)
+            }
+
+        case .notifications:
+            NotificationPermissionView {
                 state.navigate(to: .completion)
             }
 

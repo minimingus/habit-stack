@@ -40,5 +40,6 @@ enum OnboardingStep: Hashable {
     case identity
     case philosophy
     case habitSwipe
+    case notifications
     case completion
 }

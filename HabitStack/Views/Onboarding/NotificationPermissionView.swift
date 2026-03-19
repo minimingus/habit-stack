@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct NotificationPermissionView: View {
     let onComplete: () -> Void
@@ -33,7 +34,12 @@ struct NotificationPermissionView: View {
             VStack(spacing: 12) {
                 Button {
                     Task {
-                        _ = await NotificationManager.shared.requestPermission()
+                        let granted = await NotificationManager.shared.requestPermission()
+                        if granted {
+                            PostHogSDK.shared.capture("onboarding_notifications_granted")
+                        } else {
+                            PostHogSDK.shared.capture("onboarding_notifications_denied")
+                        }
                         onComplete()
                     }
                 } label: {
@@ -46,7 +52,10 @@ struct NotificationPermissionView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
 
-                Button("Skip", action: onComplete)
+                Button("Skip") {
+                    PostHogSDK.shared.capture("onboarding_notifications_denied")
+                    onComplete()
+                }
                     .foregroundStyle(Color("Stone500"))
                     .padding()
             }
