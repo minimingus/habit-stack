@@ -45,7 +45,7 @@ struct RootView: View {
             } else if viewModel.session == nil {
                 AuthView()
             } else if !viewModel.isOnboardingComplete {
-                OnboardingContainerView()
+                OnboardingFlow()
             } else {
                 MainTabView()
             }

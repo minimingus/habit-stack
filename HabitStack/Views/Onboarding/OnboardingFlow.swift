@@ -11,11 +11,10 @@ import SwiftUI
 /// Main onboarding coordinator view
 struct OnboardingFlow: View {
     @StateObject private var state = OnboardingState()
-    @Environment(\.dismiss) private var dismiss
-    
+    @State private var isSaving = false
+
     var body: some View {
         NavigationStack(path: $state.path) {
-            // Start with vision screen
             OnboardingVisionView {
                 state.navigate(to: .identity)
             }
@@ -23,8 +22,9 @@ struct OnboardingFlow: View {
                 destinationView(for: step)
             }
         }
+        .interactiveDismissDisabled()
     }
-    
+
     @ViewBuilder
     private func destinationView(for step: OnboardingStep) -> some View {
         switch step {
@@ -32,21 +32,21 @@ struct OnboardingFlow: View {
             OnboardingVisionView {
                 state.navigate(to: .identity)
             }
-            
+
         case .identity:
             OnboardingIdentitySelectionView(
                 selectedTraits: $state.selectedTraits
             ) {
                 state.navigate(to: .philosophy)
             }
-            
+
         case .philosophy:
             OnboardingPhilosophyView(
                 selectedTraits: Array(state.selectedTraits)
             ) {
                 state.navigate(to: .habitSwipe)
             }
-            
+
         case .habitSwipe:
             OnboardingHabitSwipeView(
                 selectedTraits: Array(state.selectedTraits),
@@ -54,29 +54,56 @@ struct OnboardingFlow: View {
             ) {
                 state.navigate(to: .completion)
             }
-            
+
         case .completion:
             OnboardingCompletionView(
                 adoptedHabits: state.adoptedHabits
             ) {
-                completeOnboarding()
+                Task { await completeOnboarding() }
             }
         }
     }
-    
-    private func completeOnboarding() {
-        // Save user's future self identity
-        let futureSelf = FutureSelf(traits: Array(state.selectedTraits))
-        // TODO: Save to profile/database
-        
-        // Save adopted habits
-        // TODO: Create habits from templates
-        
-        // Mark onboarding complete
-        // TODO: Update user defaults or app state
-        
-        // Navigate to main app
-        dismiss()
+
+    @MainActor
+    private func completeOnboarding() async {
+        guard !isSaving else { return }
+        isSaving = true
+
+        do {
+            let userId = try await supabase.auth.session.user.id
+
+            // Convert each adopted template into a real Habit and persist it
+            for (index, template) in state.adoptedHabits.enumerated() {
+                let timeOfDay: Habit.TimeOfDay = {
+                    switch template.defaultTime {
+                    case .morning: return .morning
+                    case .afternoon: return .afternoon
+                    case .evening: return .evening
+                    case .anytime: return .allDay
+                    }
+                }()
+
+                let habit = Habit(
+                    id: UUID(),
+                    userId: userId,
+                    name: template.name,
+                    emoji: template.emoji,
+                    color: "#0D9488",
+                    frequency: .daily,
+                    timeOfDay: timeOfDay,
+                    reminderEnabled: false,
+                    sortOrder: index,
+                    createdAt: Date()
+                )
+                try await HabitService.shared.createHabit(habit, isPro: false)
+            }
+        } catch {
+            // Non-fatal — habits can be added later; don't block onboarding completion
+        }
+
+        // Mark onboarding complete and trigger RootView to show main app
+        UserDefaults.standard.set(true, forKey: "onboardingComplete")
+        _ = try? await supabase.auth.refreshSession()
     }
 }
 
