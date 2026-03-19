@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct TodayView: View {
     @State private var viewModel = TodayViewModel()
@@ -96,7 +97,12 @@ struct TodayView: View {
                                             onToggle: { Task { await viewModel.toggleHabit(habitWithStatus) } },
                                             onEdit: { editingHabit = habitWithStatus.habit },
                                             onArchive: { Task {
-                                                try? await HabitService.shared.archiveHabit(habitWithStatus.habit.id)
+                                                do {
+                                                    try await HabitService.shared.archiveHabit(habitWithStatus.habit.id)
+                                                } catch {
+                                                    viewModel.errorMessage = "Couldn't archive habit. Please try again."
+                                                    PostHogSDK.shared.capture("error_occurred", properties: ["source": "archive_habit", "message": error.localizedDescription])
+                                                }
                                                 await viewModel.loadToday()
                                             }},
                                             onPause: { until in
@@ -182,6 +188,7 @@ struct TodayView: View {
                 .padding(.bottom, 24)
             }
             .navigationTitle("Today")
+            .errorToast($viewModel.errorMessage)
             .task { await viewModel.loadToday() }
             .sheet(isPresented: $viewModel.showMilestone) {
                 MilestoneCelebrationView(

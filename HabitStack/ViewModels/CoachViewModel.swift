@@ -57,7 +57,8 @@ final class CoachViewModel {
         } catch {
             messages.removeLast()
             persistMessages()
-            errorMessage = error.localizedDescription
+            errorMessage = "Coach couldn't respond. Please try again."
+            PostHogSDK.shared.capture("error_occurred", properties: ["source": "coach_send", "message": error.localizedDescription])
         }
 
         isLoading = false

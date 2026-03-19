@@ -66,7 +66,12 @@ final class TodayViewModel {
         group.move(fromOffsets: source, toOffset: destination)
         habitGroups[timeOfDay] = group
         Task {
-            try? await HabitService.shared.reorderHabits(group.map { $0.habit })
+            do {
+                try await HabitService.shared.reorderHabits(group.map { $0.habit })
+            } catch {
+                await MainActor.run { errorMessage = "Couldn't save new order. It will reset on next launch." }
+                PostHogSDK.shared.capture("error_occurred", properties: ["source": "reorder_habits", "message": error.localizedDescription])
+            }
         }
     }
 
@@ -316,13 +321,23 @@ final class TodayViewModel {
     }
 
     func pauseHabit(_ habit: Habit, until: Date) async {
-        try? await HabitService.shared.pauseHabit(habit.id, until: until)
+        do {
+            try await HabitService.shared.pauseHabit(habit.id, until: until)
+        } catch {
+            await MainActor.run { errorMessage = "Couldn't pause habit. Please try again." }
+            PostHogSDK.shared.capture("error_occurred", properties: ["source": "pause_habit", "message": error.localizedDescription])
+        }
         await loadToday()
     }
 
     func resumeHabit(_ habit: Habit) async {
         guard let userId else { return }
-        try? await HabitService.shared.resumeHabit(habit.id, userId: userId, pausedUntil: habit.pausedUntil ?? Date())
+        do {
+            try await HabitService.shared.resumeHabit(habit.id, userId: userId, pausedUntil: habit.pausedUntil ?? Date())
+        } catch {
+            await MainActor.run { errorMessage = "Couldn't resume habit. Please try again." }
+            PostHogSDK.shared.capture("error_occurred", properties: ["source": "resume_habit", "message": error.localizedDescription])
+        }
         await loadToday()
     }
 
@@ -333,11 +348,16 @@ final class TodayViewModel {
 
     func spendStreakShield() async {
         guard let userId else { return }
-        try? await supabase.rpc("spend_streak_shield", params: ["p_user_id": userId.uuidString]).execute()
-        await loadToday()
-        neverMissTwiceState = .comeback
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            self?.neverMissTwiceState = .dismissed
+        do {
+            try await supabase.rpc("spend_streak_shield", params: ["p_user_id": userId.uuidString]).execute()
+            await loadToday()
+            neverMissTwiceState = .comeback
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                self?.neverMissTwiceState = .dismissed
+            }
+        } catch {
+            await MainActor.run { errorMessage = "Couldn't activate streak shield. Please try again." }
+            PostHogSDK.shared.capture("error_occurred", properties: ["source": "streak_shield", "message": error.localizedDescription])
         }
     }
 

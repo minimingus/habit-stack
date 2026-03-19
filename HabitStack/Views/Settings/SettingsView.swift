@@ -9,6 +9,7 @@ struct SettingsView: View {
     @State private var versionTapCount = 0
     @State private var profile: Profile?
     @State private var userEmail: String?
+    @State private var errorMessage: String?
     @AppStorage("compactCardMode") private var compactCardMode = false
 
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -130,9 +131,16 @@ struct SettingsView: View {
                 }
             }
             .task { await loadProfile() }
+            .errorToast($errorMessage)
             .alert("Sign Out?", isPresented: $showSignOutAlert) {
                 Button("Sign Out", role: .destructive) {
-                    Task { try? await rootViewModel.signOut() }
+                    Task {
+                        do {
+                            try await rootViewModel.signOut()
+                        } catch {
+                            errorMessage = "Couldn't sign out. Please try again."
+                        }
+                    }
                 }
                 Button("Cancel", role: .cancel) {}
             }
@@ -153,7 +161,11 @@ struct SettingsView: View {
         if let bundleId = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: bundleId)
         }
-        try? await supabase.auth.signOut()
+        do {
+            try await supabase.auth.signOut()
+        } catch {
+            errorMessage = "Couldn't sign out from server, but local data was cleared."
+        }
     }
 
     private func loadProfile() async {

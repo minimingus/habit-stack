@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01B9FB968FFFB9B747E7FEE9 /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8755D5F7B381A50FF2E2AB54 /* CoachView.swift */; };
+		067C4316324927F11B971257 /* QuickCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FA84CCBD90EB14D0A88E80 /* QuickCompleteView.swift */; };
 		0BACBE722DAA3170AD58EA00 /* HabitTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7BC4B416240934E80EB921 /* HabitTemplate.swift */; };
 		111BBA4571D2D73A013AF8A6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5487F060D6880ECB470D226F /* NotificationManager.swift */; };
 		11716BCEBF1F69EA17D30BD5 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E293D67F5C77FC88273764B5 /* TodayViewModel.swift */; };
@@ -25,6 +26,7 @@
 		3270A6B1E3981B71E38631A1 /* ScorecardEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F69062BC6F99A7135D7166 /* ScorecardEntry.swift */; };
 		337D3BDAA8883A727C91ECA5 /* RevenueCatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3A238D3815F241DD164337 /* RevenueCatManager.swift */; };
 		343478017FBEA56B7ED41EA0 /* HabitsScorecardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F896E232829DE88E092E90 /* HabitsScorecardView.swift */; };
+		37135FDE92C936C1C33CDE92 /* ErrorToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531D5AE2F21A15B6A521B370 /* ErrorToastView.swift */; };
 		374A55BF2837F728E5114B41 /* ChipGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B17F9D1133576CAE8F22D /* ChipGrid.swift */; };
 		3E4C06587E482120DBB98066 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6A9695532242A11BF5EE09 /* AnalyticsView.swift */; };
 		3F92871F46D4B7CB8C9FB3EA /* HabitGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */; };
@@ -164,6 +166,7 @@
 		3EFBD204BDFFFA15857B2768 /* ScorecardOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardOnboardingView.swift; sourceTree = "<group>"; };
 		40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitGroupView.swift; sourceTree = "<group>"; };
 		4B741AFCD42DA4B070087E51 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		531D5AE2F21A15B6A521B370 /* ErrorToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorToastView.swift; sourceTree = "<group>"; };
 		5487F060D6880ECB470D226F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		5D42396C55B3521646C4658A /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		60FD270019FD1B3209E184F9 /* HabitStackWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitStackWidget.swift; sourceTree = "<group>"; };
@@ -217,6 +220,7 @@
 		C0710092D60DD015AC55FE38 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		C79963E1CBF5A1FB225E2B42 /* StreakCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakCalendarView.swift; sourceTree = "<group>"; };
+		C7FA84CCBD90EB14D0A88E80 /* QuickCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCompleteView.swift; sourceTree = "<group>"; };
 		C811B14B68AE8BA06CBC5E9A /* WhatsNewRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewRegistry.swift; sourceTree = "<group>"; };
 		CD291C1BEA57F1097DB22E35 /* HabitWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWizardView.swift; sourceTree = "<group>"; };
 		CE2B17F9D1133576CAE8F22D /* ChipGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipGrid.swift; sourceTree = "<group>"; };
@@ -452,6 +456,7 @@
 				CE2B17F9D1133576CAE8F22D /* ChipGrid.swift */,
 				C6A44E9442D63AA01F3F3205 /* ConfettiView.swift */,
 				A37FC117FAD3655F5BAD8921 /* EmptyStateView.swift */,
+				531D5AE2F21A15B6A521B370 /* ErrorToastView.swift */,
 				1DCCBBDD1CDBBE0282E07310 /* FormSection.swift */,
 				F6EA25B89F54CDB12EFAAACC /* IdentityTraitCard.swift */,
 				13F281294986393E1A8729EF /* SkeletonView.swift */,
@@ -542,6 +547,7 @@
 				7FCFB97F033F399539FA5185 /* PausedHabitRow.swift */,
 				ACD61DB8F246734A51625910 /* PauseHabitSheet.swift */,
 				186088F433E12ABBF455C717 /* ProgressRingView.swift */,
+				C7FA84CCBD90EB14D0A88E80 /* QuickCompleteView.swift */,
 				619B5479D502BADA36DFDD9F /* StreakShareCard.swift */,
 				978B04D383502B53C766F257 /* TodayView.swift */,
 				F2BC204FC6086DE968CA7BA5 /* XPHeaderView.swift */,
@@ -715,6 +721,7 @@
 				624356B11FE6BF7563982897 /* DailyInsightCard.swift in Sources */,
 				A83394E8F02EE5617CB59735 /* EmptyStateView.swift in Sources */,
 				85534F40A7F07FE3025B00FE /* EnvDesignTipSheet.swift in Sources */,
+				37135FDE92C936C1C33CDE92 /* ErrorToastView.swift in Sources */,
 				20884FF6D4CE08C05128607B /* FeatureFlags.swift in Sources */,
 				D02DC7ABE6DBCD331202DB44 /* FormSection.swift in Sources */,
 				968E77D686857459156C27FD /* FourLawsView.swift in Sources */,
@@ -757,6 +764,7 @@
 				D0AA4F235F599CB17E252628 /* PaywallView.swift in Sources */,
 				A3E36FCFC8FD94C41B2CE46C /* Profile.swift in Sources */,
 				9DE198E2D6E34BB70DBB7C5A /* ProgressRingView.swift in Sources */,
+				067C4316324927F11B971257 /* QuickCompleteView.swift in Sources */,
 				337D3BDAA8883A727C91ECA5 /* RevenueCatManager.swift in Sources */,
 				E65B35E61C13D59A5EF94206 /* RootView.swift in Sources */,
 				3270A6B1E3981B71E38631A1 /* ScorecardEntry.swift in Sources */,

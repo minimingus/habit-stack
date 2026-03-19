@@ -134,12 +134,12 @@ final class HabitService {
             let lastLoggedDate: Date?
             enum CodingKeys: String, CodingKey { case lastLoggedDate = "last_logged_date" }
         }
-        let rows: [StreakRow] = (try? await supabase
+        let rows: [StreakRow] = try await supabase
             .from("streaks")
             .select("last_logged_date")
             .eq("habit_id", value: habitId.uuidString)
             .execute()
-            .value) ?? []
+            .value
 
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -160,7 +160,7 @@ final class HabitService {
                 loggedAt: day,
                 status: .skipped
             )
-            try? await supabase.from("habit_logs").insert(log).execute()
+            try await supabase.from("habit_logs").insert(log).execute()
             day = calendar.date(byAdding: .day, value: 1, to: day)!
         }
     }
