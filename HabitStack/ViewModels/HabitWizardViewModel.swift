@@ -45,11 +45,12 @@ final class HabitWizardViewModel {
     func prefill(from template: HabitTemplate) {
         name = template.name
         emoji = template.emoji
-        tinyVersion = template.tinyVersion
-        craving = template.identity
-        cue = template.cue
-        timeOfDay = template.timeOfDay
-        reward = template.reward
+        switch template.defaultTime {
+        case .morning: timeOfDay = .morning
+        case .afternoon: timeOfDay = .afternoon
+        case .evening: timeOfDay = .evening
+        case .anytime: timeOfDay = .allDay
+        }
     }
 
     func prefill(replacing behavior: String) {

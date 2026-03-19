@@ -179,7 +179,7 @@ private struct TemplateRow: View {
                     Text(template.name)
                         .font(.subheadline.bold())
                         .foregroundStyle(Color("Stone950"))
-                    Text("Tiny: \(template.tinyVersion)")
+                    Text(template.description)
                         .font(.caption)
                         .foregroundStyle(Color("Stone500"))
                 }
