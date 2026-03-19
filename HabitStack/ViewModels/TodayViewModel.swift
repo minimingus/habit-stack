@@ -45,10 +45,10 @@ final class TodayViewModel {
     var momentumMessage: String {
         guard totalHabits > 0 else { return "" }
         switch progress {
-        case 0: return "Let's get started!"
-        case ..<0.5: return "Keep going!"
-        case ..<1.0: return "Almost there!"
-        default: return "Perfect day!"
+        case 0: return "Start where you are."
+        case ..<0.5: return "One at a time."
+        case ..<1.0: return "Almost there."
+        default: return "Every habit done."
         }
     }
 

@@ -1,35 +1,35 @@
 import SwiftUI
 
 private enum WeekMood: String, CaseIterable {
-    case crushing  = "Crushing it 🔥"
+    case steady    = "Steady week ✓"
     case good      = "Felt good 👍"
     case tough     = "Tough week 💪"
     case rough     = "Rough week 😓"
 
     var symbol: String {
         switch self {
-        case .crushing: return "flame.fill"
-        case .good:     return "hand.thumbsup.fill"
-        case .tough:    return "bolt.fill"
-        case .rough:    return "cloud.rain.fill"
+        case .steady: return "checkmark.circle.fill"
+        case .good:   return "hand.thumbsup.fill"
+        case .tough:  return "bolt.fill"
+        case .rough:  return "cloud.rain.fill"
         }
     }
 
     var symbolColor: Color {
         switch self {
-        case .crushing: return .orange
-        case .good:     return Color("Teal")
-        case .tough:    return .yellow
-        case .rough:    return Color("Stone500")
+        case .steady: return Color("Teal")
+        case .good:   return Color("Teal")
+        case .tough:  return .yellow
+        case .rough:  return Color("Stone500")
         }
     }
 
     var response: String {
         switch self {
-        case .crushing: return "That's the compound effect in action. Keep stacking those reps — your future self is watching."
-        case .good:     return "Consistency over intensity, every time. You showed up and that's what builds identity."
-        case .tough:    return "Grit is a skill. You practised it this week. Hard weeks make easy weeks possible."
-        case .rough:    return "Every champion has off weeks. The rule is simple: never miss twice. You've already started."
+        case .steady: return "You showed up consistently. That's the whole game."
+        case .good:   return "Consistency over intensity, every time. You showed up and that's what matters."
+        case .tough:  return "Hard weeks are part of the process. You stayed in the game — that counts."
+        case .rough:  return "Off weeks happen. The only rule: show up again. You're already here."
         }
     }
 }

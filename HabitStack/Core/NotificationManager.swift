@@ -61,7 +61,7 @@ final class NotificationManager {
         center.removePendingNotificationRequests(withIdentifiers: ["eod-recovery"])
         guard pendingCount > 0 else { return }
         let content = UNMutableNotificationContent()
-        content.title = "Don't end the day empty"
+        content.title = "A few habits left today"
         content.body = "You have \(pendingCount) habit\(pendingCount == 1 ? "" : "s") left to complete today."
         content.sound = .default
         var comps = DateComponents()
@@ -136,7 +136,7 @@ final class NotificationManager {
 
         let content = UNMutableNotificationContent()
         content.title = "\(habit.emoji) \(habit.name)"
-        content.body = "You usually do this around \(formatHour(typicalHour)). Stay consistent today!"
+        content.body = "You usually do this around \(formatHour(typicalHour)). Keeping the rhythm going."
         content.sound = .default
 
         var comps = DateComponents()

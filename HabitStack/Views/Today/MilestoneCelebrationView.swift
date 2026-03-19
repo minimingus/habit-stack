@@ -37,9 +37,9 @@ struct MilestoneCelebrationView: View {
     private var milestoneEmoji: String {
         switch streakDays {
         case 0: return "⭐"
-        case 7: return "🔥"
+        case 7: return "🌱"
         case 14: return "⚡"
-        case 21: return "🌱"
+        case 21: return "🌿"
         case 30: return "🏆"
         case 66: return "🧠"
         case 100: return "💯"

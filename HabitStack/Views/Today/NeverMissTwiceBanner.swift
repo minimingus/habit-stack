@@ -62,8 +62,8 @@ struct NeverMissTwiceBanner: View {
 
     private var comebackBanner: some View {
         HStack(spacing: 12) {
-            Text("🔥").font(.title2)
-            Text("You're back. Streak lives on.")
+            Text("✓").font(.title2)
+            Text("You're back. That's what matters.")
                 .font(.subheadline.bold())
                 .foregroundStyle(.white)
             Spacer()
