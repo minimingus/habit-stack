@@ -31,9 +31,11 @@ final class CoachViewModel {
         errorMessage = nil
 
         do {
+            let habitContext = await gatherHabitContext()
             let response = try await CoachService.shared.sendMessage(
                 content: text,
-                history: Array(messages.suffix(6))
+                history: Array(messages.suffix(6)),
+                habitContext: habitContext
             )
             let assistantMsg = CoachMessage(role: .assistant, content: response.reply)
             messages.append(assistantMsg)
@@ -64,6 +66,36 @@ final class CoachViewModel {
     func clearConversation() {
         messages = []
         persistMessages()
+    }
+
+    // MARK: - Habit Context
+
+    private func gatherHabitContext() async -> HabitContext? {
+        guard let userId = try? await supabase.auth.session.user.id else { return nil }
+
+        do {
+            let todayHabits = try await HabitService.shared.fetchTodayHabits(userId: userId)
+            let streaks = try await StreakService.shared.fetchStreaks(userId: userId)
+            let streakMap = Dictionary(uniqueKeysWithValues: streaks.map { ($0.habitId, $0) })
+
+            let habitInfos = todayHabits.map { hw in
+                let streak = streakMap[hw.habit.id]
+                return HabitContext.HabitInfo(
+                    name: hw.habit.name,
+                    emoji: hw.habit.emoji,
+                    currentStreak: streak?.currentStreak ?? 0,
+                    isCompletedToday: hw.isCompleted
+                )
+            }
+
+            let traits = (UserDefaults.standard.stringArray(forKey: "selectedIdentityTraits") ?? [])
+                .compactMap { IdentityTrait(rawValue: $0) }
+                .map(\.displayName)
+
+            return HabitContext(habits: habitInfos, identityTraits: traits)
+        } catch {
+            return nil
+        }
     }
 
     // MARK: - Persistence

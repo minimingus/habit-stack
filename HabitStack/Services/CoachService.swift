@@ -5,11 +5,37 @@ enum CoachError: Error {
     case networkError(Error)
 }
 
+struct HabitContext {
+    struct HabitInfo {
+        let name: String
+        let emoji: String
+        let currentStreak: Int
+        let isCompletedToday: Bool
+    }
+
+    let habits: [HabitInfo]
+    let identityTraits: [String]
+
+    func toDictionary() -> [String: Any] {
+        [
+            "habits": habits.map { habit in
+                [
+                    "name": habit.name,
+                    "emoji": habit.emoji,
+                    "currentStreak": habit.currentStreak,
+                    "isCompletedToday": habit.isCompletedToday
+                ] as [String: Any]
+            },
+            "identityTraits": identityTraits
+        ]
+    }
+}
+
 final class CoachService {
     static let shared = CoachService()
     private init() {}
 
-    func sendMessage(content: String, history: [CoachMessage]) async throws -> CoachResponse {
+    func sendMessage(content: String, history: [CoachMessage], habitContext: HabitContext?) async throws -> CoachResponse {
         guard let session = try? await supabase.auth.session else {
             throw CoachError.networkError(URLError(.userAuthenticationRequired))
         }
@@ -21,10 +47,13 @@ final class CoachService {
         request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let body: [String: Any] = [
+        var body: [String: Any] = [
             "message": content,
             "history": recentHistory.map { ["role": $0.role.rawValue, "content": $0.content] }
         ]
+        if let context = habitContext {
+            body["habitContext"] = context.toDictionary()
+        }
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
         let (data, response) = try await URLSession.shared.data(for: request)

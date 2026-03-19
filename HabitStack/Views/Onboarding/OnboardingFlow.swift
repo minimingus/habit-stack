@@ -116,6 +116,10 @@ struct OnboardingFlow: View {
             "traits_selected": Array(state.selectedTraits).map(\.rawValue)
         ])
 
+        // Persist selected identity traits for coach context
+        let traitStrings = Array(state.selectedTraits).map(\.rawValue)
+        UserDefaults.standard.set(traitStrings, forKey: "selectedIdentityTraits")
+
         // Mark onboarding complete and trigger RootView to show main app
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
         _ = try? await supabase.auth.refreshSession()

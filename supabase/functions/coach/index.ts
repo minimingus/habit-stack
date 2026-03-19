@@ -74,7 +74,38 @@ serve(async (req) => {
     );
   }
 
-  const { message, history } = await req.json();
+  const { message, history, habitContext } = await req.json();
+
+  // Build context-aware system prompt
+  let systemPrompt = SYSTEM_PROMPT;
+  if (habitContext) {
+    const contextLines: string[] = [];
+
+    if (habitContext.habits?.length) {
+      const completed = habitContext.habits.filter((h: any) => h.isCompletedToday);
+      const remaining = habitContext.habits.filter((h: any) => !h.isCompletedToday);
+
+      contextLines.push("\n\nThe user's current habits:");
+      for (const h of habitContext.habits) {
+        const streakLabel = h.currentStreak > 0 ? ` (${h.currentStreak}-day streak)` : "";
+        const status = h.isCompletedToday ? "✅ done today" : "⬜ not yet today";
+        contextLines.push(`- ${h.emoji} ${h.name}${streakLabel} — ${status}`);
+      }
+      contextLines.push(`\nToday's progress: ${completed.length}/${habitContext.habits.length} habits completed.`);
+      if (remaining.length > 0) {
+        contextLines.push(`Remaining: ${remaining.map((h: any) => h.name).join(", ")}.`);
+      }
+    }
+
+    if (habitContext.identityTraits?.length) {
+      contextLines.push(`\nThe user wants to become: ${habitContext.identityTraits.join(", ")}.`);
+      contextLines.push("Reference these identity goals when giving advice — tie habits back to the person they're becoming.");
+    }
+
+    if (contextLines.length > 0) {
+      systemPrompt += contextLines.join("\n");
+    }
+  }
 
   // Model routing: short non-question messages → Haiku, else Sonnet
   const wordCount = message.split(/\s+/).length;
@@ -98,7 +129,7 @@ serve(async (req) => {
     body: JSON.stringify({
       model,
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages
     })
   });
