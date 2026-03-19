@@ -13,6 +13,24 @@ final class RevenueCatManager {
     }
     private var _isProUser: Bool = false
 
+    var isOnTrial: Bool {
+        guard FeatureFlags.revenueCatEnabled else { return false }
+        return _isOnTrial
+    }
+    private var _isOnTrial: Bool = false
+
+    var trialExpirationDate: Date? {
+        guard FeatureFlags.revenueCatEnabled else { return nil }
+        return _trialExpirationDate
+    }
+    private var _trialExpirationDate: Date?
+
+    var trialDaysRemaining: Int? {
+        guard let expiration = trialExpirationDate else { return nil }
+        let days = Calendar.current.dateComponents([.day], from: Date(), to: expiration).day ?? 0
+        return max(0, days)
+    }
+
     func configure() {
         guard FeatureFlags.revenueCatEnabled else { return }
         Purchases.configure(withAPIKey: Secrets.revenueCatAPIKey)
@@ -23,7 +41,7 @@ final class RevenueCatManager {
     func refreshStatus() async {
         guard FeatureFlags.revenueCatEnabled else { return }
         guard let info = try? await Purchases.shared.customerInfo() else { return }
-        _isProUser = info.entitlements["pro"]?.isActive == true
+        updateEntitlementState(from: info)
         await syncPlanWithSupabase()
     }
 
@@ -32,7 +50,7 @@ final class RevenueCatManager {
         let offerings = try await Purchases.shared.offerings()
         guard let monthly = offerings.current?.monthly else { return }
         let result = try await Purchases.shared.purchase(package: monthly)
-        _isProUser = result.customerInfo.entitlements["pro"]?.isActive == true
+        updateEntitlementState(from: result.customerInfo)
         await syncPlanWithSupabase()
     }
 
@@ -41,15 +59,22 @@ final class RevenueCatManager {
         let offerings = try await Purchases.shared.offerings()
         guard let annual = offerings.current?.annual else { return }
         let result = try await Purchases.shared.purchase(package: annual)
-        _isProUser = result.customerInfo.entitlements["pro"]?.isActive == true
+        updateEntitlementState(from: result.customerInfo)
         await syncPlanWithSupabase()
     }
 
     func restorePurchases() async throws {
         guard FeatureFlags.revenueCatEnabled else { return }
         let info = try await Purchases.shared.restorePurchases()
-        _isProUser = info.entitlements["pro"]?.isActive == true
+        updateEntitlementState(from: info)
         await syncPlanWithSupabase()
+    }
+
+    private func updateEntitlementState(from info: CustomerInfo) {
+        let proEntitlement = info.entitlements["pro"]
+        _isProUser = proEntitlement?.isActive == true
+        _isOnTrial = proEntitlement?.periodType == .trial
+        _trialExpirationDate = proEntitlement?.expirationDate
     }
 
     private func syncPlanWithSupabase() async {

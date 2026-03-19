@@ -70,7 +70,7 @@ struct OnboardingCompletionView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "crown.fill")
                             .foregroundStyle(.yellow)
-                        Text("Start your journey with Pro")
+                        Text("Start Free Trial")
                             .fontWeight(.semibold)
                     }
                     .font(.subheadline)

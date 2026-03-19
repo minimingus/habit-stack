@@ -42,14 +42,25 @@ struct SettingsView: View {
                 // Subscription
                 if FeatureFlags.revenueCatEnabled {
                     Section("Subscription") {
-                        if RevenueCatManager.shared.isProUser {
+                        if RevenueCatManager.shared.isOnTrial, let days = RevenueCatManager.shared.trialDaysRemaining {
+                            LabeledContent("Pro Trial") {
+                                Text("\(days) day\(days == 1 ? "" : "s") remaining")
+                                    .foregroundStyle(Color("Teal"))
+                                    .fontWeight(.semibold)
+                            }
+                            Button("Manage Subscription") {
+                                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                        } else if RevenueCatManager.shared.isProUser {
                             Button("Manage Subscription") {
                                 if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
                                     UIApplication.shared.open(url)
                                 }
                             }
                         } else {
-                            Button("Upgrade to Pro") { showPaywall = true }
+                            Button("Start Free Trial") { showPaywall = true }
                                 .foregroundStyle(Color("Teal"))
                         }
                     }

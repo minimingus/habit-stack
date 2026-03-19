@@ -17,12 +17,21 @@ struct PaywallView: View {
                         Image(systemName: "crown.fill")
                             .font(.system(size: 48))
                             .foregroundStyle(Color("Teal"))
-                        Text("Upgrade to Pro")
-                            .font(.title.bold())
-                        Text("Unlock all features and build habits without limits.")
-                            .font(.subheadline)
-                            .foregroundStyle(Color("Stone500"))
-                            .multilineTextAlignment(.center)
+
+                        if RevenueCatManager.shared.isOnTrial, let days = RevenueCatManager.shared.trialDaysRemaining {
+                            Text("Pro Trial Active")
+                                .font(.title.bold())
+                            Text("\(days) day\(days == 1 ? "" : "s") remaining")
+                                .font(.subheadline)
+                                .foregroundStyle(Color("Teal"))
+                        } else {
+                            Text("Try Pro Free for 7 Days")
+                                .font(.title.bold())
+                            Text("Unlock all features and build habits without limits.")
+                                .font(.subheadline)
+                                .foregroundStyle(Color("Stone500"))
+                                .multilineTextAlignment(.center)
+                        }
                     }
                     .padding(.top, 32)
                     .padding(.horizontal, 24)
@@ -35,24 +44,33 @@ struct PaywallView: View {
                     }
                     .padding(.horizontal, 24)
 
-                    // Plan selector
-                    VStack(spacing: 10) {
-                        PlanButton(
-                            title: "Annual",
-                            price: "$59.99/year",
-                            badge: "Save 37%",
-                            isSelected: selectedPlan == .annual,
-                            onSelect: { selectedPlan = .annual }
-                        )
-                        PlanButton(
-                            title: "Monthly",
-                            price: "$7.99/month",
-                            badge: nil,
-                            isSelected: selectedPlan == .monthly,
-                            onSelect: { selectedPlan = .monthly }
-                        )
+                    if !RevenueCatManager.shared.isOnTrial {
+                        // Trial messaging
+                        Text("Try Pro free for 7 days. Cancel anytime.")
+                            .font(.subheadline)
+                            .foregroundStyle(Color("Stone500"))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+
+                        // Plan selector
+                        VStack(spacing: 10) {
+                            PlanButton(
+                                title: "Annual",
+                                price: "7-day free trial, then $59.99/year",
+                                badge: "Save 37%",
+                                isSelected: selectedPlan == .annual,
+                                onSelect: { selectedPlan = .annual }
+                            )
+                            PlanButton(
+                                title: "Monthly",
+                                price: "7-day free trial, then $7.99/month",
+                                badge: nil,
+                                isSelected: selectedPlan == .monthly,
+                                onSelect: { selectedPlan = .monthly }
+                            )
+                        }
+                        .padding(.horizontal, 24)
                     }
-                    .padding(.horizontal, 24)
 
                     if let error = errorMessage {
                         Text(error)
@@ -62,24 +80,40 @@ struct PaywallView: View {
                     }
 
                     VStack(spacing: 12) {
-                        Button {
-                            Task { await purchase() }
-                        } label: {
-                            Group {
-                                if isLoading {
-                                    ProgressView().tint(.white)
-                                } else {
-                                    Text("Subscribe")
-                                        .fontWeight(.semibold)
+                        if RevenueCatManager.shared.isOnTrial {
+                            Button {
+                                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                                    UIApplication.shared.open(url)
                                 }
+                            } label: {
+                                Text("Manage Subscription")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color("Teal"))
+                                    .foregroundStyle(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 14))
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color("Teal"))
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                        } else {
+                            Button {
+                                Task { await purchase() }
+                            } label: {
+                                Group {
+                                    if isLoading {
+                                        ProgressView().tint(.white)
+                                    } else {
+                                        Text("Start 7-Day Free Trial")
+                                            .fontWeight(.semibold)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color("Teal"))
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                            }
+                            .disabled(isLoading)
                         }
-                        .disabled(isLoading)
 
                         Button {
                             Task { await restore() }
@@ -123,7 +157,11 @@ struct PaywallView: View {
             } else {
                 try await RevenueCatManager.shared.purchaseMonthly()
             }
-            PostHogSDK.shared.capture("purchase_completed", properties: ["plan": planName])
+            if RevenueCatManager.shared.isOnTrial {
+                PostHogSDK.shared.capture("trial_started", properties: ["plan": planName])
+            } else {
+                PostHogSDK.shared.capture("purchase_completed", properties: ["plan": planName])
+            }
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
