@@ -8,7 +8,7 @@ struct WelcomeView: View {
             Spacer()
 
             VStack(spacing: 16) {
-                Text("HabitStack")
+                Text("Better You")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(Color("Teal"))
 
@@ -20,9 +20,9 @@ struct WelcomeView: View {
             .padding(.horizontal)
 
             VStack(spacing: 12) {
-                FeatureRow(icon: "checkmark.circle.fill", text: "Track habits using Atomic Habits methodology")
-                FeatureRow(icon: "flame.fill", text: "Build streaks and never miss twice")
-                FeatureRow(icon: "bubble.left.fill", text: "AI Coach grounded in James Clear's system")
+                FeatureRow(icon: "checkmark.circle.fill", text: "Track habits with a system built for consistency")
+                FeatureRow(icon: "checkmark.seal.fill", text: "Build streaks and never miss twice")
+                FeatureRow(icon: "bubble.left.fill", text: "AI Coach that keeps you grounded and on track")
             }
             .padding(.horizontal, 32)
 

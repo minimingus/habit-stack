@@ -4,7 +4,7 @@
 Better You
 
 ## Subtitle (30 characters max)
-Build habits that stick.
+Build better habits with AI
 
 ## Category
 Health & Fitness
@@ -16,8 +16,9 @@ Lifestyle
 Free (with in-app purchases)
 
 ## In-App Purchases
-- Better You Pro Monthly: $7.99/month
-- Better You Pro Annual: $59.99/year (Save 37%)
+- Better You Pro Weekly: $2.99/week
+- Better You Pro Monthly: $7.99/month (Save 33%)
+- Better You Pro Annual: $59.99/year (Best Value)
 
 ---
 
@@ -29,7 +30,7 @@ Better You helps you build lasting habits by focusing on who you want to become 
 Choose the traits that define your future self: Stronger, Focused, Calmer, Disciplined, or Confident. Better You suggests habits that align with who you're becoming, so every daily action reinforces the person you want to be.
 
 **Adopt habits with a swipe.**
-Browse personalized habit suggestions and swipe to adopt the ones that fit your life. Start with just 3 habits. Small, consistent actions compound into real change.
+Browse personalized habit suggestions and swipe to adopt the ones that fit your life. Start with just one habit. Small, consistent actions compound into real change.
 
 **Track with zero friction.**
 One tap to mark a habit complete. See your streaks grow. Celebrate milestones at 7, 14, 21, 30, and 66 days — the point where consistency becomes automatic.
@@ -50,17 +51,18 @@ See your completion rates, streaks, and patterns in clean analytics. Understand 
 - Weekly reflections
 - Streak tracking and milestones
 
-**Pro features ($7.99/month or $59.99/year):**
+**Pro features (from $2.99/week, with free trial):**
 - Unlimited habits
 - Full 5-week analytics history
 - 50 AI Coach messages per day
+- Plans: $2.99/week, $7.99/month, or $59.99/year
 
 Better You is built on the science of behavior change: consistency beats intensity, identity drives action, and small wins compound. No hype. No gamification tricks. Just a calm, focused tool for becoming who you want to be.
 
 ---
 
 ## Keywords (100 characters max)
-habits,habit tracker,atomic,routine,streak,daily,coach,identity,mindfulness,consistency,self-improve
+habit tracker,daily habits,habit building,routine tracker,streak,self improvement,AI coach,goals,better habits,consistency
 
 ## Promotional Text (170 characters, can be updated without review)
 Build habits that stick. Choose your future self, swipe to adopt habits, and track your consistency with an AI coach by your side.

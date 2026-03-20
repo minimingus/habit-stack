@@ -32,10 +32,10 @@ struct FourLawsView: View {
                                     .foregroundStyle(Color("Teal"))
                             }
                             VStack(alignment: .leading, spacing: 3) {
-                                Text("Habits Scorecard")
+                                Text("Your Progress")
                                     .font(.subheadline.bold())
                                     .foregroundStyle(Color("Stone950"))
-                                Text("List your daily behaviors and rate them +/=/–. Make the unconscious conscious.")
+                                Text("List your daily behaviors and rate them +/=/–. Notice what you actually do.")
                                     .font(.caption)
                                     .foregroundStyle(Color("Stone500"))
                                     .multilineTextAlignment(.leading)

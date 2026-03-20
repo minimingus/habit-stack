@@ -56,6 +56,7 @@ struct RootView: View {
 }
 
 struct MainTabView: View {
+    @State private var selectedTab = 0
     @State private var showWeeklyReflection = false
     @State private var habitStats: [(name: String, emoji: String, completionRate: Double)] = []
     @State private var showWhatsNew = false
@@ -63,19 +64,27 @@ struct MainTabView: View {
     private let whatsNewService = WhatsNewService()
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             TodayView()
                 .tabItem { Label("Today", systemImage: "checkmark.circle.fill") }
+                .tag(0)
             AnalyticsView()
                 .tabItem { Label("Analytics", systemImage: "chart.bar.fill") }
+                .tag(1)
             CoachView()
                 .tabItem { Label("Coach", systemImage: "bubble.left.fill") }
+                .tag(2)
             FourLawsView()
                 .tabItem { Label("Identity", systemImage: "person.crop.circle.badge.checkmark") }
+                .tag(3)
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+                .tag(4)
         }
         .tint(Color("Teal"))
+        .onReceive(NotificationCenter.default.publisher(for: .openCoachFromNudge)) { _ in
+            selectedTab = 2 // Switch to Coach tab
+        }
         .task {
             PostHogSDK.shared.capture("app_opened")
             whatsNewService.bootstrapIfNeeded()

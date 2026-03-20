@@ -2,6 +2,10 @@ import SwiftUI
 import PostHog
 import UserNotifications
 
+extension Notification.Name {
+    static let openCoachFromNudge = Notification.Name("openCoachFromNudge")
+}
+
 @main
 struct HabitStackApp: App {
     @State private var rootViewModel = RootViewModel()
@@ -12,7 +16,6 @@ struct HabitStackApp: App {
         WindowGroup {
             RootView()
                 .environment(rootViewModel)
-                .preferredColorScheme(.dark)
                 .onAppear {
                     RevenueCatManager.shared.configure()
                     PostHogSDK.shared.setup(
@@ -58,8 +61,19 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let userInfo = response.notification.request.content.userInfo
-        if let type = userInfo["type"] as? String, type == "day1_activation" {
-            PostHogSDK.shared.capture("day1_notification_opened")
+        if let type = userInfo["type"] as? String {
+            switch type {
+            case "day1_activation":
+                PostHogSDK.shared.capture("day1_notification_opened")
+            case "coach_nudge":
+                PostHogSDK.shared.capture("coach_nudge_opened", properties: [
+                    "habit_id": userInfo["habit_id"] as? String ?? ""
+                ])
+                // Navigate to coach tab — post notification for MainTabView to handle
+                NotificationCenter.default.post(name: .openCoachFromNudge, object: nil)
+            default:
+                break
+            }
         }
         completionHandler()
     }
