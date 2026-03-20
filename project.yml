@@ -29,14 +29,14 @@ targets:
     info:
       path: HabitStack/Info.plist
       properties:
-        CFBundleName: HabitStack
+        CFBundleName: Better You
+        CFBundleDisplayName: Better You
         CFBundleIdentifier: com.tomerab.habitstack
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         UILaunchStoryboardName: LaunchScreen
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        NSCameraUsageDescription: Used for profile photos
         CFBundleURLTypes:
           - CFBundleURLSchemes:
               - habitstack
