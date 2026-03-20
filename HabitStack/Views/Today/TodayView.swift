@@ -8,6 +8,7 @@ struct TodayView: View {
     @State private var selectedTab: Int = 0
     @State private var showScorecard = false
     @State private var showPaywall = false
+    @State private var showUpgradeNudge = RevenueCatManager.shared.shouldShowUpgradeNudge
 
     var body: some View {
         NavigationStack {
@@ -61,6 +62,32 @@ struct TodayView: View {
                                     .onAppear {
                                         PostHogSDK.shared.capture("trial_expiry_banner_shown")
                                     }
+                                }
+                            }
+
+                            // Weekly-to-monthly upgrade nudge
+                            if showUpgradeNudge {
+                                Section {
+                                    UpgradeNudgeCard(
+                                        onUpgrade: {
+                                            Task {
+                                                do {
+                                                    try await RevenueCatManager.shared.purchaseMonthly()
+                                                    PostHogSDK.shared.capture("plan_upgrade_completed", properties: ["from": "weekly", "to": "monthly"])
+                                                    showUpgradeNudge = false
+                                                } catch {
+                                                    viewModel.errorMessage = "Couldn't process upgrade. Please try again."
+                                                }
+                                            }
+                                        },
+                                        onDismiss: {
+                                            RevenueCatManager.shared.dismissUpgradeNudge()
+                                            withAnimation { showUpgradeNudge = false }
+                                        }
+                                    )
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                                 }
                             }
 
@@ -199,7 +226,10 @@ struct TodayView: View {
             }
             .navigationTitle("Today")
             .errorToast($viewModel.errorMessage)
-            .task { await viewModel.loadToday() }
+            .task {
+                await viewModel.loadToday()
+                showUpgradeNudge = RevenueCatManager.shared.shouldShowUpgradeNudge
+            }
             .sheet(isPresented: $viewModel.showMilestone) {
                 MilestoneCelebrationView(
                     streakDays: viewModel.milestoneStreak,

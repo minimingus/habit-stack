@@ -80,6 +80,33 @@ final class RevenueCatManager {
         await syncPlanWithSupabase()
     }
 
+    var isWeeklySubscriber: Bool {
+        guard FeatureFlags.revenueCatEnabled else { return false }
+        return _isWeeklySubscriber
+    }
+    private var _isWeeklySubscriber = false
+
+    var originalPurchaseDate: Date? {
+        guard FeatureFlags.revenueCatEnabled else { return nil }
+        return _originalPurchaseDate
+    }
+    private var _originalPurchaseDate: Date?
+
+    var shouldShowUpgradeNudge: Bool {
+        guard isProUser, isWeeklySubscriber, !isOnTrial else { return false }
+        guard let purchaseDate = originalPurchaseDate else { return false }
+        let daysSincePurchase = Calendar.current.dateComponents([.day], from: purchaseDate, to: Date()).day ?? 0
+        guard daysSincePurchase >= 28 else { return false }
+        let dismissCount = UserDefaults.standard.integer(forKey: "upgradeNudgeDismissCount")
+        return dismissCount < 3
+    }
+
+    func dismissUpgradeNudge() {
+        let key = "upgradeNudgeDismissCount"
+        let count = UserDefaults.standard.integer(forKey: key)
+        UserDefaults.standard.set(count + 1, forKey: key)
+    }
+
     var trialExpiresWithin24h: Bool {
         guard let expiration = trialExpirationDate, isOnTrial else { return false }
         let hoursRemaining = expiration.timeIntervalSince(Date()) / 3600
@@ -98,6 +125,10 @@ final class RevenueCatManager {
         _isProUser = proEntitlement?.isActive == true
         _isOnTrial = proEntitlement?.periodType == .trial
         _trialExpirationDate = proEntitlement?.expirationDate
+
+        // Track weekly subscription status for upgrade nudge
+        _isWeeklySubscriber = info.activeSubscriptions.contains { $0.lowercased().contains("weekly") || $0.lowercased().contains("week") }
+        _originalPurchaseDate = info.originalPurchaseDate
 
         // Schedule trial expiry notifications when trial is first detected
         if _isOnTrial, let expDate = _trialExpirationDate, !wasTrial {

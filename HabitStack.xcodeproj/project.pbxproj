@@ -51,6 +51,7 @@
 		5840DD5686D0538F86955F96 /* HabitFrictionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7AC66A652B7E92253C6A2E /* HabitFrictionSheet.swift */; };
 		5C1E2CBDB290651AEB66D5BC /* Streak.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E74505815490CAFA130C12 /* Streak.swift */; };
 		5FB8959E85DF3E377624D4E8 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6548DB26D57BF808B91201CC /* HabitDetailView.swift */; };
+		5FC7D1E3B268E96BE0485B4C /* UpgradeNudgeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25B898D8F1B1C2582576F93 /* UpgradeNudgeCard.swift */; };
 		60418B4F938E97625EF932BC /* CoachMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AFE8166EBAD62E550456DC /* CoachMessage.swift */; };
 		624356B11FE6BF7563982897 /* DailyInsightCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CF7AD25FC19A87E9CB0B51 /* DailyInsightCard.swift */; };
 		637DEE93E9F6B5EF5E613CE4 /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D738DEF8D62A07312D1831CD /* OnboardingFlow.swift */; };
@@ -203,6 +204,7 @@
 		9AF9A8EF7AB4137DFA1DC038 /* HabitStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitStackApp.swift; sourceTree = "<group>"; };
 		9CAFFE310EEFAC09F422B2A0 /* HabitStackWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HabitStackWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DFD365CCD95709EFB974DD8 /* HabitCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCardView.swift; sourceTree = "<group>"; };
+		A25B898D8F1B1C2582576F93 /* UpgradeNudgeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeNudgeCard.swift; sourceTree = "<group>"; };
 		A2644443501BB2AA34A352F0 /* NeverMissTwiceBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeverMissTwiceBanner.swift; sourceTree = "<group>"; };
 		A28D29C48C373421DC70178E /* WizardStepRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardStepRoutineView.swift; sourceTree = "<group>"; };
 		A2E74505815490CAFA130C12 /* Streak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streak.swift; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 				619B5479D502BADA36DFDD9F /* StreakShareCard.swift */,
 				978B04D383502B53C766F257 /* TodayView.swift */,
 				F0479CD89B8178AF6632FD74 /* TrialExpiryBanner.swift */,
+				A25B898D8F1B1C2582576F93 /* UpgradeNudgeCard.swift */,
 				F2BC204FC6086DE968CA7BA5 /* XPHeaderView.swift */,
 			);
 			path = Today;
@@ -787,6 +790,7 @@
 				302D2902E13C14D83133B7E1 /* TodayView.swift in Sources */,
 				11716BCEBF1F69EA17D30BD5 /* TodayViewModel.swift in Sources */,
 				09390472D348B1EDD3C2D80E /* TrialExpiryBanner.swift in Sources */,
+				5FC7D1E3B268E96BE0485B4C /* UpgradeNudgeCard.swift in Sources */,
 				5532DEAD4B019B888C75E315 /* WeeklyReflectionView.swift in Sources */,
 				C1AEA691FF45C42C0441E276 /* WelcomeView.swift in Sources */,
 				E806A38F572498F607D660FE /* WhatsNewRegistry.swift in Sources */,
