@@ -18,14 +18,19 @@ final class NotificationManager {
     func scheduleReminder(for habit: Habit, streak: Streak? = nil) {
         guard habit.reminderEnabled, let reminderTime = habit.reminderTime else { return }
         let content = UNMutableNotificationContent()
-        content.title = "\(habit.emoji) \(habit.name)"
 
-        if let streak, streak.currentStreak > 0 {
-            content.body = "Keep your \(streak.currentStreak)-day consistency going."
-        } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
-            content.body = "Takes just 2 minutes: \(tiny)"
+        if let identity = habit.craving, !identity.isEmpty {
+            content.title = "Time to vote for \(identity.capitalized)"
+            content.body = "\(habit.emoji) \(habit.name) is waiting."
         } else {
-            content.body = "Time for your habit!"
+            content.title = "\(habit.emoji) \(habit.name)"
+            if let streak, streak.currentStreak > 0 {
+                content.body = "Keep your \(streak.currentStreak)-day streak alive."
+            } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
+                content.body = "Takes just 2 minutes: \(tiny)"
+            } else {
+                content.body = "One more vote for who you are becoming."
+            }
         }
 
         content.sound = .default
@@ -61,8 +66,8 @@ final class NotificationManager {
         center.removePendingNotificationRequests(withIdentifiers: ["eod-recovery"])
         guard pendingCount > 0 else { return }
         let content = UNMutableNotificationContent()
-        content.title = "A few habits left today"
-        content.body = "You have \(pendingCount) habit\(pendingCount == 1 ? "" : "s") left to complete today."
+        content.title = "Identity votes remaining"
+        content.body = "You have \(pendingCount) identity vote\(pendingCount == 1 ? "" : "s") left today."
         content.sound = .default
         var comps = DateComponents()
         comps.hour = 21
@@ -77,11 +82,11 @@ final class NotificationManager {
         guard !habits.isEmpty else { return }
         let content = UNMutableNotificationContent()
         if habits.count == 1 {
-            content.title = "Keep your consistency going"
-            content.body = "Stay consistent with \(habits[0].name) — \(habits[0].streak) days and counting."
+            content.title = "Your identity streak is at risk"
+            content.body = "\(habits[0].streak) days of proof. 2 minutes keeps the vote alive."
         } else {
-            content.title = "Stay consistent today"
-            content.body = "\(habits.count) habits are waiting. Consistency is built one day at a time."
+            content.title = "\(habits.count) identity votes at risk"
+            content.body = "Each one is proof of who you are becoming."
         }
         content.sound = .default
         var comps = DateComponents()
@@ -99,8 +104,8 @@ final class NotificationManager {
         comps.hour = 10
         comps.minute = 0
         let content = UNMutableNotificationContent()
-        content.title = "Missing you"
-        content.body = "Your habits are waiting. Even one small action keeps the momentum alive."
+        content.title = "Your identity is fading"
+        content.body = "One action brings it back. Vote for who you are becoming."
         content.sound = .default
         let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
         center.add(UNNotificationRequest(identifier: "inactive-user", content: content, trigger: trigger))
@@ -113,8 +118,8 @@ final class NotificationManager {
         comps.hour = 9
         comps.minute = 0
         let content = UNMutableNotificationContent()
-        content.title = "You missed yesterday. That's okay."
-        content.body = "Rule: Never miss twice. One small habit today keeps you on track."
+        content.title = "Missing a day doesn't change who you are"
+        content.body = "One vote today keeps your identity alive."
         content.sound = .default
         let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
         center.add(UNNotificationRequest(identifier: "miss-2-days", content: content, trigger: trigger))
@@ -135,8 +140,13 @@ final class NotificationManager {
         guard currentHour < nudgeHour else { return } // nudge time already passed today
 
         let content = UNMutableNotificationContent()
-        content.title = "\(habit.emoji) \(habit.name)"
-        content.body = "You usually do this around \(formatHour(typicalHour)). Keeping the rhythm going."
+        if let identity = habit.craving, !identity.isEmpty {
+            content.title = "Vote for \(identity.capitalized)"
+            content.body = "You usually cast this vote around \(formatHour(typicalHour))."
+        } else {
+            content.title = "\(habit.emoji) \(habit.name)"
+            content.body = "You usually do this around \(formatHour(typicalHour))."
+        }
         content.sound = .default
 
         var comps = DateComponents()
@@ -187,13 +197,18 @@ final class NotificationManager {
         cancelExtraReminders(for: habit.id)
         for (index, time) in times.prefix(2).enumerated() {
             let content = UNMutableNotificationContent()
-            content.title = "\(habit.emoji) \(habit.name)"
-            if let streak, streak.currentStreak > 0 {
-                content.body = "Keep your \(streak.currentStreak)-day consistency going."
-            } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
-                content.body = "Takes just 2 minutes: \(tiny)"
+            if let identity = habit.craving, !identity.isEmpty {
+                content.title = "Vote for \(identity.capitalized)"
+                content.body = "\(habit.emoji) \(habit.name) is waiting."
             } else {
-                content.body = "Time for your habit!"
+                content.title = "\(habit.emoji) \(habit.name)"
+                if let streak, streak.currentStreak > 0 {
+                    content.body = "Keep your \(streak.currentStreak)-day streak alive."
+                } else if let tiny = habit.tinyVersion, !tiny.isEmpty {
+                    content.body = "Takes just 2 minutes: \(tiny)"
+                } else {
+                    content.body = "One more vote for who you are becoming."
+                }
             }
             content.sound = .default
             var components = Calendar.current.dateComponents([.hour, .minute], from: time)
