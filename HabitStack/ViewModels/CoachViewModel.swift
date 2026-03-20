@@ -13,6 +13,7 @@ final class CoachViewModel {
     var showSoftPaywall = false
 
     private let storageKey = "coachMessages"
+    private let memoryKey = "coach_conversation_history"
     private let usedTodayKey = "coachMessagesUsedToday"
     private let usedTodayDateKey = "coachMessagesUsedTodayDate"
 
@@ -32,17 +33,25 @@ final class CoachViewModel {
 
         do {
             let habitContext = await gatherHabitContext()
+            let conversationMemory = loadConversationMemory()
             let response = try await CoachService.shared.sendMessage(
                 content: text,
                 history: Array(messages.suffix(6)),
-                habitContext: habitContext
+                habitContext: habitContext,
+                conversationHistory: conversationMemory
             )
             let assistantMsg = CoachMessage(role: .assistant, content: response.reply)
             messages.append(assistantMsg)
             persistMessages()
+            saveConversationMemory()
             dailyLimit = response.messagesRemainingToday + messagesUsedToday + 1
             messagesUsedToday += 1
             saveTodayUsage()
+            if !conversationMemory.isEmpty {
+                PostHogSDK.shared.capture("coach_memory_used", properties: [
+                    "history_length": conversationMemory.count / 2
+                ])
+            }
             PostHogSDK.shared.capture("coach_message_sent", properties: [
                 "messages_today_count": messagesUsedToday
             ])
@@ -129,5 +138,23 @@ final class CoachViewModel {
         let today = ISO8601DateFormatter().string(from: Calendar.current.startOfDay(for: Date()))
         UserDefaults.standard.set(today, forKey: usedTodayDateKey)
         UserDefaults.standard.set(messagesUsedToday, forKey: usedTodayKey)
+    }
+
+    // MARK: - Conversation Memory
+
+    private func loadConversationMemory() -> [[String: String]] {
+        guard let data = UserDefaults.standard.data(forKey: memoryKey),
+              let memory = try? JSONDecoder().decode([[String: String]].self, from: data) else {
+            return []
+        }
+        return memory
+    }
+
+    private func saveConversationMemory() {
+        // Extract the last 5 exchanges (10 messages) as memory
+        let exchanges = messages.suffix(10)
+        let memory = exchanges.map { ["role": $0.role.rawValue, "content": $0.content] }
+        guard let data = try? JSONEncoder().encode(memory) else { return }
+        UserDefaults.standard.set(data, forKey: memoryKey)
     }
 }

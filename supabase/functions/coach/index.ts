@@ -74,7 +74,7 @@ serve(async (req) => {
     );
   }
 
-  const { message, history, habitContext } = await req.json();
+  const { message, history, habitContext, conversationHistory } = await req.json();
 
   // Build context-aware system prompt
   let systemPrompt = SYSTEM_PROMPT;
@@ -114,8 +114,17 @@ serve(async (req) => {
     ? "claude-haiku-4-5-20251001"
     : "claude-sonnet-4-20250514";
 
+  // Inject conversation memory (past exchanges) before recent history
+  // Deduplicate: exclude memory messages that overlap with recent history
+  const recentHistory = (history ?? []).slice(-6);
+  const recentContents = new Set(recentHistory.map((m: any) => m.content));
+  const memoryMessages = (conversationHistory ?? [])
+    .slice(-10)
+    .filter((m: any) => !recentContents.has(m.content))
+    .map((m: any) => ({ role: m.role, content: m.content }));
   const messages = [
-    ...(history ?? []).slice(-6),
+    ...memoryMessages,
+    ...recentHistory,
     { role: "user", content: message }
   ];
 

@@ -35,7 +35,7 @@ final class CoachService {
     static let shared = CoachService()
     private init() {}
 
-    func sendMessage(content: String, history: [CoachMessage], habitContext: HabitContext?) async throws -> CoachResponse {
+    func sendMessage(content: String, history: [CoachMessage], habitContext: HabitContext?, conversationHistory: [[String: String]] = []) async throws -> CoachResponse {
         guard let session = try? await supabase.auth.session else {
             throw CoachError.networkError(URLError(.userAuthenticationRequired))
         }
@@ -53,6 +53,9 @@ final class CoachService {
         ]
         if let context = habitContext {
             body["habitContext"] = context.toDictionary()
+        }
+        if !conversationHistory.isEmpty {
+            body["conversationHistory"] = conversationHistory
         }
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
