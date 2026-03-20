@@ -29,6 +29,7 @@
 		343478017FBEA56B7ED41EA0 /* HabitsScorecardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F896E232829DE88E092E90 /* HabitsScorecardView.swift */; };
 		37135FDE92C936C1C33CDE92 /* ErrorToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531D5AE2F21A15B6A521B370 /* ErrorToastView.swift */; };
 		374A55BF2837F728E5114B41 /* ChipGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B17F9D1133576CAE8F22D /* ChipGrid.swift */; };
+		3C29250FC626D8847123A00C /* StreakRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B265E9FD656847E25AD27224 /* StreakRecovery.swift */; };
 		3E4C06587E482120DBB98066 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6A9695532242A11BF5EE09 /* AnalyticsView.swift */; };
 		3F92871F46D4B7CB8C9FB3EA /* HabitGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40014898A37D50AC4C4BD6C1 /* HabitGroupView.swift */; };
 		3FB68880E794E1B203118172 /* OnboardingPhilosophyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23CBDA82F7F670ADFA0784 /* OnboardingPhilosophyView.swift */; };
@@ -216,6 +217,7 @@
 		ACE3C2B8DAA04AF39ABA92F8 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		AF7BC4B416240934E80EB921 /* HabitTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTemplate.swift; sourceTree = "<group>"; };
 		B0DF3AF6D571F2469C131E9A /* OnboardingIdentitySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIdentitySelectionView.swift; sourceTree = "<group>"; };
+		B265E9FD656847E25AD27224 /* StreakRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakRecovery.swift; sourceTree = "<group>"; };
 		B43D17A9FF73F264DAD9A438 /* OnboardingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingState.swift; sourceTree = "<group>"; };
 		B68772CACACD02DE7B5F4C05 /* ArchivedHabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedHabitsView.swift; sourceTree = "<group>"; };
 		BE0E02981840AFC193CC82D4 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				E6AD53D3389F721D32D8E745 /* Profile.swift */,
 				17F69062BC6F99A7135D7166 /* ScorecardEntry.swift */,
 				A2E74505815490CAFA130C12 /* Streak.swift */,
+				B265E9FD656847E25AD27224 /* StreakRecovery.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -783,6 +786,7 @@
 				B799447D7D8AB01CF969AAC7 /* StreakBadge.swift in Sources */,
 				9EC8BC1F2FF3AB8F656E03C7 /* StreakBarView.swift in Sources */,
 				ED3123161B88F43BBB58EAC0 /* StreakCalendarView.swift in Sources */,
+				3C29250FC626D8847123A00C /* StreakRecovery.swift in Sources */,
 				7BBB560D1C599914A4CBA6D1 /* StreakService.swift in Sources */,
 				A6AD28164116AA8EA873CA1E /* StreakShareCard.swift in Sources */,
 				E4A5845F747B3AFD4C51C4DE /* SupabaseClient.swift in Sources */,

@@ -3,8 +3,10 @@ import Observation
 import WidgetKit
 import PostHog
 
-enum NeverMissTwiceState {
+enum NeverMissTwiceState: Equatable {
     case warning, comeback, dismissed
+    case recovering(day: Int) // day 0, 1, or 2 of recovery
+    case recoverySuccess
 }
 
 private let milestoneValues: Set<Int> = [7, 14, 21, 30, 66, 100]
@@ -29,6 +31,8 @@ final class TodayViewModel {
     var identityVoteCount: Int = 0
     var neverMissTwiceState: NeverMissTwiceState = .dismissed
     var isPerfectDay = false
+    var activeRecoveries: [UUID: StreakRecovery] = [:]
+    var recoveryHabitCount = 0
 
     private var userId: UUID?
 
@@ -216,6 +220,8 @@ final class TodayViewModel {
                     self.topIdentityStatement = completedHabit?.habit.craving
                     self.identityVoteCount = voteCount
                     self.showXPToast = true
+                    // Advance streak recovery if active
+                    self.advanceRecoveryIfNeeded(habitId: habitId, habitName: habitName)
                     // checkMilestone must run before checkPerfectDay — perfect day guards on !showMilestone
                     self.checkMilestone(for: habitId, habitName: habitName, streaks: allStreaks)
                     self.checkPerfectDay()
@@ -260,6 +266,40 @@ final class TodayViewModel {
 
     private func checkNeverMissTwice(streaks: [Streak]) {
         guard !neverMissTwiceDismissed, !streaks.isEmpty else { return }
+
+        // Check for expired recoveries and fire failure events
+        for streak in streaks {
+            if let existing = StreakRecovery.load(for: streak.habitId), existing.isExpired, !existing.isComplete {
+                let habitName = habitGroups.values.flatMap { $0 }.first { $0.habit.id == streak.habitId }?.habit.name ?? "unknown"
+                PostHogSDK.shared.capture("streak_recovery_failed", properties: [
+                    "habit_name": habitName,
+                    "streak_at_break": existing.streakValueAtBreak,
+                    "days_completed": existing.completedDays
+                ])
+            }
+        }
+
+        // Evaluate streak recoveries
+        let recoveries = StreakService.shared.evaluateRecoveries(streaks: streaks)
+        self.activeRecoveries = recoveries
+        self.recoveryHabitCount = recoveries.count
+
+        // If any habits are in recovery, show recovery state
+        if !recoveries.isEmpty {
+            let maxDay = recoveries.values.map(\.completedDays).max() ?? 0
+            neverMissTwiceState = .recovering(day: maxDay)
+
+            // Fire offered event for newly created recoveries (completedDays == 0)
+            for (habitId, recovery) in recoveries where recovery.completedDays == 0 {
+                let habitName = habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }?.habit.name ?? "unknown"
+                PostHogSDK.shared.capture("streak_recovery_offered", properties: [
+                    "habit_name": habitName,
+                    "streak_at_break": recovery.streakValueAtBreak
+                ])
+            }
+            return
+        }
+
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let missedCount = streaks.filter { streak in
@@ -314,10 +354,52 @@ final class TodayViewModel {
     }
 
     private func checkComeback() {
+        // Recovery flow takes priority
+        if case .recovering = neverMissTwiceState { return }
+
         guard neverMissTwiceState == .warning, completedHabits == 1 else { return }
         neverMissTwiceState = .comeback
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             self?.neverMissTwiceState = .dismissed
+        }
+    }
+
+    private func advanceRecoveryIfNeeded(habitId: UUID, habitName: String) {
+        guard activeRecoveries[habitId] != nil else { return }
+        guard let updated = StreakService.shared.advanceRecovery(for: habitId) else { return }
+        activeRecoveries[habitId] = updated
+
+        if updated.isComplete {
+            // Recovery succeeded — backfill the missed day
+            let uid = self.userId!
+            PostHogSDK.shared.capture("streak_recovery_completed", properties: [
+                "habit_name": habitName,
+                "recovered_streak": updated.streakValueAtBreak
+            ])
+            neverMissTwiceState = .recoverySuccess
+            HapticManager.notification(.success)
+            Task {
+                try? await StreakService.shared.completeRecovery(for: habitId, userId: uid)
+                let refreshed = try? await StreakService.shared.fetchStreaks(userId: uid)
+                await MainActor.run {
+                    if let refreshed {
+                        self.streaks = Dictionary(uniqueKeysWithValues: refreshed.map { ($0.habitId, $0) })
+                    }
+                    self.activeRecoveries.removeValue(forKey: habitId)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in
+                        if case .recoverySuccess = self?.neverMissTwiceState {
+                            self?.neverMissTwiceState = .dismissed
+                        }
+                    }
+                }
+            }
+        } else {
+            neverMissTwiceState = .recovering(day: updated.completedDays)
+            PostHogSDK.shared.capture("streak_recovery_day_completed", properties: [
+                "habit_name": habitName,
+                "recovery_day": updated.completedDays,
+                "streak_at_break": updated.streakValueAtBreak
+            ])
         }
     }
 

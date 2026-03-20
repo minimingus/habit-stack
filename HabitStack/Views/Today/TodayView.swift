@@ -97,6 +97,7 @@ struct TodayView: View {
                                     NeverMissTwiceBanner(
                                         state: viewModel.neverMissTwiceState,
                                         missedCount: viewModel.neverMissTwiceCount,
+                                        recoveryHabitCount: viewModel.recoveryHabitCount,
                                         profile: viewModel.profile,
                                         onDismiss: {
                                             viewModel.dismissNeverMissTwice()
