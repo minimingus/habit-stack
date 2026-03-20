@@ -102,7 +102,39 @@ final class CoachViewModel {
                 .compactMap { IdentityTrait(rawValue: $0) }
                 .map(\.displayName)
 
-            return HabitContext(habits: habitInfos, identityTraits: traits)
+            // Fetch identity votes for evidence
+            let votes: [IdentityVote] = (try? await supabase
+                .from("identity_votes")
+                .select()
+                .eq("user_id", value: userId.uuidString)
+                .execute()
+                .value) ?? []
+
+            let calendar = Calendar.current
+            let now = Date()
+            let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+            let twoWeeksAgo = calendar.date(byAdding: .day, value: -14, to: now) ?? now
+
+            let grouped = Dictionary(grouping: votes, by: { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) })
+            let evidence = grouped.map { key, traitVotes in
+                let firstDate = traitVotes.map(\.votedAt).min() ?? now
+                let daysSince = max(0, calendar.dateComponents([.day], from: firstDate, to: now).day ?? 0)
+                let lastWeek = traitVotes.filter { $0.votedAt >= weekAgo }.count
+                let priorWeek = traitVotes.filter { $0.votedAt >= twoWeeksAgo && $0.votedAt < weekAgo }.count
+                let displayName = traitVotes.first?.identityStatement ?? key
+                return HabitContext.IdentityEvidence(
+                    trait: displayName,
+                    voteCount: traitVotes.count,
+                    daysSinceFirstVote: daysSince,
+                    lastWeekVotes: lastWeek,
+                    priorWeekVotes: priorWeek
+                )
+            }
+            .sorted { $0.voteCount > $1.voteCount }
+
+            var context = HabitContext(habits: habitInfos, identityTraits: traits)
+            context.identityEvidence = evidence
+            return context
         } catch {
             return nil
         }

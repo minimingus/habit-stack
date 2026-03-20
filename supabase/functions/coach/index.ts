@@ -102,6 +102,17 @@ serve(async (req) => {
       contextLines.push("Reference these identity goals when giving advice — tie habits back to the person they're becoming.");
     }
 
+    if (habitContext.identityEvidence?.length) {
+      contextLines.push("\nIdentity evidence (vote counts from completed habits):");
+      for (const ev of habitContext.identityEvidence) {
+        const trend = ev.lastWeekVotes > ev.priorWeekVotes ? "↑ trending up"
+          : ev.lastWeekVotes < ev.priorWeekVotes ? "↓ trending down"
+          : "→ stable";
+        contextLines.push(`- "${ev.trait}": ${ev.voteCount} total votes over ${ev.daysSinceFirstVote} days (${ev.lastWeekVotes} this week, ${trend})`);
+      }
+      contextLines.push("\nWhen the user has identity evidence, reference it specifically. For example: \"You have shown up as a runner 23 times this month. That is not a streak — that is who you are.\" Celebrate identity milestones at 10, 25, 50, and 100 votes for a trait. If a trend is down, gently encourage without guilt.");
+    }
+
     if (contextLines.length > 0) {
       systemPrompt += contextLines.join("\n");
     }

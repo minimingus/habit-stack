@@ -13,11 +13,20 @@ struct HabitContext {
         let isCompletedToday: Bool
     }
 
+    struct IdentityEvidence {
+        let trait: String
+        let voteCount: Int
+        let daysSinceFirstVote: Int
+        let lastWeekVotes: Int
+        let priorWeekVotes: Int
+    }
+
     let habits: [HabitInfo]
     let identityTraits: [String]
+    var identityEvidence: [IdentityEvidence] = []
 
     func toDictionary() -> [String: Any] {
-        [
+        var dict: [String: Any] = [
             "habits": habits.map { habit in
                 [
                     "name": habit.name,
@@ -28,6 +37,18 @@ struct HabitContext {
             },
             "identityTraits": identityTraits
         ]
+        if !identityEvidence.isEmpty {
+            dict["identityEvidence"] = identityEvidence.map { evidence in
+                [
+                    "trait": evidence.trait,
+                    "voteCount": evidence.voteCount,
+                    "daysSinceFirstVote": evidence.daysSinceFirstVote,
+                    "lastWeekVotes": evidence.lastWeekVotes,
+                    "priorWeekVotes": evidence.priorWeekVotes
+                ] as [String: Any]
+            }
+        }
+        return dict
     }
 }
 
