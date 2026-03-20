@@ -6,7 +6,9 @@ struct AuthView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var showSignUp = false
+    #if DEBUG
     @State private var isDevLoading = false
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -14,7 +16,7 @@ struct AuthView: View {
                 Spacer()
 
                 VStack(spacing: 8) {
-                    Text("HabitStack")
+                    Text("Better You")
                         .font(.largeTitle.bold())
                         .foregroundStyle(Color("Teal"))
                     Text("Build better habits, one day at a time.")
@@ -78,6 +80,7 @@ struct AuthView: View {
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Teal"), lineWidth: 1.5))
                     }
 
+                    #if DEBUG
                     Button {
                         Task { await devLogin() }
                     } label: {
@@ -94,6 +97,7 @@ struct AuthView: View {
                         .foregroundStyle(Color("Stone500"))
                     }
                     .disabled(isDevLoading)
+                    #endif
                 }
 
                 Spacer()
@@ -105,6 +109,7 @@ struct AuthView: View {
         }
     }
 
+    #if DEBUG
     private func devLogin() async {
         isDevLoading = true
         errorMessage = nil
@@ -114,7 +119,6 @@ struct AuthView: View {
         do {
             let result = try await supabase.auth.signUp(email: fakeEmail, password: fakePassword)
             if result.session == nil {
-                // Auto-confirm not enabled — fall back to sign-in attempt
                 try await supabase.auth.signIn(email: fakeEmail, password: fakePassword)
             }
         } catch {
@@ -122,6 +126,7 @@ struct AuthView: View {
         }
         isDevLoading = false
     }
+    #endif
 
     private func signIn() async {
         isLoading = true
