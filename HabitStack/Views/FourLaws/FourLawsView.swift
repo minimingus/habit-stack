@@ -191,10 +191,11 @@ private struct LawCardData {
     let allHabits: [Habit]
 
     var fraction: Double {
-        allHabits.isEmpty ? 1 : Double(allHabits.count - missingHabits.count) / Double(allHabits.count)
+        allHabits.isEmpty ? 0 : Double(allHabits.count - missingHabits.count) / Double(allHabits.count)
     }
 
     var scoreColor: Color {
+        if allHabits.isEmpty { return Color("Stone500") }
         if fraction >= 1.0 { return Color("Teal") }
         if fraction >= 0.5 { return .orange }
         return .red.opacity(0.7)
