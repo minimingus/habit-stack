@@ -3,11 +3,11 @@ import PostHog
 
 struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedPlan: Plan = .annual
+    @State private var selectedPlan: Plan = .weekly
     @State private var isLoading = false
     @State private var errorMessage: String?
 
-    enum Plan { case monthly, annual }
+    enum Plan { case weekly, monthly, annual }
 
     var body: some View {
         NavigationStack {
@@ -46,7 +46,7 @@ struct PaywallView: View {
 
                     if !RevenueCatManager.shared.isOnTrial {
                         // Trial messaging
-                        Text("Try Pro free for 7 days. Cancel anytime.")
+                        Text("Try Pro free. Cancel anytime.")
                             .font(.subheadline)
                             .foregroundStyle(Color("Stone500"))
                             .multilineTextAlignment(.center)
@@ -55,11 +55,11 @@ struct PaywallView: View {
                         // Plan selector
                         VStack(spacing: 10) {
                             PlanButton(
-                                title: "Annual",
-                                price: "7-day free trial, then $59.99/year",
-                                badge: "Save 37%",
-                                isSelected: selectedPlan == .annual,
-                                onSelect: { selectedPlan = .annual }
+                                title: "Weekly",
+                                price: "3-day free trial, then $2.99/week",
+                                badge: "Most Popular",
+                                isSelected: selectedPlan == .weekly,
+                                onSelect: { selectedPlan = .weekly }
                             )
                             PlanButton(
                                 title: "Monthly",
@@ -67,6 +67,13 @@ struct PaywallView: View {
                                 badge: nil,
                                 isSelected: selectedPlan == .monthly,
                                 onSelect: { selectedPlan = .monthly }
+                            )
+                            PlanButton(
+                                title: "Annual",
+                                price: "7-day free trial, then $59.99/year",
+                                badge: "Save 60%",
+                                isSelected: selectedPlan == .annual,
+                                onSelect: { selectedPlan = .annual }
                             )
                         }
                         .padding(.horizontal, 24)
@@ -102,7 +109,7 @@ struct PaywallView: View {
                                     if isLoading {
                                         ProgressView().tint(.white)
                                     } else {
-                                        Text("Start 7-Day Free Trial")
+                                        Text("Start Free Trial")
                                             .fontWeight(.semibold)
                                     }
                                 }
@@ -146,16 +153,26 @@ struct PaywallView: View {
         }
     }
 
+    private var planName: String {
+        switch selectedPlan {
+        case .weekly: return "weekly"
+        case .monthly: return "monthly"
+        case .annual: return "annual"
+        }
+    }
+
     private func purchase() async {
         isLoading = true
         errorMessage = nil
-        let planName = selectedPlan == .annual ? "annual" : "monthly"
         PostHogSDK.shared.capture("purchase_started", properties: ["plan": planName])
         do {
-            if selectedPlan == .annual {
-                try await RevenueCatManager.shared.purchaseAnnual()
-            } else {
+            switch selectedPlan {
+            case .weekly:
+                try await RevenueCatManager.shared.purchaseWeekly()
+            case .monthly:
                 try await RevenueCatManager.shared.purchaseMonthly()
+            case .annual:
+                try await RevenueCatManager.shared.purchaseAnnual()
             }
             if RevenueCatManager.shared.isOnTrial {
                 PostHogSDK.shared.capture("trial_started", properties: ["plan": planName])

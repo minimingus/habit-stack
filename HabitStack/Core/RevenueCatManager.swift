@@ -46,6 +46,15 @@ final class RevenueCatManager {
         await syncPlanWithSupabase()
     }
 
+    func purchaseWeekly() async throws {
+        guard FeatureFlags.revenueCatEnabled else { return }
+        let offerings = try await Purchases.shared.offerings()
+        guard let weekly = offerings.current?.weekly else { return }
+        let result = try await Purchases.shared.purchase(package: weekly)
+        updateEntitlementState(from: result.customerInfo)
+        await syncPlanWithSupabase()
+    }
+
     func purchaseMonthly() async throws {
         guard FeatureFlags.revenueCatEnabled else { return }
         let offerings = try await Purchases.shared.offerings()
