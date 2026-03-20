@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct FourLawsView: View {
     @State private var habits: [Habit] = []
@@ -88,6 +89,13 @@ struct FourLawsView: View {
             .navigationTitle("Identity")
             .task { await load() }
             .refreshable { await load() }
+            .onAppear {
+                let traitCount = Set(allVotes.map { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) }).count
+                PostHogSDK.shared.capture("identity_tab_viewed", properties: [
+                    "total_traits": traitCount,
+                    "total_votes": allVotes.count
+                ])
+            }
             .sheet(isPresented: $showScorecard) {
                 HabitsScorecardView()
             }

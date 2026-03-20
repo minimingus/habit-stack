@@ -149,19 +149,47 @@ final class TodayViewModel {
 
             // Fetch identity vote count for the completed habit's identity statement
             var fetchedVoteCount = 0
+            var identityTraitName: String?
             if newStatus == .done {
                 let completedHabit = await MainActor.run {
                     self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
                 }
-                if let statement = completedHabit?.habit.craving {
-                    let votes: [IdentityVote] = (try? await supabase
+                identityTraitName = completedHabit?.habit.craving
+                if let statement = identityTraitName {
+                    let allVotes: [IdentityVote] = (try? await supabase
                         .from("identity_votes")
                         .select()
                         .eq("user_id", value: userId.uuidString)
-                        .eq("identity_statement", value: statement)
                         .execute()
                         .value) ?? []
-                    fetchedVoteCount = votes.count
+                    let traitVotes = allVotes.filter {
+                        $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) == statement.lowercased().trimmingCharacters(in: .whitespaces)
+                    }
+                    fetchedVoteCount = traitVotes.count
+
+                    // Identity analytics
+                    PostHogSDK.shared.capture("identity_vote_cast", properties: [
+                        "trait_name": statement,
+                        "cumulative_count": fetchedVoteCount,
+                        "habit_name": habitName
+                    ])
+
+                    let milestones: Set<Int> = [10, 25, 50, 100]
+                    if milestones.contains(fetchedVoteCount) {
+                        PostHogSDK.shared.capture("identity_evidence_milestone", properties: [
+                            "trait_name": statement,
+                            "milestone_count": fetchedVoteCount
+                        ])
+                    }
+
+                    // Set user properties
+                    let grouped = Dictionary(grouping: allVotes, by: { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) })
+                    let identityDepth = grouped.values.filter { $0.count > 5 }.count
+                    let topTrait = grouped.max(by: { $0.value.count < $1.value.count })?.value.first?.identityStatement ?? statement
+                    PostHogSDK.shared.identify(userId.uuidString, userProperties: [
+                        "identity_depth": identityDepth,
+                        "top_identity_trait": topTrait
+                    ])
                 }
             }
             let voteCount = fetchedVoteCount
