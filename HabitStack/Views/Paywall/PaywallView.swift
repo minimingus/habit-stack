@@ -25,9 +25,9 @@ struct PaywallView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Color("Teal"))
                         } else {
-                            Text("Try Pro Free for 7 Days")
+                            Text("Become who you want to be")
                                 .font(.title.bold())
-                            Text("Unlock all features and build habits without limits.")
+                            Text("Unlock your full potential with unlimited habits and personal AI coaching.")
                                 .font(.subheadline)
                                 .foregroundStyle(Color("Stone500"))
                                 .multilineTextAlignment(.center)
@@ -38,9 +38,9 @@ struct PaywallView: View {
 
                     // Features list
                     VStack(alignment: .leading, spacing: 12) {
-                        ProFeatureRow(icon: "infinity", text: "Unlimited habits (free: 5 max)")
-                        ProFeatureRow(icon: "chart.bar.fill", text: "Full 5-week analytics history")
-                        ProFeatureRow(icon: "bubble.left.fill", text: "50 AI coach messages per day")
+                        ProFeatureRow(icon: "bubble.left.fill", text: "Personal AI coach — 50 messages/day")
+                        ProFeatureRow(icon: "infinity", text: "Unlimited habits to match your goals")
+                        ProFeatureRow(icon: "chart.bar.fill", text: "5 weeks of progress insights")
                     }
                     .padding(.horizontal, 24)
 
@@ -64,14 +64,14 @@ struct PaywallView: View {
                             PlanButton(
                                 title: "Monthly",
                                 price: "7-day free trial, then $7.99/month",
-                                badge: nil,
+                                badge: "Save 33%",
                                 isSelected: selectedPlan == .monthly,
                                 onSelect: { selectedPlan = .monthly }
                             )
                             PlanButton(
                                 title: "Annual",
                                 price: "7-day free trial, then $59.99/year",
-                                badge: "Save 60%",
+                                badge: "Best Value",
                                 isSelected: selectedPlan == .annual,
                                 onSelect: { selectedPlan = .annual }
                             )
@@ -109,7 +109,7 @@ struct PaywallView: View {
                                     if isLoading {
                                         ProgressView().tint(.white)
                                     } else {
-                                        Text("Start Free Trial")
+                                        Text(selectedPlan == .weekly ? "Try for $2.99/week" : "Start Free Trial")
                                             .fontWeight(.semibold)
                                     }
                                 }
