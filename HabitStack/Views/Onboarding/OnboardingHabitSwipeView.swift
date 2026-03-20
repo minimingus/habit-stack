@@ -48,9 +48,32 @@ struct OnboardingHabitSwipeView: View {
                     }
                 } else {
                     // All cards swiped
-                    Text("No more suggestions")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
+                    VStack(spacing: 16) {
+                        Text("No more suggestions")
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+
+                        if adoptedHabits.count < targetCount {
+                            Text("Pick at least 1 habit to get started")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+
+                            Button(action: {
+                                PostHogSDK.shared.capture("onboarding_habits_reshuffled")
+                                withAnimation {
+                                    currentIndex = 0
+                                    loadSuggestedHabits()
+                                }
+                            }) {
+                                Label("Shuffle new suggestions", systemImage: "shuffle")
+                                    .font(.headline)
+                                    .padding()
+                                    .background(Color.accentColor)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                            }
+                        }
+                    }
                 }
             }
             .frame(height: 500)
