@@ -57,6 +57,11 @@ struct SwipeableHabitCard: View {
             .padding(30)
         }
         .frame(width: 320, height: 450)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(template.name), \(template.category.displayName), \(template.suggestedDuration) minutes")
+        .accessibilityHint("Swipe right to adopt, swipe left to skip")
+        .accessibilityAction(named: "Adopt") { onSwipeRight() }
+        .accessibilityAction(named: "Skip") { onSwipeLeft() }
         .offset(offset)
         .rotationEffect(.degrees(Double(offset.width / 20)))
         .gesture(dragGesture)

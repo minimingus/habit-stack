@@ -14,5 +14,7 @@ struct StreakBadge: View {
         .padding(.vertical, 2)
         .background(Color("TealLight"))
         .clipShape(Capsule())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(streak) day streak")
     }
 }

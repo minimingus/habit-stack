@@ -62,6 +62,8 @@ struct HoldCompleteButton: View {
                     .animation(.spring(duration: 0.3), value: isCompleted)
             }
         }
+        .accessibilityLabel(isCompleted ? "Completed" : "Hold to complete")
+        .accessibilityAddTraits(isCompleted ? .isSelected : [])
         .scaleEffect(isPressed ? 0.92 : 1.0)
         .animation(.spring(duration: 0.15), value: isPressed)
         .gesture(

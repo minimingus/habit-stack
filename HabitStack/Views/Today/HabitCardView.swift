@@ -159,6 +159,9 @@ struct HabitCardView: View {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(Color.white.opacity(0.07), lineWidth: 0.5)
         )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(habit.name), \(habitWithStatus.isCompleted ? "completed" : "not completed")")
+        .accessibilityValue(streak != nil && streak!.currentStreak > 0 ? "\(streak!.currentStreak) day streak" : "")
         .animation(.easeInOut(duration: 0.25), value: habitWithStatus.isCompleted)
         .overlay(alignment: .top) {
             if showConfetti {

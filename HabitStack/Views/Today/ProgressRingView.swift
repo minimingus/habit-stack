@@ -42,6 +42,8 @@ struct ProgressRingView: View {
                     .animation(.easeInOut, value: momentumMessage)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(completed) of \(total) habits completed, \(Int(progress * 100)) percent")
         .padding(.vertical, 16)
         .onAppear { animatedProgress = progress }
         .onChange(of: progress) { _, new in animatedProgress = new }
