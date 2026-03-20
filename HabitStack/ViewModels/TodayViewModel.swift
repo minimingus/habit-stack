@@ -156,6 +156,16 @@ final class TodayViewModel {
                 }
                 identityTraitName = completedHabit?.habit.craving
                 if let statement = identityTraitName {
+                    // Record identity vote for this habit completion
+                    try? await supabase
+                        .from("identity_votes")
+                        .insert([
+                            "user_id": userId.uuidString,
+                            "habit_id": habitId.uuidString,
+                            "identity_statement": statement
+                        ])
+                        .execute()
+
                     let allVotes: [IdentityVote] = (try? await supabase
                         .from("identity_votes")
                         .select()
