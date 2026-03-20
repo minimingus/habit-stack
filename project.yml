@@ -68,7 +68,7 @@ targets:
     info:
       path: HabitStackWidget/Info.plist
       properties:
-        CFBundleDisplayName: HabitStack Widget
+        CFBundleDisplayName: Better You Widget
         CFBundleIdentifier: com.tomerab.habitstack.widget
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
