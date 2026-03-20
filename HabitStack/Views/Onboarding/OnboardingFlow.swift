@@ -11,7 +11,7 @@ import PostHog
 
 /// Main onboarding coordinator view
 struct OnboardingFlow: View {
-    @StateObject private var state = OnboardingState()
+    @State private var state = OnboardingState()
     @State private var isSaving = false
     @State private var day1ReminderTime: Date?
     @State private var showHabitCreationError = false
