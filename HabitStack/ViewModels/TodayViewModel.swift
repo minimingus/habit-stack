@@ -21,12 +21,12 @@ final class TodayViewModel {
     var profile: Profile?
     var showXPToast = false
     var xpToastAmount = 10
-    var xpToastIsIdentity = false
     var lastCompletedHabitName: String?
     var showMilestone = false
     var milestoneStreak = 0
     var milestoneHabitName = ""
     var topIdentityStatement: String?
+    var identityVoteCount: Int = 0
     var neverMissTwiceState: NeverMissTwiceState = .dismissed
     var isPerfectDay = false
 
@@ -146,6 +146,26 @@ final class TodayViewModel {
                 .limit(1)
                 .execute()
                 .value) ?? []
+
+            // Fetch identity vote count for the completed habit's identity statement
+            var fetchedVoteCount = 0
+            if newStatus == .done {
+                let completedHabit = await MainActor.run {
+                    self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
+                }
+                if let statement = completedHabit?.habit.craving {
+                    let votes: [IdentityVote] = (try? await supabase
+                        .from("identity_votes")
+                        .select()
+                        .eq("user_id", value: userId.uuidString)
+                        .eq("identity_statement", value: statement)
+                        .execute()
+                        .value) ?? []
+                    fetchedVoteCount = votes.count
+                }
+            }
+            let voteCount = fetchedVoteCount
+
             await MainActor.run {
                 self.streaks = Dictionary(uniqueKeysWithValues: allStreaks.map { ($0.habitId, $0) })
                 self.profile = profiles.first
@@ -156,7 +176,8 @@ final class TodayViewModel {
                     self.lastCompletedHabitName = habitName
                     let completedHabit = self.habitGroups.values.flatMap { $0 }.first { $0.habit.id == habitId }
                     self.topIdentityStatement = completedHabit?.habit.craving
-                    self.showXPToastRotated()
+                    self.identityVoteCount = voteCount
+                    self.showXPToast = true
                     // checkMilestone must run before checkPerfectDay — perfect day guards on !showMilestone
                     self.checkMilestone(for: habitId, habitName: habitName, streaks: allStreaks)
                     self.checkPerfectDay()
@@ -180,13 +201,6 @@ final class TodayViewModel {
     }
 
     // MARK: - Private helpers
-
-    private func showXPToastRotated() {
-        // Alternate between XP and identity message
-        let showIdentity = (topIdentityStatement != nil) && (completedHabits % 2 == 0)
-        xpToastIsIdentity = showIdentity
-        showXPToast = true
-    }
 
     private func checkMilestone(for habitId: UUID, habitName: String, streaks: [Streak]) {
         guard let streak = streaks.first(where: { $0.habitId == habitId }) else { return }

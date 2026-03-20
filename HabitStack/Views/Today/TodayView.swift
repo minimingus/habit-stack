@@ -163,28 +163,21 @@ struct TodayView: View {
                     }
                 }
 
-                // XP toast overlay
+                // Completion toast overlay
                 if viewModel.showXPToast {
                     VStack {
                         Spacer()
-                        if viewModel.xpToastIsIdentity, let statement = viewModel.topIdentityStatement {
-                            IdentityToastView(statement: statement)
-                                .padding(.bottom, 100)
-                                .transition(.move(edge: .bottom).combined(with: .opacity))
-                                .onAppear {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                                        withAnimation { viewModel.showXPToast = false }
-                                    }
-                                }
-                        } else {
-                            XPToastView(amount: viewModel.xpToastAmount)
-                                .padding(.bottom, 100)
-                                .transition(.move(edge: .bottom).combined(with: .opacity))
-                                .onAppear {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                        withAnimation { viewModel.showXPToast = false }
-                                    }
-                                }
+                        CompletionToastView(
+                            xpAmount: viewModel.xpToastAmount,
+                            identityStatement: viewModel.topIdentityStatement,
+                            voteCount: viewModel.identityVoteCount
+                        )
+                        .padding(.bottom, 100)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                withAnimation { viewModel.showXPToast = false }
+                            }
                         }
                     }
                 }

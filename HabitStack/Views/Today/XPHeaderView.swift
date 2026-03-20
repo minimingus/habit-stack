@@ -74,36 +74,26 @@ struct XPHeaderView: View {
     }
 }
 
-struct XPToastView: View {
-    let amount: Int
+struct CompletionToastView: View {
+    let xpAmount: Int
+    let identityStatement: String?
+    let voteCount: Int
 
     var body: some View {
         HStack(spacing: 6) {
-            Image(systemName: "star.fill")
-                .foregroundStyle(.yellow)
-            Text("+\(amount) XP")
-                .font(.subheadline.bold())
+            Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(.white)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(Color("Teal"))
-        .clipShape(Capsule())
-        .shadow(color: .black.opacity(0.15), radius: 6, y: 3)
-    }
-}
-
-struct IdentityToastView: View {
-    let statement: String
-
-    var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: "person.fill.checkmark")
-                .foregroundStyle(.white)
-            Text("Vote cast: I want to become someone who \(statement.lowercased())")
-                .font(.caption.bold())
-                .foregroundStyle(.white)
-                .lineLimit(2)
+            if let statement = identityStatement {
+                Text("+\(xpAmount) XP · Vote #\(voteCount) for \(statement.capitalized)")
+                    .font(.caption.bold())
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+            } else {
+                Text("+\(xpAmount) XP · One more vote for who you are becoming")
+                    .font(.caption.bold())
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
