@@ -109,7 +109,7 @@ struct PaywallView: View {
                                     if isLoading {
                                         ProgressView().tint(.white)
                                     } else {
-                                        Text(selectedPlan == .weekly ? "Try for $2.99/week" : "Start Free Trial")
+                                        Text("Start Free Trial")
                                             .fontWeight(.semibold)
                                     }
                                 }
