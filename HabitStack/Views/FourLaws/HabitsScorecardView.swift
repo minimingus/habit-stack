@@ -138,7 +138,7 @@ struct HabitsScorecardView: View {
                 .padding(.vertical, 12)
             }
             .background(Color("AppBackground").ignoresSafeArea())
-            .navigationTitle("Your Progress")
+            .navigationTitle("Daily Review")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if let onContinue {
