@@ -213,6 +213,53 @@ final class NotificationManager {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 
+    // MARK: - Trial expiry nudge
+
+    func scheduleTrialExpiryNotifications(expirationDate: Date) {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [
+            "trial-expiry-24h", "trial-expiry-day"
+        ])
+
+        let calendar = Calendar.current
+
+        // 24h before expiry
+        if let dayBefore = calendar.date(byAdding: .day, value: -1, to: expirationDate),
+           dayBefore > Date() {
+            var comps = calendar.dateComponents([.year, .month, .day], from: dayBefore)
+            comps.hour = 10
+            comps.minute = 0
+            let content = UNMutableNotificationContent()
+            content.title = "Your Pro trial ends tomorrow"
+            content.body = "Keep unlimited habits and your AI coach — upgrade now."
+            content.sound = .default
+            content.userInfo = ["type": "trial_expiry_24h"]
+            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            center.add(UNNotificationRequest(identifier: "trial-expiry-24h", content: content, trigger: trigger))
+        }
+
+        // On expiry day
+        let expiryDay = calendar.startOfDay(for: expirationDate)
+        if expiryDay >= calendar.startOfDay(for: Date()) {
+            var comps = calendar.dateComponents([.year, .month, .day], from: expiryDay)
+            comps.hour = 10
+            comps.minute = 0
+            let content = UNMutableNotificationContent()
+            content.title = "Your Pro trial ended"
+            content.body = "Your habits are safe — upgrade to keep unlimited access."
+            content.sound = .default
+            content.userInfo = ["type": "trial_expiry_day"]
+            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            center.add(UNNotificationRequest(identifier: "trial-expiry-day", content: content, trigger: trigger))
+        }
+    }
+
+    func cancelTrialExpiryNotifications() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(
+            withIdentifiers: ["trial-expiry-24h", "trial-expiry-day"]
+        )
+    }
+
     func cancelPredictiveNudge(for habitId: UUID) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(
             withIdentifiers: ["predictive_nudge_\(habitId.uuidString)"]

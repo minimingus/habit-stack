@@ -7,6 +7,7 @@ struct TodayView: View {
     @State private var editingHabit: Habit?
     @State private var selectedTab: Int = 0
     @State private var showScorecard = false
+    @State private var showPaywall = false
 
     var body: some View {
         NavigationStack {
@@ -44,6 +45,22 @@ struct TodayView: View {
                                     )
                                     .listRowBackground(Color.clear)
                                     .listRowSeparator(.hidden)
+                                }
+                            }
+
+                            // Trial expiry banner
+                            if RevenueCatManager.shared.trialExpiresWithin24h {
+                                Section {
+                                    TrialExpiryBanner {
+                                        PostHogSDK.shared.capture("trial_expiry_banner_tapped")
+                                        showPaywall = true
+                                    }
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                                    .onAppear {
+                                        PostHogSDK.shared.capture("trial_expiry_banner_shown")
+                                    }
                                 }
                             }
 
@@ -207,6 +224,7 @@ struct TodayView: View {
             }) {
                 HabitsScorecardView()
             }
+            .sheet(isPresented: $showPaywall) { PaywallView() }
             .sheet(item: $editingHabit) { habit in
                 HabitWizardView(
                     editingHabit: habit,

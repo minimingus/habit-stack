@@ -1,6 +1,7 @@
 import Foundation
 import RevenueCat
 import Observation
+import PostHog
 
 @Observable
 final class RevenueCatManager {
@@ -70,11 +71,37 @@ final class RevenueCatManager {
         await syncPlanWithSupabase()
     }
 
+    var trialExpiresWithin24h: Bool {
+        guard let expiration = trialExpirationDate, isOnTrial else { return false }
+        let hoursRemaining = expiration.timeIntervalSince(Date()) / 3600
+        return hoursRemaining > 0 && hoursRemaining <= 24
+    }
+
+    var trialHoursRemaining: Int? {
+        guard let expiration = trialExpirationDate, isOnTrial else { return nil }
+        let hours = Int(expiration.timeIntervalSince(Date()) / 3600)
+        return max(0, hours)
+    }
+
     private func updateEntitlementState(from info: CustomerInfo) {
         let proEntitlement = info.entitlements["pro"]
+        let wasTrial = _isOnTrial
         _isProUser = proEntitlement?.isActive == true
         _isOnTrial = proEntitlement?.periodType == .trial
         _trialExpirationDate = proEntitlement?.expirationDate
+
+        // Schedule trial expiry notifications when trial is first detected
+        if _isOnTrial, let expDate = _trialExpirationDate, !wasTrial {
+            NotificationManager.shared.scheduleTrialExpiryNotifications(expirationDate: expDate)
+            PostHogSDK.shared.capture("trial_expiry_notification_sent", properties: [
+                "hours_remaining": Int(expDate.timeIntervalSince(Date()) / 3600)
+            ])
+        }
+
+        // Cancel trial notifications if user converted
+        if !_isOnTrial && wasTrial && _isProUser {
+            NotificationManager.shared.cancelTrialExpiryNotifications()
+        }
     }
 
     private func syncPlanWithSupabase() async {
