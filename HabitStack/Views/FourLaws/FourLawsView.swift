@@ -3,6 +3,7 @@ import SwiftUI
 struct FourLawsView: View {
     @State private var habits: [Habit] = []
     @State private var allVotes: [IdentityVote] = []
+    @State private var allStreaks: [Streak] = []
     @State private var showScorecard = false
     @State private var editingHabit: Habit? = nil
     @State private var expandedLaw: String? = nil
@@ -13,9 +14,10 @@ struct FourLawsView: View {
                 VStack(spacing: 20) {
 
                     // MARK: 1. Identity Statement — front and centre
-                    IdentityCarousel(
+                    IdentityDashboard(
                         habits: habits,
                         votes: allVotes,
+                        streaks: allStreaks,
                         onHabitTap: { habit in editingHabit = habit }
                     )
                     .padding(.horizontal, 16)
@@ -156,9 +158,17 @@ struct FourLawsView: View {
             .execute()
             .value) ?? []
 
-        let (loadedHabits, loadedVotes) = await (habitsResult, votesResult)
+        async let streaksResult: [Streak] = (try? await supabase
+            .from("streaks")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+            .value) ?? []
+
+        let (loadedHabits, loadedVotes, loadedStreaks) = await (habitsResult, votesResult, streaksResult)
         habits = loadedHabits
         allVotes = loadedVotes
+        allStreaks = loadedStreaks
     }
 }
 
@@ -294,11 +304,12 @@ private struct LawCard: View {
     }
 }
 
-// MARK: - Identity Carousel
+// MARK: - Identity Dashboard
 
-private struct IdentityCarousel: View {
+private struct IdentityDashboard: View {
     let habits: [Habit]
     let votes: [IdentityVote]
+    let streaks: [Streak]
     let onHabitTap: (Habit) -> Void
 
     struct IdentityGroup: Identifiable {
@@ -306,36 +317,70 @@ private struct IdentityCarousel: View {
         let statement: String
         let habits: [Habit]
         let evidenceCount: Int
+        let bestStreak: Int
+        let firstVoteDate: Date?
+        let lastWeekCount: Int
+        let priorWeekCount: Int
     }
 
     private var groups: [IdentityGroup] {
+        let calendar = Calendar.current
+        let now = Date()
+        let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+        let twoWeeksAgo = calendar.date(byAdding: .day, value: -14, to: now) ?? now
+
         let withCraving = habits.compactMap { habit -> (Habit, String)? in
             guard let craving = habit.craving?.trimmingCharacters(in: .whitespaces), !craving.isEmpty else { return nil }
             return (habit, craving.lowercased())
         }
         let grouped = Dictionary(grouping: withCraving, by: { $0.1 })
         return grouped.map { key, value in
-            let count = votes.filter { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) == key }.count
+            let matchingVotes = votes.filter { $0.identityStatement.lowercased().trimmingCharacters(in: .whitespaces) == key }
+            let habitIds = Set(value.map { $0.0.id })
+            let bestStreak = streaks.filter { habitIds.contains($0.habitId) }.map(\.currentStreak).max() ?? 0
+            let firstDate = matchingVotes.map(\.votedAt).min()
+            let lastWeek = matchingVotes.filter { $0.votedAt >= weekAgo }.count
+            let priorWeek = matchingVotes.filter { $0.votedAt >= twoWeeksAgo && $0.votedAt < weekAgo }.count
             let displayStatement = value.first?.0.craving?.trimmingCharacters(in: .whitespaces) ?? key
-            return IdentityGroup(id: key, statement: displayStatement, habits: value.map { $0.0 }, evidenceCount: count)
+            return IdentityGroup(
+                id: key,
+                statement: displayStatement,
+                habits: value.map { $0.0 },
+                evidenceCount: matchingVotes.count,
+                bestStreak: bestStreak,
+                firstVoteDate: firstDate,
+                lastWeekCount: lastWeek,
+                priorWeekCount: priorWeek
+            )
         }
         .sorted { $0.evidenceCount > $1.evidenceCount }
     }
 
+    private var totalVotes: Int { votes.count }
+    private var traitCount: Int { groups.count }
+
     var body: some View {
-        if groups.isEmpty {
-            emptyCard
-        } else if groups.count == 1 {
-            IdentityCard(group: groups[0], onHabitTap: onHabitTap)
-        } else {
-            TabView {
+        VStack(spacing: 12) {
+            if groups.isEmpty {
+                emptyCard
+            } else {
+                // Header summary
+                HStack(spacing: 4) {
+                    Image(systemName: "person.fill.checkmark")
+                        .foregroundStyle(Color("Teal"))
+                    Text("\(totalVotes) identity vote\(totalVotes == 1 ? "" : "s") across \(traitCount) trait\(traitCount == 1 ? "" : "s")")
+                        .font(.caption.bold())
+                        .foregroundStyle(Color("Stone950"))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color("TealLight").opacity(0.5))
+                .clipShape(Capsule())
+
                 ForEach(groups) { group in
-                    IdentityCard(group: group, onHabitTap: onHabitTap)
-                        .padding(.bottom, 24)
+                    IdentityProofCard(group: group, onHabitTap: onHabitTap)
                 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .automatic))
-            .frame(height: 264)
         }
     }
 
@@ -363,15 +408,35 @@ private struct IdentityCarousel: View {
     }
 }
 
-// MARK: - Identity Card
+// MARK: - Identity Proof Card
 
-private struct IdentityCard: View {
-    let group: IdentityCarousel.IdentityGroup
+private struct IdentityProofCard: View {
+    let group: IdentityDashboard.IdentityGroup
     let onHabitTap: (Habit) -> Void
 
+    private var trendIcon: String {
+        if group.lastWeekCount > group.priorWeekCount { return "arrow.up.right" }
+        if group.lastWeekCount < group.priorWeekCount { return "arrow.down.right" }
+        return "arrow.right"
+    }
+
+    private var trendColor: Color {
+        if group.lastWeekCount > group.priorWeekCount { return Color("Teal") }
+        if group.lastWeekCount < group.priorWeekCount { return .orange }
+        return Color("Stone500")
+    }
+
+    private var sinceText: String {
+        guard let date = group.firstVoteDate else { return "" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, yyyy"
+        return "Since \(formatter.string(from: date))"
+    }
+
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(spacing: 8) {
+        VStack(spacing: 14) {
+            // Identity statement
+            VStack(spacing: 4) {
                 Text("I am becoming")
                     .font(.caption.bold())
                     .foregroundStyle(Color("Teal"))
@@ -383,16 +448,52 @@ private struct IdentityCard: View {
                     .multilineTextAlignment(.center)
             }
 
-            // Habit chips
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+            // Evidence stats row
+            HStack(spacing: 16) {
+                StatPill(value: "\(group.evidenceCount)", label: "actions", icon: "checkmark.circle.fill")
+                if group.bestStreak > 0 {
+                    StatPill(value: "\(group.bestStreak)d", label: "streak", icon: "flame.fill")
+                }
+                HStack(spacing: 3) {
+                    Image(systemName: trendIcon)
+                        .font(.caption2.bold())
+                        .foregroundStyle(trendColor)
+                    Text("\(group.lastWeekCount) this week")
+                        .font(.caption2)
+                        .foregroundStyle(Color("Stone500"))
+                }
+            }
+
+            // Progress bar (evidence strength, capped at 30 for visual)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color("Stone100"))
+                        .frame(height: 6)
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color("Teal"))
+                        .frame(width: geo.size.width * min(1.0, Double(group.evidenceCount) / 30.0), height: 6)
+                        .animation(.easeInOut(duration: 0.5), value: group.evidenceCount)
+                }
+            }
+            .frame(height: 6)
+
+            // First vote date + habit chips
+            HStack {
+                if !sinceText.isEmpty {
+                    Text(sinceText)
+                        .font(.caption2)
+                        .foregroundStyle(Color("Stone500"))
+                }
+                Spacer()
+                HStack(spacing: 4) {
                     ForEach(group.habits.prefix(3)) { habit in
                         Button { onHabitTap(habit) } label: {
                             Text("\(habit.emoji) \(habit.name)")
-                                .font(.caption.bold())
+                                .font(.caption2.bold())
                                 .lineLimit(1)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
                                 .background(Color("CardBackground").opacity(0.7))
                                 .foregroundStyle(Color("Stone950"))
                                 .clipShape(Capsule())
@@ -401,29 +502,15 @@ private struct IdentityCard: View {
                         .buttonStyle(.plain)
                     }
                     if group.habits.count > 3 {
-                        Text("+\(group.habits.count - 3) more")
-                            .font(.caption)
+                        Text("+\(group.habits.count - 3)")
+                            .font(.caption2)
                             .foregroundStyle(Color("Stone500"))
                     }
                 }
             }
-
-            if group.evidenceCount > 0 {
-                HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color("Teal"))
-                    Text("\(group.evidenceCount) completion\(group.evidenceCount == 1 ? "" : "s") as evidence")
-                        .font(.subheadline)
-                        .foregroundStyle(Color("Stone950"))
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(Color("TealLight"))
-                .clipShape(Capsule())
-            }
         }
         .frame(maxWidth: .infinity)
-        .padding(20)
+        .padding(16)
         .background(
             LinearGradient(
                 colors: [Color("TealLight"), Color("TealLight").opacity(0.3)],
@@ -432,5 +519,27 @@ private struct IdentityCard: View {
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: 18))
+    }
+}
+
+// MARK: - Stat Pill
+
+private struct StatPill: View {
+    let value: String
+    let label: String
+    let icon: String
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.caption2)
+                .foregroundStyle(Color("Teal"))
+            Text(value)
+                .font(.caption.bold())
+                .foregroundStyle(Color("Stone950"))
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(Color("Stone500"))
+        }
     }
 }
