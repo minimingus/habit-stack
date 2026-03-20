@@ -16,12 +16,63 @@ final class CoachViewModel {
     private let memoryKey = "coach_conversation_history"
     private let usedTodayKey = "coachMessagesUsedToday"
     private let usedTodayDateKey = "coachMessagesUsedTodayDate"
+    private let welcomeShownKey = "coachWelcomeShown"
 
     var messagesRemainingToday: Int { max(0, dailyLimit - messagesUsedToday) }
 
     init() {
         loadPersistedMessages()
         loadTodayUsage()
+        if messages.isEmpty && !UserDefaults.standard.bool(forKey: welcomeShownKey) {
+            Task { await insertWelcomeMessage() }
+        }
+    }
+
+    private func insertWelcomeMessage() async {
+        let traits = (UserDefaults.standard.stringArray(forKey: "selectedIdentityTraits") ?? [])
+            .compactMap { IdentityTrait(rawValue: $0) }
+
+        var habitNames: [String] = []
+        if let userId = try? await supabase.auth.session.user.id {
+            let habits = (try? await HabitService.shared.fetchTodayHabits(userId: userId)) ?? []
+            habitNames = habits.map { $0.habit.name }
+        }
+
+        let welcome = buildWelcomeText(traits: traits, habitNames: habitNames)
+        let msg = CoachMessage(role: .assistant, content: welcome)
+        messages.append(msg)
+        persistMessages()
+        UserDefaults.standard.set(true, forKey: welcomeShownKey)
+        PostHogSDK.shared.capture("coach_welcome_shown")
+    }
+
+    private func buildWelcomeText(traits: [IdentityTrait], habitNames: [String]) -> String {
+        var parts: [String] = []
+
+        if !traits.isEmpty {
+            let traitNames = traits.map(\.displayName).joined(separator: " and ")
+            parts.append("I see you're working on becoming more **\(traitNames)** — that's a powerful vision.")
+        }
+
+        if !habitNames.isEmpty {
+            let names = habitNames.joined(separator: ", ")
+            parts.append("You've set up some great habits: **\(names)**.")
+        }
+
+        if !habitNames.isEmpty {
+            let first = habitNames[0]
+            parts.append("Here's my Day 1 tip: pair **\(first)** with something you already do every day — like right after your morning coffee or brushing your teeth. Attaching new habits to existing routines makes them stick.")
+        } else {
+            parts.append("A great way to start: pick one small habit you can do right after something you already do every morning. Tiny wins build momentum.")
+        }
+
+        parts.append("How can I help you today?")
+
+        let greeting = (traits.isEmpty && habitNames.isEmpty)
+            ? "Welcome to your habit coach!"
+            : "Welcome!"
+
+        return "\(greeting) \(parts.joined(separator: " "))"
     }
 
     func sendMessage(_ text: String) async {
