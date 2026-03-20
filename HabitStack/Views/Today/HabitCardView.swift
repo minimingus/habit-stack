@@ -10,6 +10,8 @@ struct HabitCardView: View {
     let onPause: (Date) -> Void
 
     @AppStorage("compactCardMode") private var compactCardMode = false
+    @AppStorage("hasCompletedFirstHabit") private var hasCompletedFirstHabit = false
+    @State private var showGestureHint = false
     @State private var showArchiveAlert = false
     @State private var showPauseSheet = false
     @State private var showConfetti = false
@@ -166,6 +168,25 @@ struct HabitCardView: View {
                     .allowsHitTesting(false)
             }
         }
+        .overlay(alignment: .leading) {
+            if showGestureHint {
+                HStack(spacing: 6) {
+                    Image(systemName: "hand.tap.fill")
+                        .font(.caption)
+                        .symbolEffect(.pulse)
+                    Text("Hold to complete")
+                        .font(.caption.bold())
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.black.opacity(0.75))
+                .clipShape(Capsule())
+                .offset(x: 60, y: 0)
+                .transition(.opacity.combined(with: .scale))
+                .allowsHitTesting(false)
+            }
+        }
         .contextMenu {
             Button { onEdit() } label: { Label("Edit", systemImage: "pencil") }
             Button { showPauseSheet = true } label: { Label("Pause", systemImage: "pause.circle") }
@@ -230,6 +251,18 @@ struct HabitCardView: View {
             let savedTarget = UserDefaults.standard.integer(forKey: "habitTargetCount_\(habit.id.uuidString)")
             if savedTarget > 0 { targetCount = savedTarget }
             currentCount = UserDefaults.standard.integer(forKey: todayCountKey)
+
+            if !hasCompletedFirstHabit && !habitWithStatus.isCompleted {
+                withAnimation(.easeIn(duration: 0.5).delay(0.8)) {
+                    showGestureHint = true
+                }
+            }
+        }
+        .onChange(of: habitWithStatus.isCompleted) { _, isCompleted in
+            if isCompleted && !hasCompletedFirstHabit {
+                hasCompletedFirstHabit = true
+                withAnimation { showGestureHint = false }
+            }
         }
     }
 

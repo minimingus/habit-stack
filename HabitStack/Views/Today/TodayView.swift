@@ -225,6 +225,9 @@ struct TodayView: View {
                 HabitsScorecardView()
             }
             .sheet(isPresented: $showPaywall) { PaywallView() }
+            .onChange(of: viewModel.completedHabits) { _, newCount in
+                checkFirstUsePaywall(completedCount: newCount)
+            }
             .sheet(item: $editingHabit) { habit in
                 HabitWizardView(
                     editingHabit: habit,
@@ -233,6 +236,20 @@ struct TodayView: View {
                     Task { await viewModel.loadToday() }
                 }
             }
+        }
+    }
+
+    private func checkFirstUsePaywall(completedCount: Int) {
+        guard completedCount >= 3,
+              !UserDefaults.standard.bool(forKey: "hasSeenFirstUsePaywall"),
+              !RevenueCatManager.shared.isProUser else { return }
+        UserDefaults.standard.set(true, forKey: "hasSeenFirstUsePaywall")
+        PostHogSDK.shared.capture("first_use_paywall_shown", properties: [
+            "completed_habits": completedCount
+        ])
+        // Small delay so the completion animation plays first
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            showPaywall = true
         }
     }
 
