@@ -16,7 +16,7 @@ struct OnboardingHabitSwipeView: View {
     @State private var suggestedHabits: [HabitTemplate] = []
     @State private var currentIndex: Int = 0
     
-    let targetCount: Int = 3
+    let targetCount: Int = 1
     let onComplete: () -> Void
     
     var body: some View {
@@ -26,7 +26,7 @@ struct OnboardingHabitSwipeView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text("Here are 3 habits to start:")
+                Text("Pick at least 1 habit to start:")
                     .font(.headline)
             }
             .padding(.top)
@@ -64,14 +64,30 @@ struct OnboardingHabitSwipeView: View {
             
             // Continue button (appears when enough habits adopted)
             if adoptedHabits.count >= targetCount {
-                Button(action: onComplete) {
-                    Text("Continue")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                VStack(spacing: 12) {
+                    Button(action: onComplete) {
+                        Text("Continue")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+
+                    if currentIndex < suggestedHabits.count {
+                        Button(action: {
+                            PostHogSDK.shared.capture("onboarding_skip_remaining_habits", properties: [
+                                "habits_adopted": adoptedHabits.count,
+                                "habits_remaining": suggestedHabits.count - currentIndex
+                            ])
+                            onComplete()
+                        }) {
+                            Text("I'll add more later")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
                 .transition(.scale.combined(with: .opacity))
             }

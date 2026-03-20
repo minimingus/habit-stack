@@ -14,6 +14,8 @@ struct OnboardingFlow: View {
     @StateObject private var state = OnboardingState()
     @State private var isSaving = false
     @State private var day1ReminderTime: Date?
+    @State private var showHabitCreationError = false
+    @State private var habitCreationErrorMessage = ""
 
     var body: some View {
         NavigationStack(path: $state.path) {
@@ -25,6 +27,16 @@ struct OnboardingFlow: View {
             }
         }
         .interactiveDismissDisabled()
+        .alert("Couldn't Save Habits", isPresented: $showHabitCreationError) {
+            Button("Retry") {
+                Task { await completeOnboarding() }
+            }
+            Button("Continue Anyway", role: .cancel) {
+                finishOnboarding()
+            }
+        } message: {
+            Text(habitCreationErrorMessage)
+        }
     }
 
     @ViewBuilder
@@ -80,9 +92,13 @@ struct OnboardingFlow: View {
     private func completeOnboarding() async {
         guard !isSaving else { return }
         isSaving = true
+        defer { isSaving = false }
 
         do {
             let userId = try await supabase.auth.session.user.id
+
+            var failedCount = 0
+            let totalCount = state.adoptedHabits.count
 
             // Convert each adopted template into a real Habit and persist it
             for (index, template) in state.adoptedHabits.enumerated() {
@@ -107,12 +123,44 @@ struct OnboardingFlow: View {
                     sortOrder: index,
                     createdAt: Date()
                 )
-                try await HabitService.shared.createHabit(habit, isPro: false)
+                do {
+                    try await HabitService.shared.createHabit(habit, isPro: false)
+                } catch {
+                    failedCount += 1
+                    PostHogSDK.shared.capture("onboarding_habit_creation_failed", properties: [
+                        "habit_name": template.name,
+                        "error": error.localizedDescription
+                    ])
+                }
+            }
+
+            if failedCount == totalCount && totalCount > 0 {
+                // All habits failed — show retry prompt
+                habitCreationErrorMessage = "Your habits couldn't be saved. Check your connection and try again."
+                showHabitCreationError = true
+                return
+            } else if failedCount > 0 {
+                // Some habits failed — show toast-style alert but continue
+                habitCreationErrorMessage = "Some habits couldn't be saved. Tap + to add them later."
+                showHabitCreationError = true
+                return
             }
         } catch {
-            // Non-fatal — habits can be added later; don't block onboarding completion
+            // Auth/session error — all habits failed
+            PostHogSDK.shared.capture("onboarding_habit_creation_failed", properties: [
+                "error": error.localizedDescription,
+                "stage": "auth"
+            ])
+            habitCreationErrorMessage = "Couldn't connect to save your habits. Check your connection and try again."
+            showHabitCreationError = true
+            return
         }
 
+        finishOnboarding()
+    }
+
+    @MainActor
+    private func finishOnboarding() {
         PostHogSDK.shared.capture("onboarding_completed", properties: [
             "habits_adopted_count": state.adoptedHabits.count,
             "traits_selected": Array(state.selectedTraits).map(\.rawValue)
@@ -137,7 +185,7 @@ struct OnboardingFlow: View {
 
         // Mark onboarding complete and trigger RootView to show main app
         UserDefaults.standard.set(true, forKey: "onboardingComplete")
-        _ = try? await supabase.auth.refreshSession()
+        Task { _ = try? await supabase.auth.refreshSession() }
     }
 }
 
