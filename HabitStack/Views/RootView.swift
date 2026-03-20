@@ -61,6 +61,7 @@ struct MainTabView: View {
     @State private var habitStats: [(name: String, emoji: String, completionRate: Double)] = []
     @State private var showWhatsNew = false
     @State private var unseenFeatures: [WhatsNewFeature] = []
+    @State private var showMonthlyRecap = false
     private let whatsNewService = WhatsNewService()
 
     var body: some View {
@@ -89,6 +90,8 @@ struct MainTabView: View {
             PostHogSDK.shared.capture("app_opened")
             whatsNewService.bootstrapIfNeeded()
             NotificationManager.shared.scheduleInactiveUserReminder()
+            NotificationManager.shared.scheduleMonthlyRecapPush()
+            checkMonthlyRecap()
             await checkWeeklyReflection()
             let unseen = whatsNewService.unseenFeatures()
             if !unseen.isEmpty {
@@ -104,6 +107,11 @@ struct MainTabView: View {
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $showMonthlyRecap) {
+            MonthlyRecapView(onDismiss: {
+                showMonthlyRecap = false
+            })
+        }
         .sheet(isPresented: $showWeeklyReflection) {
             WeeklyReflectionView(habitStats: habitStats, onDismiss: {
                 showWeeklyReflection = false
@@ -115,6 +123,21 @@ struct MainTabView: View {
                 showWeeklyReflection = false
             })
         }
+    }
+
+    private func checkMonthlyRecap() {
+        let calendar = Calendar.current
+        let now = Date()
+        let currentMonth = calendar.component(.month, from: now)
+        let currentYear = calendar.component(.year, from: now)
+        let key = "lastRecapShownMonth"
+        let lastShown = UserDefaults.standard.string(forKey: key) ?? ""
+        let thisMonthKey = "\(currentYear)-\(currentMonth)"
+        guard lastShown != thisMonthKey else { return }
+        // Only show if we have at least some history (not first month)
+        guard UserDefaults.standard.bool(forKey: "onboardingComplete") else { return }
+        UserDefaults.standard.set(thisMonthKey, forKey: key)
+        showMonthlyRecap = true
     }
 
     private func checkWeeklyReflection() async {

@@ -275,6 +275,35 @@ final class NotificationManager {
         )
     }
 
+    // MARK: - Monthly recap push
+
+    func scheduleMonthlyRecapPush() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["monthly-recap"])
+
+        let calendar = Calendar.current
+        let now = Date()
+
+        // Schedule for 9 AM on the 1st of next month
+        guard let firstOfThisMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)),
+              let firstOfNextMonth = calendar.date(byAdding: .month, value: 1, to: firstOfThisMonth) else { return }
+
+        var comps = calendar.dateComponents([.year, .month, .day], from: firstOfNextMonth)
+        comps.hour = 9
+        comps.minute = 0
+
+        let monthName = calendar.monthSymbols[(calendar.component(.month, from: now)) - 1]
+
+        let content = UNMutableNotificationContent()
+        content.title = "Your \(monthName) recap is ready"
+        content.body = "See how your habits shaped who you are becoming."
+        content.sound = .default
+        content.userInfo = ["type": "monthly_recap"]
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: "monthly-recap", content: content, trigger: trigger))
+    }
+
     func cancelPredictiveNudge(for habitId: UUID) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(
             withIdentifiers: ["predictive_nudge_\(habitId.uuidString)"]
