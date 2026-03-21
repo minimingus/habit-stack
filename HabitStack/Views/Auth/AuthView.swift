@@ -14,7 +14,7 @@ struct AuthView: View {
                 Spacer()
 
                 VStack(spacing: 8) {
-                    Text("HabitStack")
+                    Text("Better You")
                         .font(.largeTitle.bold())
                         .foregroundStyle(Color("Teal"))
                     Text("Build better habits, one day at a time.")
