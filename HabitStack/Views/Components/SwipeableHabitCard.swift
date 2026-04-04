@@ -2,13 +2,9 @@
 //  SwipeableHabitCard.swift
 //  Better You
 //
-//  Created by Symphony
-//  Phase 2: Issue #21
-//
 
 import SwiftUI
 
-/// Tinder-style swipeable card for habit adoption
 struct SwipeableHabitCard: View {
     let template: HabitTemplate
     @State private var offset: CGSize = .zero
@@ -19,122 +15,119 @@ struct SwipeableHabitCard: View {
 
     var body: some View {
         ZStack {
-            // Card background — drag gesture lives here only so buttons aren't blocked
-            RoundedRectangle(cornerRadius: 16)
-                .fill(cardColor)
-                .shadow(
-                    color: .black.opacity(isDragging ? 0.3 : 0.2),
-                    radius: isDragging ? 12 : 8
-                )
-                .gesture(dragGesture)
+            // Background
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(UIColor.secondarySystemBackground))
+                .shadow(color: .black.opacity(isDragging ? 0.18 : 0.10), radius: isDragging ? 16 : 8, y: 4)
 
-            VStack(spacing: 20) {
-                Image(systemName: template.category.icon)
-                    .font(.system(size: 52, weight: .light))
-                    .foregroundStyle(Color("Teal"))
+            // Swipe hint overlay
+            if offset.width > 40 {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color("Teal").opacity(min(Double(offset.width - 40) / 100, 0.15)))
+            } else if offset.width < -40 {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color.red.opacity(min(Double(-offset.width - 40) / 100, 0.15)))
+            }
 
-                VStack(spacing: 8) {
-                    Text(template.name)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color.primary)
-                        .multilineTextAlignment(.center)
-
-                    Text("\(template.suggestedDuration) min · \(template.category.displayName)")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.secondary)
+            VStack(spacing: 0) {
+                // Emoji in a tinted squircle
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color("TealLight"))
+                        .frame(width: 72, height: 72)
+                    Text(template.emoji)
+                        .font(.system(size: 36))
                 }
+                .padding(.top, 32)
 
+                // Name
+                Text(template.name)
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(Color.primary)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 16)
+                    .padding(.horizontal, 24)
+
+                // Meta
+                Text("\(template.suggestedDuration) min · \(template.category.displayName)")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.secondary)
+                    .padding(.top, 4)
+
+                // Description
                 Text(template.description)
                     .font(.body)
                     .foregroundStyle(Color.secondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 28)
+                    .padding(.top, 12)
+                    .lineLimit(3)
 
                 Spacer()
 
-                HStack(spacing: 50) {
+                // Buttons
+                HStack(spacing: 32) {
                     Button(action: onSwipeLeft) {
-                        Label("Skip", systemImage: "xmark")
-                            .foregroundStyle(Color.red)
-                            .font(.callout)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 10)
-                            .background(Color.red.opacity(0.1))
-                            .clipShape(Capsule())
+                        HStack(spacing: 6) {
+                            Image(systemName: "xmark")
+                            Text("Skip")
+                        }
+                        .font(.callout.weight(.medium))
+                        .foregroundStyle(Color.secondary)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .background(Color(UIColor.tertiarySystemBackground))
+                        .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
 
                     Button(action: onSwipeRight) {
-                        Label("Add", systemImage: "checkmark")
-                            .foregroundStyle(Color("Teal"))
-                            .font(.callout)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 10)
-                            .background(Color("Teal").opacity(0.1))
-                            .clipShape(Capsule())
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus")
+                            Text("Add")
+                        }
+                        .font(.callout.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .background(Color("Teal"))
+                        .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
                 }
+                .padding(.bottom, 28)
             }
-            .padding(30)
-            .allowsHitTesting(true)
         }
-        .frame(width: 320, height: 450)
+        .frame(width: 320, height: 460)
         .offset(offset)
-        .rotationEffect(.degrees(Double(offset.width / 20)))
+        .rotationEffect(.degrees(Double(offset.width / 22)))
+        // minimumDistance: 10 ensures simple taps reach the buttons above
+        .gesture(
+            DragGesture(minimumDistance: 10)
+                .onChanged { g in
+                    isDragging = true
+                    offset = g.translation
+                }
+                .onEnded { g in
+                    isDragging = false
+                    if abs(offset.width) > 110 {
+                        completeSwipe(offset.width > 0 ? .right : .left)
+                    } else {
+                        withAnimation(.spring(response: 0.3)) { offset = .zero }
+                    }
+                }
+        )
         .accessibilityLabel("\(template.name), \(template.category.displayName), \(template.suggestedDuration) minutes")
-        .accessibilityHint("Swipe right to add, swipe left to skip")
         .accessibilityAction(named: "Add") { onSwipeRight() }
         .accessibilityAction(named: "Skip") { onSwipeLeft() }
     }
 
-    private var cardColor: LinearGradient {
-        if offset.width > 50 {
-            return LinearGradient(
-                colors: [Color("Teal").opacity(0.15), Color(UIColor.systemBackground)],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-        } else if offset.width < -50 {
-            return LinearGradient(
-                colors: [Color.red.opacity(0.15), Color(UIColor.systemBackground)],
-                startPoint: .trailing,
-                endPoint: .leading
-            )
-        } else {
-            return LinearGradient(
-                colors: [Color(UIColor.systemBackground)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
-    }
-
-    private var dragGesture: some Gesture {
-        DragGesture(minimumDistance: 10)
-            .onChanged { gesture in
-                isDragging = true
-                offset = gesture.translation
-            }
-            .onEnded { gesture in
-                isDragging = false
-                if abs(offset.width) > 100 {
-                    completeSwipe(offset.width > 0 ? .right : .left)
-                } else {
-                    withAnimation(.spring(response: 0.3)) {
-                        offset = .zero
-                    }
-                }
-            }
-    }
-
     private func completeSwipe(_ direction: SwipeDirection) {
-        withAnimation(.easeOut(duration: 0.3)) {
-            offset = CGSize(width: direction == .right ? 500 : -500, height: 0)
+        withAnimation(.easeOut(duration: 0.25)) {
+            offset = CGSize(width: direction == .right ? 520 : -520, height: 0)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            if direction == .right { onSwipeRight() } else { onSwipeLeft() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            direction == .right ? onSwipeRight() : onSwipeLeft()
             offset = .zero
         }
     }
@@ -146,8 +139,8 @@ enum SwipeDirection { case left, right }
     SwipeableHabitCard(
         template: HabitTemplate(
             name: "Morning Walk",
-            emoji: "🏃",
-            description: "Start your day with movement",
+            emoji: "🚶",
+            description: "Start your day with movement and fresh air",
             suggestedDuration: 15,
             category: .health,
             identityTraits: [.stronger, .energetic],
