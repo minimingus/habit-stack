@@ -186,7 +186,7 @@ struct HabitProgressWidgetView: View {
 // MARK: - Widget entry point
 
 @main
-struct HabitStackWidget: Widget {
+struct BetterWidget: Widget {
     let kind = "HabitProgressWidget"
 
     var body: some WidgetConfiguration {

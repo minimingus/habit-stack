@@ -1,4 +1,4 @@
-name: HabitStack
+name: Better
 options:
   bundleIdPrefix: com.tomerab
   deploymentTarget:
@@ -17,17 +17,17 @@ packages:
     from: 3.0.0
 
 targets:
-  HabitStack:
+  Better:
     type: application
     platform: iOS
     sources:
-      - path: HabitStack
+      - path: Better
     resources:
-      - path: HabitStack/Assets.xcassets
-      - path: HabitStack/Secrets.plist
+      - path: Better/Assets.xcassets
+      - path: Better/Secrets.plist
         optional: true
     info:
-      path: HabitStack/Info.plist
+      path: Better/Info.plist
       properties:
         CFBundleName: Better
         CFBundleDisplayName: Better
@@ -50,7 +50,7 @@ targets:
         product: RevenueCat
       - package: PostHog
         product: PostHog
-      - target: HabitStackWidget
+      - target: BetterWidget
         embed: true
     settings:
       base:
@@ -58,18 +58,18 @@ targets:
         DEVELOPMENT_TEAM: FDLSN3ZJFV
         CODE_SIGN_STYLE: Automatic
         PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.better
-        CODE_SIGN_ENTITLEMENTS: HabitStack/HabitStack.entitlements
+        CODE_SIGN_ENTITLEMENTS: Better/Better.entitlements
 
-  HabitStackWidget:
+  BetterWidget:
     type: app-extension
     platform: iOS
     sources:
-      - path: HabitStackWidget
+      - path: BetterWidget
     dependencies:
       - sdk: WidgetKit.framework
       - sdk: SwiftUI.framework
     info:
-      path: HabitStackWidget/Info.plist
+      path: BetterWidget/Info.plist
       properties:
         CFBundleDisplayName: Better Widget
         CFBundleIdentifier: com.tomerab.better.widget
@@ -81,15 +81,15 @@ targets:
         DEVELOPMENT_TEAM: FDLSN3ZJFV
         CODE_SIGN_STYLE: Automatic
         PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.better.widget
-        CODE_SIGN_ENTITLEMENTS: HabitStackWidget/HabitStackWidget.entitlements
+        CODE_SIGN_ENTITLEMENTS: BetterWidget/BetterWidget.entitlements
 
-  HabitStackTests:
+  BetterTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: HabitStackTests
+      - path: BetterTests
     dependencies:
-      - target: HabitStack
+      - target: Better
     settings:
       base:
         SWIFT_VERSION: "5.10"

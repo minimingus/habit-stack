@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import HabitStack
+@testable import Better
 
 // Pure streak calculation logic extracted for testing
 private func calculateStreak(doneDates: [Date]) -> (current: Int, longest: Int) {

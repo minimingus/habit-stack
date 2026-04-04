@@ -7,7 +7,7 @@ extension Notification.Name {
 }
 
 @main
-struct HabitStackApp: App {
+struct BetterApp: App {
     @State private var rootViewModel = RootViewModel()
     @State private var showQuickComplete = false
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate

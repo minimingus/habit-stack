@@ -1,5 +1,5 @@
 import Testing
-@testable import HabitStack
+@testable import Better
 
 // MARK: - ScorecardService (implementation lives here until project.pbxproj is regenerated via xcodegen)
 
