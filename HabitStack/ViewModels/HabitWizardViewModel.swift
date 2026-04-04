@@ -21,6 +21,7 @@ final class HabitWizardViewModel {
     // Custom frequency: set of weekday ints (1=Sun, 2=Mon … 7=Sat, matching Calendar.weekday)
     var customDays: Set<Int> = [2, 3, 4, 5, 6]   // Mon–Fri default
     var timeOfDay: Habit.TimeOfDay = .allDay
+    var difficultyLevel: Int = 1
     var reminderEnabled: Bool = false
     var reminderTime: Date = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
     // Up to 2 extra reminders (in addition to the primary reminderTime)
@@ -45,12 +46,7 @@ final class HabitWizardViewModel {
     func prefill(from template: HabitTemplate) {
         name = template.name
         emoji = template.emoji
-        switch template.defaultTime {
-        case .morning: timeOfDay = .morning
-        case .afternoon: timeOfDay = .afternoon
-        case .evening: timeOfDay = .evening
-        case .anytime: timeOfDay = .allDay
-        }
+        timeOfDay = template.defaultTime
     }
 
     func prefill(replacing behavior: String) {
@@ -76,6 +72,7 @@ final class HabitWizardViewModel {
         anchorHabitId = habit.anchorHabitId
         frequency = habit.frequency
         timeOfDay = habit.timeOfDay
+        difficultyLevel = habit.difficultyLevel
         reminderEnabled = habit.reminderEnabled
         if let rt = habit.reminderTime { reminderTime = rt }
         if let days = UserDefaults.standard.array(forKey: "customDays_\(habit.id.uuidString)") as? [Int] {
@@ -142,6 +139,7 @@ final class HabitWizardViewModel {
             timeOfDay: timeOfDay,
             reminderEnabled: reminderEnabled,
             reminderTime: reminderEnabled ? reminderTime : nil,
+            difficultyLevel: difficultyLevel,
             archivedAt: nil,
             sortOrder: 0,
             createdAt: Date()

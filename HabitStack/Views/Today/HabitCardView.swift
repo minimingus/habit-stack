@@ -62,20 +62,24 @@ struct HabitCardView: View {
             // MARK: Habit Info (tappable → detail)
             Button { showDetail = true } label: {
                 VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 6) {
+                    HStack(spacing: 10) {
                         if !compactCardMode {
                             ZStack {
-                                Circle()
-                                    .fill(accentColor)
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(accentColor.opacity(0.14))
                                     .frame(width: 40, height: 40)
-                                Text(String(habit.name.prefix(1)).uppercased())
-                                    .font(.headline.bold())
-                                    .foregroundStyle(.white)
+                                Text(habit.emoji)
+                                    .font(.system(size: 20))
                             }
                         }
                         Text(habit.name)
                             .font(.headline)
-                            .foregroundStyle(Color("Stone950"))
+                            .foregroundStyle(
+                                habitWithStatus.isCompleted
+                                    ? Color("Stone500")
+                                    : Color("Stone950")
+                            )
+                            .strikethrough(habitWithStatus.isCompleted, color: Color("Stone500"))
                     }
 
                     if !compactCardMode {
@@ -129,6 +133,7 @@ struct HabitCardView: View {
                         .buttonStyle(.plain)
                     }
 
+                    DifficultyDots(level: habit.difficultyLevel)
                     if let streak, streak.currentStreak > 0 {
                         StreakBadge(streak: streak.currentStreak)
                     }
@@ -350,4 +355,26 @@ struct HabitCardView: View {
         }
     }
 
+}
+
+private struct DifficultyDots: View {
+    let level: Int
+
+    var body: some View {
+        HStack(spacing: 3) {
+            ForEach(0..<3, id: \.self) { i in
+                Circle()
+                    .fill(i < level ? dotColor : Color("Stone100"))
+                    .frame(width: 5, height: 5)
+            }
+        }
+    }
+
+    private var dotColor: Color {
+        switch level {
+        case 1: return .green
+        case 2: return .orange
+        default: return .red
+        }
+    }
 }

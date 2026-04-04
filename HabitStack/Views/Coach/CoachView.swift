@@ -9,7 +9,7 @@ struct CoachView: View {
     private let suggestions = [
         "Why do I keep failing?",
         "Design a morning routine",
-        "2-Minute Rule tips"
+        "Tips to start small"
     ]
 
     var body: some View {

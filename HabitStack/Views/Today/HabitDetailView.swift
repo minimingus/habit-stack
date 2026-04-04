@@ -9,6 +9,7 @@ struct HabitDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var showArchiveAlert = false
+    @State private var showReplacement = false
     @State private var completionRate: Double? = nil
 
     var body: some View {
@@ -55,29 +56,29 @@ struct HabitDetailView: View {
                     // Four Laws breakdown
                     VStack(spacing: 1) {
                         LawRow(
-                            law: "Make it Obvious",
+                            law: "Set a Trigger",
                             icon: "eye",
                             values: [
-                                habit.cue.map { "Cue: \($0)" },
+                                habit.cue.map { "Trigger: \($0)" },
                                 anchorName.map { "After: \($0)" }
                             ].compactMap { $0 }
                         )
                         LawRow(
-                            law: "Make it Attractive",
+                            law: "Find Your Why",
                             icon: "heart",
                             values: [habit.craving].compactMap { $0 }
                         )
                         LawRow(
-                            law: "Make it Easy",
+                            law: "Start Small",
                             icon: "bolt",
                             values: [
-                                habit.tinyVersion.map { "2-min version: \($0)" },
+                                habit.tinyVersion.map { "Tiny version: \($0)" },
                                 "When: \(habit.timeOfDay.displayName)",
                                 "Frequency: \(habit.frequency.rawValue.capitalized)"
                             ].compactMap { $0 }
                         )
                         LawRow(
-                            law: "Make it Satisfying",
+                            law: "Add a Reward",
                             icon: "star",
                             values: [
                                 habit.reward,
@@ -89,23 +90,6 @@ struct HabitDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
                     .padding(.horizontal, 16)
-
-                    // Identity statement
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Identity")
-                            .font(.caption.bold())
-                            .foregroundStyle(Color("Stone500"))
-                            .padding(.horizontal, 16)
-                        Text("I am becoming the type of person who \(habit.name.lowercased()).")
-                            .font(.subheadline.italic())
-                            .foregroundStyle(Color("Stone950"))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color("TealLight"))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .padding(.horizontal, 16)
-                    }
 
                     // Actions
                     VStack(spacing: 10) {
@@ -119,6 +103,18 @@ struct HabitDetailView: View {
                                 .padding()
                                 .background(Color("Teal"))
                                 .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+
+                        Button {
+                            showReplacement = true
+                        } label: {
+                            Label("Replace Habit", systemImage: "arrow.left.arrow.right")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color("TealLight"))
+                                .foregroundStyle(Color("Teal"))
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
 
@@ -155,6 +151,12 @@ struct HabitDetailView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("This habit will be archived and removed from your daily view.")
+            }
+            .sheet(isPresented: $showReplacement) {
+                HabitReplacementView(habit: habit) {
+                    dismiss()
+                    onArchive() // triggers parent reload
+                }
             }
         }
     }

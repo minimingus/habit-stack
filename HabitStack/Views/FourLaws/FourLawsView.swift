@@ -112,15 +112,15 @@ struct FourLawsView: View {
     private var lawCards: [LawCardData] {
         [
             LawCardData(
-                title: "Make it Obvious",
+                title: "Set a Trigger",
                 icon: "eye.fill",
-                description: "Every habit needs a clear cue — when and where it happens.",
+                description: "Every habit needs a clear trigger — when and where it happens.",
                 missingHabits: habits.filter { ($0.cue ?? "").isEmpty },
-                missingLabel: "No cue set",
+                missingLabel: "No trigger set",
                 allHabits: habits
             ),
             LawCardData(
-                title: "Make it Attractive",
+                title: "Find Your Why",
                 icon: "heart.fill",
                 description: "Link habits to your identity — why this matters to you.",
                 missingHabits: habits.filter { ($0.craving ?? "").isEmpty },
@@ -128,15 +128,15 @@ struct FourLawsView: View {
                 allHabits: habits
             ),
             LawCardData(
-                title: "Make it Easy",
+                title: "Start Small",
                 icon: "bolt.fill",
-                description: "Scale each habit down to a 2-minute version to remove friction.",
+                description: "Scale each habit down to its smallest version to remove friction.",
                 missingHabits: habits.filter { ($0.tinyVersion ?? "").isEmpty },
-                missingLabel: "No 2-min version",
+                missingLabel: "No tiny version set",
                 allHabits: habits
             ),
             LawCardData(
-                title: "Make it Satisfying",
+                title: "Add a Reward",
                 icon: "star.fill",
                 description: "Define an immediate reward so your brain wants to repeat it.",
                 missingHabits: habits.filter { ($0.reward ?? "").isEmpty },

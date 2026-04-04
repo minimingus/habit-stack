@@ -4,6 +4,7 @@ import PostHog
 struct TodayView: View {
     @State private var viewModel = TodayViewModel()
     @State private var showHabitWizard = false
+    @State private var showAddSwipe = false
     @State private var editingHabit: Habit?
     @State private var selectedTab: Int = 0
     @State private var showScorecard = false
@@ -32,21 +33,21 @@ struct TodayView: View {
                                 headline: "No habits yet",
                                 subtext: "Start with just one habit. Small beats ambitious.",
                                 cta: "Adopt a Habit",
-                                onCTA: { showHabitWizard = true }
+                                onCTA: { showAddSwipe = true }
                             )
                         }
                     } else {
                         List {
-                            // XP Header (includes identity statement inline)
-                            if let profile = viewModel.profile {
-                                Section {
-                                    XPHeaderView(
-                                        profile: profile,
-                                        identityStatement: viewModel.topIdentityStatement
-                                    )
-                                    .listRowBackground(Color.clear)
-                                    .listRowSeparator(.hidden)
-                                }
+                            // Timeline header — date, bold title, progress bar, streak badge
+                            Section {
+                                TodayHeaderView(
+                                    completed: viewModel.completedHabits,
+                                    total: viewModel.totalHabits,
+                                    bestStreak: viewModel.streaks.values.map { $0.currentStreak }.max() ?? 0
+                                )
+                                .listRowInsets(EdgeInsets())
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                             }
 
                             // Trial expiry banner
@@ -110,26 +111,6 @@ struct TodayView: View {
                                     .listRowSeparator(.hidden)
                                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                                 }
-                            }
-
-                            Section {
-                                ProgressRingView(
-                                    progress: viewModel.progress,
-                                    completed: viewModel.completedHabits,
-                                    total: viewModel.totalHabits,
-                                    momentumMessage: viewModel.momentumMessage
-                                )
-                                .frame(maxWidth: .infinity)
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
-                            }
-
-                            // Daily 1% insight
-                            Section {
-                                DailyInsightCard()
-                                    .listRowBackground(Color.clear)
-                                    .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                             }
 
                             ForEach(viewModel.orderedGroups, id: \.0) { (timeOfDay, habits) in
@@ -212,7 +193,7 @@ struct TodayView: View {
 
                 // FAB
                 Button {
-                    showHabitWizard = true
+                    showAddSwipe = true
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2.bold())
@@ -225,7 +206,8 @@ struct TodayView: View {
                 .padding(.trailing, 24)
                 .padding(.bottom, 24)
             }
-            .navigationTitle("Today")
+            .navigationTitle("")
+            .navigationBarHidden(true)
             .errorToast($viewModel.errorMessage)
             .task {
                 await viewModel.loadToday()
@@ -237,6 +219,11 @@ struct TodayView: View {
                     habitName: viewModel.milestoneHabitName,
                     onDismiss: { viewModel.showMilestone = false }
                 )
+            }
+            .sheet(isPresented: $showAddSwipe) {
+                AddHabitSwipeView {
+                    Task { await viewModel.loadToday() }
+                }
             }
             .sheet(isPresented: $showHabitWizard) {
                 HabitWizardView {

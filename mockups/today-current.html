@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today — Current (Cluttered)</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── XP Header Card ─────────────────── */
+.xp-card {
+  background: var(--card);
+  margin: 0 16px 6px;
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: var(--card-shadow-sm);
+  overflow: hidden;
+  position: relative;
+}
+.xp-bar-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--sep-light);
+}
+.xp-bar-fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 3px;
+  width: 68%;
+  background: linear-gradient(90deg, var(--teal), var(--teal-dark));
+}
+.xp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+.xp-name { font-size: 15px; font-weight: 600; color: var(--ink-1); letter-spacing: -0.2px; }
+.xp-level {
+  font-size: 12px;
+  color: var(--teal);
+  font-weight: 600;
+  background: var(--teal-light);
+  padding: 3px 9px;
+  border-radius: 10px;
+}
+.xp-track { height: 5px; background: var(--sep-light); border-radius: 3px; overflow: hidden; }
+.xp-fill { height: 100%; width: 68%; background: var(--teal); border-radius: 3px; }
+.xp-identity { font-size: 12px; color: var(--ink-3); margin-top: 6px; font-style: italic; }
+
+/* ── Trial Banner ──────────────────── */
+.trial-banner {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  margin: 0 16px 6px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #92400E;
+}
+.trial-banner span.icon { font-size: 15px; flex-shrink: 0; }
+.trial-banner .trial-upgrade {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #D97706;
+  flex-shrink: 0;
+}
+
+/* ── Progress Ring Card ─────────────── */
+.ring-card {
+  background: var(--card);
+  margin: 0 16px 6px;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--card-shadow-sm);
+}
+.ring-card-wrap { position: relative; width: 68px; height: 68px; flex-shrink: 0; }
+.ring-card-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); text-align: center;
+}
+.ring-num-sm { font-size: 18px; font-weight: 700; color: var(--teal); letter-spacing: -0.5px; display: block; line-height: 1; }
+.ring-den-sm { font-size: 10px; color: var(--ink-3); display: block; margin-top: 1px; }
+.ring-card-copy-title { font-size: 15px; font-weight: 600; color: var(--ink-1); letter-spacing: -0.2px; }
+.ring-card-copy-sub { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+
+/* ── Insight Card ───────────────────── */
+.insight-card {
+  margin: 0 16px 6px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--card-shadow-sm);
+}
+.insight-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: var(--teal-light);
+  color: var(--teal);
+  border-radius: 20px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.insight-text { flex: 1; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.insight-dismiss {
+  background: none; border: none;
+  color: var(--ink-4);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  flex-shrink: 0;
+  padding: 2px;
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-label">Today — Current (Cluttered)</div>
+      <div class="phone" style="height:860px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Large Title -->
+          <div style="padding: 0 20px 8px; background: var(--app-bg);">
+            <h1 style="font-size:34px; font-weight:700; color:var(--ink-1); letter-spacing:-0.6px;">Today</h1>
+          </div>
+
+          <!-- Scrollable Screen Content -->
+          <div class="screen" style="height:700px; overflow-y:auto; padding-bottom:88px;">
+
+            <!-- XP Header Card — visual noise before habits -->
+            <div class="xp-card">
+              <div class="xp-bar-bg"></div>
+              <div class="xp-bar-fill"></div>
+              <div class="xp-row">
+                <span class="xp-name">Tomer</span>
+                <span class="xp-level">⚡ Level 4 · 340 XP</span>
+              </div>
+              <div class="xp-track"><div class="xp-fill"></div></div>
+              <div class="xp-identity">"Becoming someone who prioritizes health."</div>
+            </div>
+
+            <!-- Trial Banner — competes for attention -->
+            <div class="trial-banner">
+              <span class="icon">⏰</span>
+              <span>Trial ends in 23 hours</span>
+              <span class="trial-upgrade">Upgrade →</span>
+            </div>
+
+            <!-- Progress Ring Card — wrapped in yet another card -->
+            <div class="ring-card">
+              <div class="ring-card-wrap">
+                <svg width="68" height="68" viewBox="0 0 68 68" style="transform:rotate(-90deg)">
+                  <circle cx="34" cy="34" r="27" fill="none" stroke="#EDE9E4" stroke-width="8"/>
+                  <circle cx="34" cy="34" r="27" fill="none" stroke="#0D9488" stroke-width="8"
+                    stroke-dasharray="169.6" stroke-dashoffset="84.8" stroke-linecap="round"/>
+                </svg>
+                <div class="ring-card-center">
+                  <span class="ring-num-sm">2</span>
+                  <span class="ring-den-sm">of 4</span>
+                </div>
+              </div>
+              <div>
+                <div class="ring-card-copy-title">Keep going!</div>
+                <div class="ring-card-copy-sub">Halfway through your day.</div>
+              </div>
+            </div>
+
+            <!-- Insight Card — yet another element before habits -->
+            <div class="insight-card">
+              <span class="insight-tag">Tip</span>
+              <span class="insight-text">Showing up today is more important than being perfect.</span>
+              <button class="insight-dismiss" onclick="this.closest('.insight-card').style.display='none'">✕</button>
+            </div>
+
+            <!-- Morning section -->
+            <div class="section-hdr">🌅 Morning</div>
+
+            <div class="habit-row done" style="border-left-color:#0D9488; opacity:0.75;">
+              <div class="habit-icon" style="background:var(--tint-teal);">🏃</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Morning Walk</div>
+                <div class="habit-row-meta"><span>🔥 5-day streak</span><span>·</span><span>15 min</span></div>
+              </div>
+              <div class="check done">✓</div>
+            </div>
+
+            <div class="habit-row done" style="border-left-color:#7C3AED; opacity:0.75;">
+              <div class="habit-icon" style="background:var(--tint-purple);">🧘</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Meditation</div>
+                <div class="habit-row-meta"><span>10 min</span></div>
+              </div>
+              <div class="check" style="background:#7C3AED;border-color:#7C3AED;box-shadow:0 2px 8px rgba(124,58,237,0.3);">✓</div>
+            </div>
+
+            <div class="habit-row">
+              <div class="habit-icon" style="background:var(--tint-blue);">📖</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Read</div>
+                <div class="habit-row-meta"><span>🔥 12-day streak</span><span>·</span><span>20 min</span></div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+            <!-- Evening section -->
+            <div class="section-hdr" style="margin-top:4px;">🌙 Evening</div>
+
+            <div class="habit-row">
+              <div class="habit-icon" style="background:var(--tint-orange);">✍️</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Journal</div>
+                <div class="habit-row-meta"><span>10 min</span></div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+          </div>
+
+          <!-- FAB -->
+          <div class="fab">+</div>
+
+          <!-- Tab Bar -->
+          <div class="tab-bar">
+            <div class="tab active">
+              <span class="tab-icon">☀️</span>
+              <span class="tab-label" style="color:var(--teal);">Today</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">🏛️</span>
+              <span class="tab-label">Identity</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">💬</span>
+              <span class="tab-label">Coach</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">⚙️</span>
+              <span class="tab-label">Settings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Card -->
+  <div class="compare-card">
+    <h2>Today — Current (Cluttered)</h2>
+    <p>The current Today screen piles XP bar, trial banner, progress ring, and insight card above the first habit. Users have to scroll past four unrelated widgets before they can do the one thing they came for: check off a habit.</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">What's Wrong</div>
+      <div class="compare-list">
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Too much noise upfront</strong> — XP bar + trial + ring + insight card all appear before any habits</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">First habit requires scrolling</strong> — on initial load the habit list is off-screen</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Competing CTAs</strong> — trial upgrade, insight dismiss, and FAB all fight for attention simultaneously</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">XP gamification adds friction</strong> — complex level system without clear value for new users</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Progress ring buried in a card</strong> — loses visual weight, blends with other card widgets</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">What Works</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Time-grouped sections</strong> — morning/evening structure gives good temporal context</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Per-habit streaks</strong> — motivation visible inline next to each habit</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Progress ring concept</strong> — at-a-glance completion summary is valuable — just over-buried</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-note-hint">Compare with Today — Simplified →</div>
+  </div>
+</div>
+
+</body>
+</html>

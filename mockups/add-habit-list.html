@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Habit — Option A: Quick List</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Habit List Row ─────────────────── */
+.habit-list-group {
+  background: var(--card);
+  margin: 0 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-sm);
+}
+.habit-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 0.5px solid var(--sep-light);
+}
+.habit-list-row:last-child { border-bottom: none; }
+.habit-list-row:active { background: var(--app-bg); }
+.habit-list-info { flex: 1; }
+.habit-list-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-1);
+  letter-spacing: -0.2px;
+}
+.habit-list-meta { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.habit-list-chevron { color: var(--ink-4); font-size: 18px; line-height: 1; }
+
+.custom-link {
+  padding: 12px 20px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.custom-link span { color: var(--teal); font-weight: 600; cursor: pointer; }
+
+/* ── Detail Bottom Sheet ────────────── */
+.detail-sheet {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.06);
+  padding: 0 20px 36px;
+  z-index: 30;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+}
+.detail-sheet.open { transform: translateY(0); }
+.sheet-handle { width:36px; height:4px; background:var(--sep); border-radius:2px; margin:12px auto 20px; }
+
+.detail-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 auto 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.detail-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-1);
+  letter-spacing: -0.3px;
+  text-align: center;
+}
+.detail-meta {
+  font-size: 13px;
+  color: var(--ink-3);
+  text-align: center;
+  margin-top: 3px;
+}
+.detail-desc {
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: center;
+  line-height: 1.6;
+  margin: 10px 0 14px;
+}
+.when-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 10px;
+}
+.time-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.time-option {
+  padding: 13px 8px;
+  border-radius: 14px;
+  border: 1.5px solid var(--sep);
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-3);
+  background: none;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.time-option .t-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+.time-option:hover { border-color: var(--teal); color: var(--teal); }
+.time-option.selected {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  color: var(--teal);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <!-- Phone 1: Browse list -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Option A — Browse List</div>
+      <div class="phone" style="height:820px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Nav bar -->
+          <div class="nav-bar">
+            <span class="nav-action muted" style="cursor:pointer;" onclick="hideDetail('detailSheet1')">Cancel</span>
+            <span class="nav-title">Add a Habit</span>
+            <span class="nav-action right" style="font-size:14px;cursor:pointer;">Custom</span>
+          </div>
+
+          <!-- Screen content -->
+          <div class="screen" style="height:688px; overflow-y:auto; position:relative;">
+
+            <!-- Search bar -->
+            <div class="search-bar">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
+                <circle cx="6" cy="6" r="4.5" stroke="#C0BAB3" stroke-width="1.5"/>
+                <path d="M9.5 9.5L12.5 12.5" stroke="#C0BAB3" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input type="text" placeholder="Search habits…" />
+            </div>
+
+            <!-- Category chips -->
+            <div class="chips" id="chips1">
+              <button class="chip active" onclick="setChip(this,'chips1')">All</button>
+              <button class="chip" onclick="setChip(this,'chips1')">💪 Health</button>
+              <button class="chip" onclick="setChip(this,'chips1')">🧠 Mind</button>
+              <button class="chip" onclick="setChip(this,'chips1')">💼 Work</button>
+              <button class="chip" onclick="setChip(this,'chips1')">🤝 Social</button>
+              <button class="chip" onclick="setChip(this,'chips1')">🌿 Lifestyle</button>
+            </div>
+
+            <!-- Habit list -->
+            <div class="habit-list-group">
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-teal)','🏃','Morning Walk','15 min · Health','Start your day with light movement. Builds momentum and clears your head.')">
+                <div class="habit-icon" style="background:var(--tint-teal);">🏃</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">Morning Walk</div>
+                  <div class="habit-list-meta">15 min · Health</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-purple)','🧘','Meditation','10 min · Mind','A short breathing session to start your day with clarity.')">
+                <div class="habit-icon" style="background:var(--tint-purple);">🧘</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">Meditation</div>
+                  <div class="habit-list-meta">10 min · Mind</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-blue)','📖','Read','20 min · Mind','Read a book, article, or anything that grows your knowledge.')">
+                <div class="habit-icon" style="background:var(--tint-blue);">📖</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">Read</div>
+                  <div class="habit-list-meta">20 min · Mind</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-blue)','💧','Drink Water','Throughout day · Health','8 glasses a day keeps the brain fog away.')">
+                <div class="habit-icon" style="background:var(--tint-blue);">💧</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">Drink Water</div>
+                  <div class="habit-list-meta">Throughout day · Health</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-coral)','🏋️','Workout','30 min · Health','Strength or cardio — anything that gets your heart rate up.')">
+                <div class="habit-icon" style="background:var(--tint-coral);">🏋️</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">Workout</div>
+                  <div class="habit-list-meta">30 min · Health</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-orange)','✍️','Journal','10 min · Mind','Reflect on your day. Three sentences is enough.')">
+                <div class="habit-icon" style="background:var(--tint-orange);">✍️</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">Journal</div>
+                  <div class="habit-list-meta">10 min · Mind</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+              <div class="habit-list-row" onclick="showDetail('detailSheet1','var(--tint-lime)','🌱','No Sugar','Daily · Health','Skip added sugars for the day. Start with just one meal.')">
+                <div class="habit-icon" style="background:var(--tint-lime);">🌱</div>
+                <div class="habit-list-info">
+                  <div class="habit-list-name">No Sugar</div>
+                  <div class="habit-list-meta">Daily · Health</div>
+                </div>
+                <span class="habit-list-chevron">›</span>
+              </div>
+            </div>
+
+            <div class="custom-link">
+              Don't see it? <span>Build a custom habit</span>
+            </div>
+
+            <!-- Detail sheet (phone 1) -->
+            <div class="detail-sheet" id="detailSheet1">
+              <div class="sheet-handle"></div>
+              <div class="detail-icon-wrap" id="d1Icon">🏃</div>
+              <div class="detail-name" id="d1Name">Morning Walk</div>
+              <div class="detail-meta" id="d1Meta">15 min · Health</div>
+              <p class="detail-desc" id="d1Desc">Start your day with light movement.</p>
+              <div class="when-label">When will you do this?</div>
+              <div class="time-options">
+                <button class="time-option selected" onclick="selectTime(this,'p1')">
+                  <span class="t-icon">🌅</span>Morning
+                </button>
+                <button class="time-option" onclick="selectTime(this,'p1')">
+                  <span class="t-icon">☀️</span>Afternoon
+                </button>
+                <button class="time-option" onclick="selectTime(this,'p1')">
+                  <span class="t-icon">🌙</span>Evening
+                </button>
+                <button class="time-option" onclick="selectTime(this,'p1')">
+                  <span class="t-icon">🔄</span>Anytime
+                </button>
+              </div>
+              <button class="btn-primary" onclick="hideDetail('detailSheet1')">Add Habit</button>
+              <button class="btn-ghost" onclick="hideDetail('detailSheet1')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Detail sheet pre-opened -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Option A — Detail Sheet Open</div>
+      <div class="phone" style="height:820px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Nav bar -->
+          <div class="nav-bar">
+            <span class="nav-action muted">Cancel</span>
+            <span class="nav-title">Add a Habit</span>
+            <span class="nav-action right" style="font-size:14px;">Custom</span>
+          </div>
+
+          <!-- Dimmed list behind -->
+          <div class="screen" style="height:688px; overflow:hidden; position:relative;">
+            <div style="opacity:0.35;">
+              <div class="search-bar" style="pointer-events:none;">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
+                  <circle cx="6" cy="6" r="4.5" stroke="#C0BAB3" stroke-width="1.5"/>
+                </svg>
+                <input type="text" placeholder="Search habits…" readonly/>
+              </div>
+              <div class="chips" style="pointer-events:none;">
+                <button class="chip active">All</button>
+                <button class="chip">💪 Health</button>
+                <button class="chip">🧠 Mind</button>
+              </div>
+              <div class="habit-list-group" style="pointer-events:none;">
+                <div class="habit-list-row" style="background:var(--app-bg-2);">
+                  <div class="habit-icon" style="background:var(--tint-teal);">🏃</div>
+                  <div class="habit-list-info">
+                    <div class="habit-list-name">Morning Walk</div>
+                    <div class="habit-list-meta">15 min · Health</div>
+                  </div>
+                  <span class="habit-list-chevron">›</span>
+                </div>
+                <div class="habit-list-row">
+                  <div class="habit-icon" style="background:var(--tint-purple);">🧘</div>
+                  <div class="habit-list-info">
+                    <div class="habit-list-name">Meditation</div>
+                    <div class="habit-list-meta">10 min · Mind</div>
+                  </div>
+                  <span class="habit-list-chevron">›</span>
+                </div>
+                <div class="habit-list-row">
+                  <div class="habit-icon" style="background:var(--tint-blue);">📖</div>
+                  <div class="habit-list-info">
+                    <div class="habit-list-name">Read</div>
+                    <div class="habit-list-meta">20 min · Mind</div>
+                  </div>
+                  <span class="habit-list-chevron">›</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scrim -->
+            <div style="position:absolute;inset:0;background:rgba(250,249,247,0.5);pointer-events:none;"></div>
+
+            <!-- Detail sheet pinned open (no JS needed on phone 2) -->
+            <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card);border-radius:24px 24px 0 0;box-shadow:0 -4px 32px rgba(0,0,0,0.1),0 0 0 0.5px rgba(0,0,0,0.06);padding:0 20px 36px;z-index:30;">
+              <div style="width:36px;height:4px;background:var(--sep);border-radius:2px;margin:12px auto 20px;"></div>
+              <div style="width:64px;height:64px;border-radius:18px;background:var(--tint-teal);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px;box-shadow:0 2px 8px rgba(13,148,136,0.15);">🏃</div>
+              <div style="font-size:20px;font-weight:700;color:var(--ink-1);letter-spacing:-0.3px;text-align:center;">Morning Walk</div>
+              <div style="font-size:13px;color:var(--ink-3);text-align:center;margin-top:3px;">15 min · Health</div>
+              <p style="font-size:14px;color:var(--ink-2);text-align:center;line-height:1.6;margin:10px 0 14px;">Start your day with light movement. Builds momentum and clears your head.</p>
+              <div style="font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;">When will you do this?</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+                <button style="padding:13px 8px;border-radius:14px;border:1.5px solid var(--teal);text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:var(--teal);background:var(--teal-light);font-family:inherit;">
+                  <span style="font-size:20px;display:block;margin-bottom:4px;">🌅</span>Morning
+                </button>
+                <button style="padding:13px 8px;border-radius:14px;border:1.5px solid var(--sep);text-align:center;cursor:pointer;font-size:14px;font-weight:500;color:var(--ink-3);background:none;font-family:inherit;">
+                  <span style="font-size:20px;display:block;margin-bottom:4px;">☀️</span>Afternoon
+                </button>
+                <button style="padding:13px 8px;border-radius:14px;border:1.5px solid var(--sep);text-align:center;cursor:pointer;font-size:14px;font-weight:500;color:var(--ink-3);background:none;font-family:inherit;">
+                  <span style="font-size:20px;display:block;margin-bottom:4px;">🌙</span>Evening
+                </button>
+                <button style="padding:13px 8px;border-radius:14px;border:1.5px solid var(--sep);text-align:center;cursor:pointer;font-size:14px;font-weight:500;color:var(--ink-3);background:none;font-family:inherit;">
+                  <span style="font-size:20px;display:block;margin-bottom:4px;">🔄</span>Anytime
+                </button>
+              </div>
+              <button class="btn-primary">Add Habit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Card -->
+  <div class="compare-card">
+    <h2>Option A: Quick List — Recommended</h2>
+    <p>Habits in a scrollable grouped list with squircle icons. Tap any row to see a detail sheet with description and time selection inline. One interaction from browse to add.</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Advantages</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Fully scannable</strong> — see all options at once, no card-by-card browsing</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">One step</strong> — tap row → pick time → tap Add. No second modal layer.</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Familiar iOS pattern</strong> — list + detail sheet is the established standard</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Searchable</strong> — type to filter without needing to scroll</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Category chips</strong> — filter to a domain when the user knows what they want</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Nothing is lost</strong> — skipping doesn't remove items; list stays intact</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Trade-offs</div>
+      <div class="compare-list">
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Less gamified</strong> — no swipe gesture "reward" feel for exploratory discovery</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Dense with many habits</strong> — needs good filtering as the catalog grows</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <p>Recommended. Matches how users naturally browse. The swipe paradigm adds gesture friction without any corresponding benefit for this use case.</p>
+    </div>
+    <div class="compare-note-hint">Tap any habit row on Phone 1 to open the inline detail sheet</div>
+  </div>
+</div>
+
+<script>
+function setChip(el, containerId) {
+  document.querySelectorAll('#' + containerId + ' .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showDetail(sheetId, bgColor, emoji, name, meta, desc) {
+  const sheet = document.getElementById(sheetId);
+  document.getElementById('d1Icon').style.background = bgColor;
+  document.getElementById('d1Icon').textContent = emoji;
+  document.getElementById('d1Name').textContent = name;
+  document.getElementById('d1Meta').textContent = meta;
+  document.getElementById('d1Desc').textContent = desc;
+  document.querySelectorAll('#' + sheetId + ' .time-option').forEach(o => o.classList.remove('selected'));
+  document.querySelector('#' + sheetId + ' .time-option').classList.add('selected');
+  sheet.classList.add('open');
+}
+
+function hideDetail(sheetId) {
+  document.getElementById(sheetId).classList.remove('open');
+}
+
+function selectTime(el, group) {
+  const sheet = el.closest('.detail-sheet');
+  sheet.querySelectorAll('.time-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</body>
+</html>

@@ -70,17 +70,14 @@ struct MainTabView: View {
                 .tabItem { Label("Today", systemImage: "checkmark.circle.fill") }
                 .tag(0)
             AnalyticsView()
-                .tabItem { Label("Analytics", systemImage: "chart.bar.fill") }
+                .tabItem { Label("Streaks", systemImage: "flame.fill") }
                 .tag(1)
             CoachView()
                 .tabItem { Label("Coach", systemImage: "bubble.left.fill") }
                 .tag(2)
-            FourLawsView()
-                .tabItem { Label("Identity", systemImage: "person.crop.circle.badge.checkmark") }
-                .tag(3)
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
-                .tag(4)
+                .tag(3)
         }
         .tint(Color("Teal"))
         .onReceive(NotificationCenter.default.publisher(for: .openCoachFromNudge)) { _ in

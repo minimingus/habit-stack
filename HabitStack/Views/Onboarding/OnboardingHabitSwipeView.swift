@@ -36,15 +36,17 @@ struct OnboardingHabitSwipeView: View {
                 if currentIndex < suggestedHabits.count {
                     // Show current + next card for depth
                     ForEach(currentIndex..<min(currentIndex + 2, suggestedHabits.count), id: \.self) { index in
+                        let isFront = index == currentIndex
                         SwipeableHabitCard(
                             template: suggestedHabits[index],
                             onSwipeLeft: { skipHabit(at: index) },
                             onSwipeRight: { adoptHabit(at: index) }
                         )
-                        .zIndex(Double(suggestedHabits.count - index))
-                        .opacity(index == currentIndex ? 1.0 : 0.5)
-                        .scaleEffect(index == currentIndex ? 1.0 : 0.95)
-                        .offset(y: index == currentIndex ? 0 : 10)
+                        .zIndex(isFront ? 1 : 0)
+                        .opacity(isFront ? 1.0 : 0.5)
+                        .scaleEffect(isFront ? 1.0 : 0.95)
+                        .offset(y: isFront ? 0 : 10)
+                        .allowsHitTesting(isFront)
                     }
                 } else {
                     // All cards swiped

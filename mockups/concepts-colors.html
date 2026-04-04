@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better You — Color &amp; Visual Language</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  background: #111;
+  padding-bottom: 80px;
+}
+
+.page-header {
+  padding: 52px 48px 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 56px;
+}
+.page-header h1 { font-size: 38px; font-weight: 700; letter-spacing: -0.8px; color: white; margin-bottom: 8px; }
+.page-header p { font-size: 16px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  padding: 0 40px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.col { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+
+.col-label {
+  text-align: center;
+  padding: 0 4px;
+}
+.col-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 5px; }
+.col-name { font-size: 20px; font-weight: 700; color: white; letter-spacing: -0.3px; margin-bottom: 3px; }
+.col-sub { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+/* Swatch row */
+.swatches { display: flex; gap: 5px; justify-content: center; margin-top: 4px; }
+.swatch { width: 20px; height: 20px; border-radius: 50%; }
+
+/* iPhone */
+.iphone {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 390/780;
+  border-radius: 40px;
+  background: #1a1a1a;
+  padding: 9px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.07), 0 28px 72px rgba(0,0,0,0.6), 0 6px 20px rgba(0,0,0,0.3);
+  position: relative;
+}
+.iphone::after {
+  content:''; position:absolute; left:-3px; top:100px;
+  width:3px; height:26px; background:#2a2a2a; border-radius:3px 0 0 3px;
+  box-shadow: 0 38px 0 #2a2a2a, 0 72px 0 #2a2a2a;
+}
+.ip-pwr { position:absolute; right:-3px; top:130px; width:3px; height:56px; background:#2a2a2a; border-radius:0 3px 3px 0; }
+.ip-screen { width:100%; height:100%; border-radius:32px; overflow:hidden; position:relative; }
+.di { position:absolute; top:11px; left:50%; transform:translateX(-50%); width:80px; height:26px; background:#000; border-radius:14px; z-index:20; }
+
+/* Shared micro */
+.sb { display:flex; justify-content:space-between; align-items:center; padding:13px 20px 5px; font-size:13px; font-weight:700; }
+.sb-r { display:flex; align-items:center; gap:4px; font-size:11px; }
+
+.section-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:7px; display:flex; align-items:center; gap:7px; }
+.section-lbl::after { content:''; flex:1; height:0.5px; display:inline-block; }
+
+.habit-row { display:flex; align-items:center; gap:9px; margin-bottom:6px; cursor:pointer; }
+.h-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; border:1.5px solid; }
+.h-card { flex:1; border-radius:13px; padding:10px 12px; display:flex; align-items:center; gap:9px; }
+.h-icon { width:31px; height:31px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.h-name { font-size:13px; font-weight:600; letter-spacing:-0.2px; }
+.h-meta { font-size:10px; margin-top:1px; }
+.h-check { width:22px; height:22px; border-radius:50%; border:1.5px solid; margin-left:auto; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; }
+
+.tab-bar { position:absolute; bottom:0; left:0; right:0; display:flex; padding:7px 0 18px; border-top:0.5px solid; backdrop-filter:blur(20px); }
+.tab { flex:1; text-align:center; }
+.tab-icon { font-size:18px; display:block; margin-bottom:2px; }
+.tab-lbl { font-size:9px; font-weight:500; }
+
+/* Desc card */
+.desc {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 16px;
+  width: 100%;
+  max-width: 300px;
+}
+.desc p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+
+.footer {
+  max-width: 1500px; margin: 48px auto 0;
+  padding: 0 40px;
+  text-align: center;
+  font-size: 14px; color: rgba(255,255,255,0.25); line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Color &amp; Visual Language</h1>
+  <p>Same Timeline layout. Four completely different color palettes and visual treatments.<br>Pick one and I'll rebuild every screen to match.</p>
+</div>
+
+<div class="grid">
+
+  <!-- ══════════════════════════
+       A: MIDNIGHT TEAL
+       Dark slate surfaces, vivid teal accent
+       ══════════════════════════ -->
+  <div class="col">
+    <div class="col-label">
+      <div class="col-num">Option A</div>
+      <div class="col-name">Midnight</div>
+      <div class="col-sub">Dark slate · vibrant teal · crisp white type</div>
+      <div class="swatches">
+        <div class="swatch" style="background:#1C2333;"></div>
+        <div class="swatch" style="background:#252E3F;"></div>
+        <div class="swatch" style="background:#0EA5E9;"></div>
+        <div class="swatch" style="background:#F8FAFC;"></div>
+        <div class="swatch" style="background:#64748B;"></div>
+      </div>
+    </div>
+
+    <div class="iphone">
+      <div class="ip-pwr"></div>
+      <div class="ip-screen">
+        <div class="di"></div>
+        <!-- screen -->
+        <div style="background:#1C2333;height:100%;color:white;position:relative;">
+          <div class="sb" style="color:white;">
+            <span>9:41</span>
+            <div class="sb-r">●●● ■■</div>
+          </div>
+
+          <!-- Header -->
+          <div style="padding:34px 20px 14px;background:#1C2333;">
+            <div style="font-size:11px;color:#64748B;font-weight:600;letter-spacing:0.5px;margin-bottom:3px;">THURSDAY, APR 3</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div style="font-size:30px;font-weight:700;color:white;letter-spacing:-0.7px;">Today</div>
+              <div style="text-align:right;">
+                <div style="font-size:26px;font-weight:700;color:#0EA5E9;letter-spacing:-0.5px;">2<span style="font-size:16px;color:#334155;">/5</span></div>
+                <div style="font-size:10px;color:#64748B;margin-top:1px;">done today</div>
+              </div>
+            </div>
+            <!-- Thin progress bar -->
+            <div style="height:3px;background:#252E3F;border-radius:2px;margin-top:12px;overflow:hidden;">
+              <div style="width:40%;height:100%;background:linear-gradient(90deg,#0EA5E9,#38BDF8);border-radius:2px;"></div>
+            </div>
+          </div>
+
+          <!-- Streak badge -->
+          <div style="padding:8px 20px;">
+            <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(14,165,233,0.12);border:1px solid rgba(14,165,233,0.2);color:#38BDF8;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;">🔥 12-day streak</div>
+          </div>
+
+          <!-- Timeline -->
+          <div style="padding:4px 20px;overflow:hidden;">
+            <div class="section-lbl" style="color:#334155;">
+              <span style="color:#475569;font-size:10px;">🌅 MORNING</span>
+            </div>
+            <div style="::after{background:#252E3F}">
+            <div class="habit-row">
+              <div class="h-dot" style="background:#0EA5E9;border-color:#0EA5E9;box-shadow:0 0 0 3px rgba(14,165,233,0.15);"></div>
+              <div class="h-card" style="background:#252E3F;">
+                <div class="h-icon" style="background:rgba(14,165,233,0.12);">🏃</div>
+                <div>
+                  <div class="h-name" style="color:#94A3B8;text-decoration:line-through;">Morning Walk</div>
+                  <div class="h-meta" style="color:#475569;">Done · 15 min</div>
+                </div>
+                <div class="h-check" style="background:#0EA5E9;border-color:#0EA5E9;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="background:#0EA5E9;border-color:#0EA5E9;box-shadow:0 0 0 3px rgba(14,165,233,0.15);"></div>
+              <div class="h-card" style="background:#252E3F;">
+                <div class="h-icon" style="background:rgba(139,92,246,0.15);">🧘</div>
+                <div>
+                  <div class="h-name" style="color:#94A3B8;text-decoration:line-through;">Meditation</div>
+                  <div class="h-meta" style="color:#475569;">Done · 10 min</div>
+                </div>
+                <div class="h-check" style="background:#0EA5E9;border-color:#0EA5E9;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#334155;"></div>
+              <div class="h-card" style="background:#252E3F;">
+                <div class="h-icon" style="background:rgba(59,130,246,0.12);">📖</div>
+                <div>
+                  <div class="h-name" style="color:#F1F5F9;">Read</div>
+                  <div class="h-meta" style="color:#64748B;">20 min</div>
+                </div>
+                <div class="h-check" style="border-color:#334155;margin-left:auto;"></div>
+              </div>
+            </div>
+
+            <div class="section-lbl" style="color:#334155;margin-top:10px;">
+              <span style="color:#475569;font-size:10px;">🌙 EVENING</span>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#334155;"></div>
+              <div class="h-card" style="background:#252E3F;">
+                <div class="h-icon" style="background:rgba(249,115,22,0.12);">✍️</div>
+                <div>
+                  <div class="h-name" style="color:#F1F5F9;">Journal</div>
+                  <div class="h-meta" style="color:#64748B;">10 min</div>
+                </div>
+                <div class="h-check" style="border-color:#334155;margin-left:auto;"></div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#334155;"></div>
+              <div class="h-card" style="background:#252E3F;">
+                <div class="h-icon" style="background:rgba(14,165,233,0.1);">💧</div>
+                <div>
+                  <div class="h-name" style="color:#F1F5F9;">Drink Water</div>
+                  <div class="h-meta" style="color:#64748B;">Throughout</div>
+                </div>
+                <div class="h-check" style="border-color:#334155;margin-left:auto;"></div>
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- FAB -->
+          <div style="position:absolute;bottom:72px;right:16px;width:44px;height:44px;border-radius:50%;background:#0EA5E9;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;box-shadow:0 4px 20px rgba(14,165,233,0.4);">+</div>
+
+          <div class="tab-bar" style="background:rgba(28,35,51,0.95);border-top-color:#252E3F;">
+            <div class="tab"><span class="tab-icon">📋</span><span class="tab-lbl" style="color:#0EA5E9;">Today</span></div>
+            <div class="tab"><span class="tab-icon">📅</span><span class="tab-lbl" style="color:#475569;">Streaks</span></div>
+            <div class="tab"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#475569;">Coach</span></div>
+            <div class="tab"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#475569;">Settings</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <p>Dark slate backgrounds with electric sky-blue accent. High contrast, focused, premium. Habit cards glow softly on dark surfaces. Best for users who prefer dark mode.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       B: PAPER
+       Warm off-white, rich ink, no accent color — monochrome with teal check only
+       ══════════════════════════ -->
+  <div class="col">
+    <div class="col-label">
+      <div class="col-num">Option B</div>
+      <div class="col-name">Paper</div>
+      <div class="col-sub">Warm white · rich ink · teal only for done</div>
+      <div class="swatches">
+        <div class="swatch" style="background:#F7F5F0;"></div>
+        <div class="swatch" style="background:#FFFFFF;"></div>
+        <div class="swatch" style="background:#1A1612;"></div>
+        <div class="swatch" style="background:#8C8278;"></div>
+        <div class="swatch" style="background:#0D9488;"></div>
+      </div>
+    </div>
+
+    <div class="iphone">
+      <div class="ip-pwr"></div>
+      <div class="ip-screen">
+        <div class="di" style="background:#1A1612;"></div>
+        <div style="background:#F7F5F0;height:100%;position:relative;">
+          <div class="sb" style="color:#1A1612;"><span>9:41</span><div class="sb-r">●●● ■■</div></div>
+
+          <div style="background:white;padding:36px 20px 14px;border-bottom:0.5px solid #EDE8E1;">
+            <div style="font-size:11px;color:#8C8278;font-weight:600;letter-spacing:0.5px;margin-bottom:3px;">THURSDAY, APR 3</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div style="font-size:30px;font-weight:700;color:#1A1612;letter-spacing:-0.7px;font-variant-numeric:tabular-nums;">Today</div>
+              <div style="font-size:26px;font-weight:300;color:#1A1612;letter-spacing:-0.5px;">2 <span style="font-size:18px;color:#C4BDB5;">/ 5</span></div>
+            </div>
+            <div style="height:2px;background:#F0EBE3;border-radius:1px;margin-top:12px;overflow:hidden;">
+              <div style="width:40%;height:100%;background:#1A1612;border-radius:1px;"></div>
+            </div>
+          </div>
+
+          <div style="padding:8px 20px;">
+            <div style="display:inline-flex;align-items:center;gap:5px;background:white;border:1px solid #EDE8E1;color:#8C8278;font-size:11px;font-weight:600;padding:4px 10px;border-radius:10px;">🔥 12-day streak</div>
+          </div>
+
+          <div style="padding:4px 20px;">
+            <div class="section-lbl" style="color:#C4BDB5;font-size:10px;">
+              <span>🌅 MORNING</span>
+              <span style="flex:1;background:#EDE8E1;height:0.5px;display:inline-block;"></span>
+            </div>
+
+            <div class="habit-row">
+              <div class="h-dot" style="background:#0D9488;border-color:#0D9488;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#F7F5F0;">🏃</div>
+                <div>
+                  <div class="h-name" style="color:#8C8278;text-decoration:line-through;">Morning Walk</div>
+                  <div class="h-meta" style="color:#C4BDB5;">Done · 15 min</div>
+                </div>
+                <div class="h-check" style="background:#0D9488;border-color:#0D9488;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="background:#0D9488;border-color:#0D9488;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#F7F5F0;">🧘</div>
+                <div>
+                  <div class="h-name" style="color:#8C8278;text-decoration:line-through;">Meditation</div>
+                  <div class="h-meta" style="color:#C4BDB5;">Done · 10 min</div>
+                </div>
+                <div class="h-check" style="background:#0D9488;border-color:#0D9488;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#C4BDB5;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#F7F5F0;">📖</div>
+                <div>
+                  <div class="h-name" style="color:#1A1612;">Read</div>
+                  <div class="h-meta" style="color:#8C8278;">20 min</div>
+                </div>
+                <div class="h-check" style="border-color:#C4BDB5;margin-left:auto;"></div>
+              </div>
+            </div>
+
+            <div class="section-lbl" style="color:#C4BDB5;font-size:10px;margin-top:10px;">
+              <span>🌙 EVENING</span>
+              <span style="flex:1;background:#EDE8E1;height:0.5px;display:inline-block;"></span>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#C4BDB5;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#F7F5F0;">✍️</div>
+                <div>
+                  <div class="h-name" style="color:#1A1612;">Journal</div>
+                  <div class="h-meta" style="color:#8C8278;">10 min</div>
+                </div>
+                <div class="h-check" style="border-color:#C4BDB5;margin-left:auto;"></div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#C4BDB5;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#F7F5F0;">💧</div>
+                <div>
+                  <div class="h-name" style="color:#1A1612;">Drink Water</div>
+                  <div class="h-meta" style="color:#8C8278;">Throughout</div>
+                </div>
+                <div class="h-check" style="border-color:#C4BDB5;margin-left:auto;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;bottom:68px;right:16px;width:44px;height:44px;border-radius:50%;background:#1A1612;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;box-shadow:0 4px 16px rgba(0,0,0,0.2);">+</div>
+
+          <div class="tab-bar" style="background:rgba(247,245,240,0.95);border-top-color:#EDE8E1;">
+            <div class="tab"><span class="tab-icon">📋</span><span class="tab-lbl" style="color:#0D9488;">Today</span></div>
+            <div class="tab"><span class="tab-icon">📅</span><span class="tab-lbl" style="color:#8C8278;">Streaks</span></div>
+            <div class="tab"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#8C8278;">Coach</span></div>
+            <div class="tab"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#8C8278;">Settings</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <p>Near-monochrome. Warm cream whites, rich near-black ink. Teal appears only when a habit is done — making completion feel meaningful. Quiet, editorial, focused.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       C: SAGE
+       Muted green-gray background, earthy tones, forest accent
+       ══════════════════════════ -->
+  <div class="col">
+    <div class="col-label">
+      <div class="col-num">Option C</div>
+      <div class="col-name">Sage</div>
+      <div class="col-sub">Muted green · earthy · forest accent</div>
+      <div class="swatches">
+        <div class="swatch" style="background:#EEF2EE;"></div>
+        <div class="swatch" style="background:#FFFFFF;"></div>
+        <div class="swatch" style="background:#2D4A2D;"></div>
+        <div class="swatch" style="background:#7A9A7A;"></div>
+        <div class="swatch" style="background:#4A7A5A;"></div>
+      </div>
+    </div>
+
+    <div class="iphone">
+      <div class="ip-pwr"></div>
+      <div class="ip-screen">
+        <div class="di" style="background:#1a2a1a;"></div>
+        <div style="background:#EEF2EE;height:100%;position:relative;">
+          <div class="sb" style="color:#2D4A2D;"><span>9:41</span><div class="sb-r">●●● ■■</div></div>
+
+          <div style="background:white;padding:36px 20px 14px;border-bottom:0.5px solid #D8E4D8;">
+            <div style="font-size:11px;color:#7A9A7A;font-weight:600;letter-spacing:0.5px;margin-bottom:3px;">THURSDAY, APR 3</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div style="font-size:30px;font-weight:700;color:#2D4A2D;letter-spacing:-0.7px;">Today</div>
+              <div style="font-size:26px;font-weight:700;color:#4A7A5A;letter-spacing:-0.5px;">2<span style="font-size:16px;color:#B0C8B0;">/5</span></div>
+            </div>
+            <div style="height:3px;background:#EEF2EE;border-radius:2px;margin-top:12px;overflow:hidden;">
+              <div style="width:40%;height:100%;background:#4A7A5A;border-radius:2px;"></div>
+            </div>
+          </div>
+
+          <div style="padding:8px 20px;">
+            <div style="display:inline-flex;align-items:center;gap:5px;background:#F0FFF0;border:1px solid #C8E0C8;color:#4A7A5A;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;">🔥 12-day streak</div>
+          </div>
+
+          <div style="padding:4px 20px;">
+            <div class="section-lbl" style="color:#B0C8B0;font-size:10px;">
+              <span>🌅 MORNING</span>
+              <span style="flex:1;background:#D8E4D8;height:0.5px;display:inline-block;"></span>
+            </div>
+
+            <div class="habit-row">
+              <div class="h-dot" style="background:#4A7A5A;border-color:#4A7A5A;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.04),0 0 0 0.5px rgba(45,74,45,0.06);">
+                <div class="h-icon" style="background:#EEF2EE;">🏃</div>
+                <div>
+                  <div class="h-name" style="color:#7A9A7A;text-decoration:line-through;">Morning Walk</div>
+                  <div class="h-meta" style="color:#B0C8B0;">Done · 15 min</div>
+                </div>
+                <div class="h-check" style="background:#4A7A5A;border-color:#4A7A5A;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="background:#4A7A5A;border-color:#4A7A5A;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.04),0 0 0 0.5px rgba(45,74,45,0.06);">
+                <div class="h-icon" style="background:#EEF2EE;">🧘</div>
+                <div>
+                  <div class="h-name" style="color:#7A9A7A;text-decoration:line-through;">Meditation</div>
+                  <div class="h-meta" style="color:#B0C8B0;">Done · 10 min</div>
+                </div>
+                <div class="h-check" style="background:#4A7A5A;border-color:#4A7A5A;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#B0C8B0;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.04),0 0 0 0.5px rgba(45,74,45,0.06);">
+                <div class="h-icon" style="background:#EEF2EE;">📖</div>
+                <div>
+                  <div class="h-name" style="color:#2D4A2D;">Read</div>
+                  <div class="h-meta" style="color:#7A9A7A;">20 min</div>
+                </div>
+                <div class="h-check" style="border-color:#B0C8B0;margin-left:auto;"></div>
+              </div>
+            </div>
+
+            <div class="section-lbl" style="color:#B0C8B0;font-size:10px;margin-top:10px;">
+              <span>🌙 EVENING</span>
+              <span style="flex:1;background:#D8E4D8;height:0.5px;display:inline-block;"></span>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#B0C8B0;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.04),0 0 0 0.5px rgba(45,74,45,0.06);">
+                <div class="h-icon" style="background:#EEF2EE;">✍️</div>
+                <div>
+                  <div class="h-name" style="color:#2D4A2D;">Journal</div>
+                  <div class="h-meta" style="color:#7A9A7A;">10 min</div>
+                </div>
+                <div class="h-check" style="border-color:#B0C8B0;margin-left:auto;"></div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#B0C8B0;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.04),0 0 0 0.5px rgba(45,74,45,0.06);">
+                <div class="h-icon" style="background:#EEF2EE;">💧</div>
+                <div>
+                  <div class="h-name" style="color:#2D4A2D;">Drink Water</div>
+                  <div class="h-meta" style="color:#7A9A7A;">Throughout</div>
+                </div>
+                <div class="h-check" style="border-color:#B0C8B0;margin-left:auto;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;bottom:68px;right:16px;width:44px;height:44px;border-radius:50%;background:#4A7A5A;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;box-shadow:0 4px 16px rgba(74,122,90,0.35);">+</div>
+
+          <div class="tab-bar" style="background:rgba(238,242,238,0.96);border-top-color:#D8E4D8;">
+            <div class="tab"><span class="tab-icon">📋</span><span class="tab-lbl" style="color:#4A7A5A;">Today</span></div>
+            <div class="tab"><span class="tab-icon">📅</span><span class="tab-lbl" style="color:#7A9A7A;">Streaks</span></div>
+            <div class="tab"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#7A9A7A;">Coach</span></div>
+            <div class="tab"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#7A9A7A;">Settings</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <p>Muted sage green throughout. Earthy, natural, calming. Forest green as the accent — feels like wellness, not productivity software. Unique in the App Store.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       D: CLAY
+       Terracotta/clay accent, warm white, bold
+       ══════════════════════════ -->
+  <div class="col">
+    <div class="col-label">
+      <div class="col-num">Option D</div>
+      <div class="col-name">Clay</div>
+      <div class="col-sub">Warm white · terracotta accent · bold type</div>
+      <div class="swatches">
+        <div class="swatch" style="background:#FAF8F5;"></div>
+        <div class="swatch" style="background:#FFFFFF;"></div>
+        <div class="swatch" style="background:#1C1917;"></div>
+        <div class="swatch" style="background:#C2673A;"></div>
+        <div class="swatch" style="background:#E8927A;"></div>
+      </div>
+    </div>
+
+    <div class="iphone">
+      <div class="ip-pwr"></div>
+      <div class="ip-screen">
+        <div class="di" style="background:#1C1917;"></div>
+        <div style="background:#FAF8F5;height:100%;position:relative;">
+          <div class="sb" style="color:#1C1917;"><span>9:41</span><div class="sb-r">●●● ■■</div></div>
+
+          <div style="background:white;padding:36px 20px 14px;border-bottom:0.5px solid #EDE7DF;">
+            <div style="font-size:11px;color:#A89080;font-weight:600;letter-spacing:0.5px;margin-bottom:3px;">THURSDAY, APR 3</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div style="font-size:30px;font-weight:800;color:#1C1917;letter-spacing:-0.8px;">Today</div>
+              <div style="font-size:26px;font-weight:700;color:#C2673A;letter-spacing:-0.5px;">2<span style="font-size:16px;color:#D4C4B8;">/5</span></div>
+            </div>
+            <div style="height:3px;background:#F5EDE5;border-radius:2px;margin-top:12px;overflow:hidden;">
+              <div style="width:40%;height:100%;background:linear-gradient(90deg,#C2673A,#E8927A);border-radius:2px;"></div>
+            </div>
+          </div>
+
+          <div style="padding:8px 20px;">
+            <div style="display:inline-flex;align-items:center;gap:5px;background:#FFF5F0;border:1px solid #F0D0BC;color:#C2673A;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;">🔥 12-day streak</div>
+          </div>
+
+          <div style="padding:4px 20px;">
+            <div class="section-lbl" style="color:#D4C4B8;font-size:10px;">
+              <span>🌅 MORNING</span>
+              <span style="flex:1;background:#EDE7DF;height:0.5px;display:inline-block;"></span>
+            </div>
+
+            <div class="habit-row">
+              <div class="h-dot" style="background:#C2673A;border-color:#C2673A;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#FFF5F0;">🏃</div>
+                <div>
+                  <div class="h-name" style="color:#A89080;text-decoration:line-through;">Morning Walk</div>
+                  <div class="h-meta" style="color:#D4C4B8;">Done · 15 min</div>
+                </div>
+                <div class="h-check" style="background:#C2673A;border-color:#C2673A;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="background:#C2673A;border-color:#C2673A;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#F5F3FF;">🧘</div>
+                <div>
+                  <div class="h-name" style="color:#A89080;text-decoration:line-through;">Meditation</div>
+                  <div class="h-meta" style="color:#D4C4B8;">Done · 10 min</div>
+                </div>
+                <div class="h-check" style="background:#C2673A;border-color:#C2673A;color:white;margin-left:auto;">✓</div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#D4C4B8;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#EFF6FF;">📖</div>
+                <div>
+                  <div class="h-name" style="color:#1C1917;">Read</div>
+                  <div class="h-meta" style="color:#A89080;">20 min</div>
+                </div>
+                <div class="h-check" style="border-color:#D4C4B8;margin-left:auto;"></div>
+              </div>
+            </div>
+
+            <div class="section-lbl" style="color:#D4C4B8;font-size:10px;margin-top:10px;">
+              <span>🌙 EVENING</span>
+              <span style="flex:1;background:#EDE7DF;height:0.5px;display:inline-block;"></span>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#D4C4B8;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#FFF7ED;">✍️</div>
+                <div>
+                  <div class="h-name" style="color:#1C1917;">Journal</div>
+                  <div class="h-meta" style="color:#A89080;">10 min</div>
+                </div>
+                <div class="h-check" style="border-color:#D4C4B8;margin-left:auto;"></div>
+              </div>
+            </div>
+            <div class="habit-row">
+              <div class="h-dot" style="border-color:#D4C4B8;"></div>
+              <div class="h-card" style="background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 0.5px rgba(0,0,0,0.04);">
+                <div class="h-icon" style="background:#EFF6FF;">💧</div>
+                <div>
+                  <div class="h-name" style="color:#1C1917;">Drink Water</div>
+                  <div class="h-meta" style="color:#A89080;">Throughout</div>
+                </div>
+                <div class="h-check" style="border-color:#D4C4B8;margin-left:auto;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;bottom:68px;right:16px;width:44px;height:44px;border-radius:50%;background:#C2673A;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;box-shadow:0 4px 16px rgba(194,103,58,0.4);">+</div>
+
+          <div class="tab-bar" style="background:rgba(250,248,245,0.96);border-top-color:#EDE7DF;">
+            <div class="tab"><span class="tab-icon">📋</span><span class="tab-lbl" style="color:#C2673A;">Today</span></div>
+            <div class="tab"><span class="tab-icon">📅</span><span class="tab-lbl" style="color:#A89080;">Streaks</span></div>
+            <div class="tab"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#A89080;">Coach</span></div>
+            <div class="tab"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#A89080;">Settings</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <p>Warm white with terracotta-clay accent. Bold heavy title weight. Feels handcrafted and human. Stands out strongly from every other habit app in the store.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p style="color:rgba(255,255,255,0.25);">All four use the Timeline layout. Same UX — different personality.<br>
+  Reply <strong style="color:rgba(255,255,255,0.6);">A</strong>, <strong style="color:rgba(255,255,255,0.6);">B</strong>, <strong style="color:rgba(255,255,255,0.6);">C</strong>, or <strong style="color:rgba(255,255,255,0.6);">D</strong> (or mix them) and I'll rebuild every screen.</p>
+</div>
+
+</body>
+</html>

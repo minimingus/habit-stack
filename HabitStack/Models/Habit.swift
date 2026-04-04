@@ -16,6 +16,7 @@ struct Habit: Codable, Identifiable, Hashable {
     var timeOfDay: TimeOfDay
     var reminderEnabled: Bool
     var reminderTime: Date?
+    var difficultyLevel: Int
     var archivedAt: Date?
     var pausedUntil: Date?
     var sortOrder: Int
@@ -48,6 +49,7 @@ struct Habit: Codable, Identifiable, Hashable {
         case timeOfDay = "time_of_day"
         case reminderEnabled = "reminder_enabled"
         case reminderTime = "reminder_time"
+        case difficultyLevel = "difficulty_level"
         case archivedAt = "archived_at"
         case pausedUntil = "paused_until"
         case sortOrder = "sort_order"

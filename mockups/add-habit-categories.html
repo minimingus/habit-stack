@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Habit — Option B: Category Grid</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Category Grid ─────────────────── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 16px 14px;
+}
+.cat-card {
+  border-radius: 18px;
+  padding: 20px 14px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: var(--card-shadow-sm);
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  border: 1.5px solid transparent;
+}
+.cat-card:hover { transform: scale(1.03); box-shadow: var(--card-shadow); }
+.cat-card:active { transform: scale(0.97); }
+.cat-icon { font-size: 30px; margin-bottom: 8px; display: block; }
+.cat-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-1);
+  letter-spacing: -0.2px;
+}
+.cat-count { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+
+/* ── Habit Pill ─────────────────────── */
+.habit-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--card);
+  margin: 0 16px 8px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: var(--card-shadow-sm);
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+}
+.habit-pill:hover { border-color: rgba(13,148,136,0.2); }
+.habit-pill.chosen {
+  border-color: var(--teal);
+  background: var(--teal-light);
+}
+.habit-pill-info { flex: 1; }
+.habit-pill-name { font-size: 15px; font-weight: 600; color: var(--ink-1); letter-spacing: -0.2px; }
+.habit-pill-sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.habit-pill-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.habit-pill.chosen .habit-pill-check {
+  background: var(--teal);
+  border-color: var(--teal);
+  box-shadow: 0 2px 6px rgba(13,148,136,0.3);
+}
+
+/* ── Add CTA gradient ───────────────── */
+.add-cta {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 12px 20px 32px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(250,249,247,0.97) 32%);
+  z-index: 10;
+  display: none;
+}
+.add-cta.visible { display: block; }
+
+.custom-link {
+  padding: 10px 20px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.custom-link span { color: var(--teal); font-weight: 600; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<!-- View 1: Category Grid -->
+<div id="view1">
+  <div class="page-layout">
+    <div class="phones-row">
+      <div class="phone-wrapper">
+        <div class="phone-label">Step 1 — Pick a Category</div>
+        <div class="phone" style="height:820px;">
+          <div class="phone-power"></div>
+          <div class="phone-inner">
+            <div class="dynamic-island"></div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <div class="status-icons">
+                <div class="sig"><span></span><span></span><span></span><span></span></div>
+                <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                  <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                  <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                <div class="batt"><div class="batt-fill"></div></div>
+              </div>
+            </div>
+
+            <!-- Nav bar -->
+            <div class="nav-bar">
+              <span class="nav-action muted" style="cursor:pointer;">Cancel</span>
+              <span class="nav-title">Add a Habit</span>
+              <span class="nav-action right"></span>
+            </div>
+
+            <!-- Screen -->
+            <div class="screen" style="padding-top:8px; height:688px; overflow-y:auto;">
+              <div style="padding: 8px 20px 2px; font-size:17px; font-weight:600; color:var(--ink-1); letter-spacing:-0.3px;">What do you want to improve?</div>
+              <div style="padding: 2px 20px 10px; font-size:13px; color:var(--ink-3);">Suggestions are personalized to your goals.</div>
+
+              <div class="cat-grid">
+                <div class="cat-card" style="background:var(--tint-teal);" onclick="goToHabits('health','Health',12)">
+                  <span class="cat-icon">💪</span>
+                  <div class="cat-name">Health</div>
+                  <div class="cat-count">12 habits</div>
+                </div>
+                <div class="cat-card" style="background:var(--tint-purple);" onclick="goToHabits('mind','Mind',9)">
+                  <span class="cat-icon">🧠</span>
+                  <div class="cat-name">Mind</div>
+                  <div class="cat-count">9 habits</div>
+                </div>
+                <div class="cat-card" style="background:var(--tint-blue);" onclick="goToHabits('work','Work',7)">
+                  <span class="cat-icon">💼</span>
+                  <div class="cat-name">Work</div>
+                  <div class="cat-count">7 habits</div>
+                </div>
+                <div class="cat-card" style="background:var(--tint-coral);" onclick="goToHabits('social','Social',5)">
+                  <span class="cat-icon">🤝</span>
+                  <div class="cat-name">Social</div>
+                  <div class="cat-count">5 habits</div>
+                </div>
+                <div class="cat-card" style="background:var(--tint-lime);" onclick="goToHabits('lifestyle','Lifestyle',8)">
+                  <span class="cat-icon">🌿</span>
+                  <div class="cat-name">Lifestyle</div>
+                  <div class="cat-count">8 habits</div>
+                </div>
+                <div class="cat-card" style="background:var(--tint-amber);" onclick="goToHabits('finance','Finance',4)">
+                  <span class="cat-icon">💰</span>
+                  <div class="cat-name">Finance</div>
+                  <div class="cat-count">4 habits</div>
+                </div>
+              </div>
+
+              <div class="custom-link">or <span>build a custom habit</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View 2: Habits within selected category -->
+<div id="view2" style="display:none;">
+  <div class="page-layout">
+    <div class="phones-row">
+      <div class="phone-wrapper">
+        <div class="phone-label">Step 2 — Pick Habits</div>
+        <div class="phone" style="height:820px; position:relative;">
+          <div class="phone-power"></div>
+          <div class="phone-inner">
+            <div class="dynamic-island"></div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <div class="status-icons">
+                <div class="sig"><span></span><span></span><span></span><span></span></div>
+                <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                  <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                  <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                <div class="batt"><div class="batt-fill"></div></div>
+              </div>
+            </div>
+
+            <!-- Nav with back -->
+            <div class="nav-bar">
+              <span class="nav-action" style="cursor:pointer;" onclick="goBack()">‹ Back</span>
+              <span class="nav-title" id="catTitle">Health</span>
+              <span class="nav-action right"></span>
+            </div>
+
+            <div class="screen" style="padding: 10px 0 88px; height:688px; overflow-y:auto; position:relative;">
+              <div style="padding: 0 20px 10px; font-size:14px; color:var(--ink-3);">Pick one or more to add at once.</div>
+
+              <div class="habit-pill" onclick="togglePill(this)">
+                <div class="habit-icon" style="background:var(--tint-teal);">🏃</div>
+                <div class="habit-pill-info">
+                  <div class="habit-pill-name">Morning Walk</div>
+                  <div class="habit-pill-sub">15 min · morning</div>
+                </div>
+                <div class="habit-pill-check">✓</div>
+              </div>
+              <div class="habit-pill" onclick="togglePill(this)">
+                <div class="habit-icon" style="background:var(--tint-coral);">🏋️</div>
+                <div class="habit-pill-info">
+                  <div class="habit-pill-name">Workout</div>
+                  <div class="habit-pill-sub">30 min · morning</div>
+                </div>
+                <div class="habit-pill-check">✓</div>
+              </div>
+              <div class="habit-pill" onclick="togglePill(this)">
+                <div class="habit-icon" style="background:var(--tint-blue);">💧</div>
+                <div class="habit-pill-info">
+                  <div class="habit-pill-name">Drink 8 Glasses</div>
+                  <div class="habit-pill-sub">throughout the day</div>
+                </div>
+                <div class="habit-pill-check">✓</div>
+              </div>
+              <div class="habit-pill" onclick="togglePill(this)">
+                <div class="habit-icon" style="background:var(--tint-lime);">🥦</div>
+                <div class="habit-pill-info">
+                  <div class="habit-pill-name">Eat Vegetables</div>
+                  <div class="habit-pill-sub">at lunch or dinner</div>
+                </div>
+                <div class="habit-pill-check">✓</div>
+              </div>
+              <div class="habit-pill" onclick="togglePill(this)">
+                <div class="habit-icon" style="background:var(--tint-purple);">😴</div>
+                <div class="habit-pill-info">
+                  <div class="habit-pill-name">Sleep by 10pm</div>
+                  <div class="habit-pill-sub">evening</div>
+                </div>
+                <div class="habit-pill-check">✓</div>
+              </div>
+              <div class="habit-pill" onclick="togglePill(this)">
+                <div class="habit-icon" style="background:var(--tint-orange);">🧘</div>
+                <div class="habit-pill-info">
+                  <div class="habit-pill-name">Stretch</div>
+                  <div class="habit-pill-sub">5 min · anytime</div>
+                </div>
+                <div class="habit-pill-check">✓</div>
+              </div>
+
+              <div class="add-cta" id="addCta">
+                <button class="btn-primary" id="addBtn">Add 0 Habits</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Compare Card (always visible) -->
+<div class="page-layout">
+  <div class="compare-card">
+    <h2>Option B: Category Grid</h2>
+    <p>User first picks an area of life to improve, using warm tinted category cards. Then sees habits within that category and can select multiple at once. The goal-first framing changes the mental model from "what should I track?" to "what do I want to improve?"</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Advantages</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Goal-oriented entry</strong> — "what do I want to improve" is the right question to start with</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Multi-select</strong> — add 2–3 related habits in a single flow</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Visual hierarchy</strong> — category-first reduces initial choice paralysis</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Warm tinted cards</strong> — each category has its own color identity, easy to recognize at a glance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Trade-offs</div>
+      <div class="compare-list">
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">2 steps required</strong> — category → habits (vs Option A's direct browsable list)</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">No time selection inline</strong> — defers the time-of-day setup to a later step</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Assumes category mental model</strong> — users searching for a specific habit must know its category first</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-note-hint">Tap a category card to navigate to its habit list, then select habits to add</div>
+  </div>
+</div>
+
+<script>
+function goToHabits(key, name, count) {
+  document.getElementById('view1').style.display = 'none';
+  document.getElementById('view2').style.display = 'block';
+  document.getElementById('catTitle').textContent = name;
+  document.querySelectorAll('.habit-pill').forEach(p => p.classList.remove('chosen'));
+  document.getElementById('addCta').classList.remove('visible');
+  selectedCount = 0;
+  document.getElementById('addBtn').textContent = 'Add 0 Habits';
+}
+
+function goBack() {
+  document.getElementById('view1').style.display = 'block';
+  document.getElementById('view2').style.display = 'none';
+}
+
+let selectedCount = 0;
+function togglePill(el) {
+  el.classList.toggle('chosen');
+  selectedCount = document.querySelectorAll('.habit-pill.chosen').length;
+  const btn = document.getElementById('addBtn');
+  const cta = document.getElementById('addCta');
+  btn.textContent = selectedCount > 0
+    ? 'Add ' + selectedCount + ' Habit' + (selectedCount !== 1 ? 's' : '')
+    : 'Add 0 Habits';
+  cta.classList.toggle('visible', selectedCount > 0);
+}
+</script>
+</body>
+</html>

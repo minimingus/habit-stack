@@ -35,15 +35,24 @@ enum IdentityTrait: String, Codable, CaseIterable, Identifiable {
     case productive = "💼 Productive"
     
     var id: String { rawValue }
-    
-    /// Emoji icon for the trait
-    var emoji: String {
-        String(rawValue.prefix(2))
-    }
-    
-    /// Display name without emoji
+
+    /// Display name without emoji prefix
     var displayName: String {
-        String(rawValue.dropFirst(3))
+        String(rawValue.dropFirst(2))
+    }
+
+    /// SF Symbol for UI display
+    var sfSymbol: String {
+        switch self {
+        case .stronger:     return "dumbbell"
+        case .focused:      return "brain.head.profile"
+        case .energetic:    return "bolt.fill"
+        case .calmer:       return "wind"
+        case .disciplined:  return "target"
+        case .confident:    return "star.fill"
+        case .healthier:    return "heart.fill"
+        case .productive:   return "checkmark.circle.fill"
+        }
     }
     
     /// Description/tagline for the trait

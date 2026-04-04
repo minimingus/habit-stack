@@ -17,12 +17,14 @@ struct IdentityTraitCard: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 8) {
-                Text(trait.emoji)
-                    .font(.system(size: 40))
-                
+                Image(systemName: trait.sfSymbol)
+                    .font(.system(size: 32, weight: .light))
+                    .foregroundStyle(isSelected ? Color("Teal") : Color.secondary)
+
                 Text(trait.displayName)
                     .font(.subheadline)
                     .fontWeight(.medium)
+                    .foregroundStyle(Color.primary)
                     .multilineTextAlignment(.center)
             }
             .frame(height: 120)

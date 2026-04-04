@@ -118,10 +118,10 @@ struct HabitWizardView: View {
 
     private var stepTitle: String {
         switch viewModel.currentStep {
-        case .cue: return "Make it Obvious"
-        case .craving: return "Make it Attractive"
-        case .routine: return "Make it Easy"
-        case .reward: return "Make it Satisfying"
+        case .cue: return "Set a Trigger"
+        case .craving: return "Find Your Why"
+        case .routine: return "Start Small"
+        case .reward: return "Add a Reward"
         }
     }
 
@@ -162,7 +162,7 @@ struct HabitWizardView: View {
         if c.isEmpty {
             return "Place a visual reminder for \"\(name)\" somewhere you'll see it every day — a sticky note, an object on your desk, or a phone wallpaper."
         }
-        return "To make \"\(name)\" obvious: put a cue right where \"\(c)\" happens so you can't miss it. Out of sight = out of mind."
+        return "To trigger \"\(name)\": place a visible reminder where \"\(c)\" happens so you can't miss it. Out of sight = out of mind."
     }
 }
 

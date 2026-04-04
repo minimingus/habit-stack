@@ -448,7 +448,7 @@ final class TodayViewModel {
     }
 
     private func updateWidgetData() {
-        let defaults = UserDefaults(suiteName: "group.com.tomerab.habitstack") ?? .standard
+        let defaults = UserDefaults(suiteName: "group.com.tomerab.better") ?? .standard
         defaults.set(completedHabits, forKey: "widget.completedCount")
         defaults.set(totalHabits, forKey: "widget.totalCount")
         WidgetCenter.shared.reloadTimelines(ofKind: "HabitProgressWidget")

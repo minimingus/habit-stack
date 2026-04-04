@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better You — UX Mockups</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', sans-serif;
+  background: #EEE6DC;
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────── */
+.header {
+  padding: 64px 48px 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+.header-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 20px;
+  padding: 12px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+  margin-bottom: 6px;
+}
+.header-app-icon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #C2673A 0%, #A8522A 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(194,103,58,0.4);
+}
+.header-app-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1C1917;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.header h1 {
+  font-size: 44px;
+  font-weight: 800;
+  color: #1C1917;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+}
+.header p {
+  font-size: 15px;
+  color: #A89080;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ── Section Divider ─────────────────── */
+.section-divider {
+  padding: 0 48px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-divider-line { flex: 1; height: 1px; background: rgba(0,0,0,0.08); }
+.section-divider-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #A89080;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  white-space: nowrap;
+}
+
+/* ── Card Grid ───────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 0 48px;
+  max-width: 1100px;
+  margin: 0 auto 44px;
+}
+
+/* Featured card spans 2 cols */
+.grid .screen-card.featured {
+  grid-column: span 2;
+}
+@media (max-width: 700px) {
+  .grid .screen-card.featured { grid-column: span 1; }
+}
+
+/* ── Screen Card ──────────────────────── */
+.screen-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+.screen-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.04);
+}
+
+/* Phone preview area */
+.card-preview {
+  height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+  background: #F0EAE3;
+}
+.featured .card-preview {
+  height: 200px;
+}
+
+/* Mini phone mockup */
+.mini-phone {
+  width: 68px;
+  height: 128px;
+  background: #1a1a1a;
+  border-radius: 18px;
+  padding: 4px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+  position: relative;
+}
+.mini-screen {
+  width: 100%;
+  height: 100%;
+  background: #FAF8F5;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.mini-di {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 6px;
+  background: #000;
+  border-radius: 8px;
+  z-index: 3;
+}
+.mini-content {
+  padding: 12px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mini-habits {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px;
+}
+.mini-habit-row {
+  background: white;
+  border-radius: 4px;
+  padding: 3px 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.mini-sq {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.mini-text-line { flex: 1; height: 3px; background: rgba(0,0,0,0.07); border-radius: 2px; }
+.mini-check { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid #D4C4B8; flex-shrink: 0; }
+.mini-check.done { background: #C2673A; border-color: #C2673A; }
+
+/* Timeline mini preview */
+.mini-timeline-section {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 2px 1px;
+}
+.mini-tl-label { font-size: 4px; color: #A89080; font-weight: 700; white-space: nowrap; }
+.mini-tl-line { flex: 1; height: 0.5px; background: #EDE7DF; }
+
+/* Badge */
+.card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-current { background: #F5EDE5; color: #A89080; }
+.badge-recommended { background: #C2673A; color: white; }
+.badge-option-a { background: #C2673A; color: white; }
+.badge-option-b { background: #7C3AED; color: white; }
+
+/* Card body */
+.card-body {
+  padding: 18px 20px 22px;
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+.card-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #A89080;
+  margin-bottom: 5px;
+}
+.card-body h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1C1917;
+  letter-spacing: -0.2px;
+  margin-bottom: 5px;
+}
+.card-body p {
+  font-size: 13px;
+  color: #A89080;
+  line-height: 1.55;
+}
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #C2673A;
+  margin-top: 12px;
+}
+
+/* Footer */
+.footer {
+  padding: 0 48px 56px;
+  text-align: center;
+}
+.footer p { font-size: 13px; color: #D4C4B8; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-identity">
+    <div class="header-app-icon">✦</div>
+    <span class="header-app-name">Better You</span>
+  </div>
+  <h1>UX Mockups</h1>
+  <p>Interactive prototypes — Clay palette · Timeline layout</p>
+</div>
+
+<!-- Today Screen -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">Today Screen</div>
+  <div class="section-divider-line"></div>
+</div>
+<div class="grid">
+
+  <!-- Featured: Timeline -->
+  <a class="screen-card featured" href="today-timeline.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <!-- Today header block -->
+          <div style="background:white;padding:10px 5px 5px;border-bottom:0.5px solid #EDE7DF;">
+            <div style="font-size:4px;color:#A89080;letter-spacing:0.3px;margin-bottom:2px;">FRIDAY, APR 4</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3px;">
+              <div style="font-size:10px;font-weight:800;color:#1C1917;letter-spacing:-0.3px;">Today</div>
+              <div style="font-size:8px;font-weight:700;color:#C2673A;">2<span style="font-size:5px;color:#D4C4B8;">/5</span></div>
+            </div>
+            <div style="height:2px;background:#F5EDE5;border-radius:1px;overflow:hidden;">
+              <div style="width:40%;height:100%;background:linear-gradient(90deg,#C2673A,#E8927A);"></div>
+            </div>
+          </div>
+          <div style="padding:3px 4px;">
+            <div style="display:inline-block;background:#FFF5F0;border:0.5px solid #F0D0BC;color:#C2673A;font-size:4px;font-weight:700;padding:1px 4px;border-radius:4px;margin-bottom:3px;">🔥 12-day streak</div>
+            <!-- Morning section -->
+            <div class="mini-timeline-section">
+              <span class="mini-tl-label">🌅 MORNING</span>
+              <div class="mini-tl-line"></div>
+            </div>
+            <div class="mini-habits">
+              <div class="mini-habit-row" style="border-left:1.5px solid #C2673A;opacity:0.7;">
+                <div class="mini-sq" style="background:#FFF5F0;"></div>
+                <div class="mini-text-line" style="text-decoration:line-through;"></div>
+                <div class="mini-check done"></div>
+              </div>
+              <div class="mini-habit-row" style="border-left:1.5px solid #C2673A;opacity:0.7;">
+                <div class="mini-sq" style="background:#F5F3FF;"></div>
+                <div class="mini-text-line"></div>
+                <div class="mini-check done"></div>
+              </div>
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#EFF6FF;"></div>
+                <div class="mini-text-line"></div>
+                <div class="mini-check"></div>
+              </div>
+            </div>
+            <!-- Evening -->
+            <div class="mini-timeline-section" style="margin-top:2px;">
+              <span class="mini-tl-label">🌙 EVENING</span>
+              <div class="mini-tl-line"></div>
+            </div>
+            <div class="mini-habits">
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#FFF7ED;"></div>
+                <div class="mini-text-line"></div>
+                <div class="mini-check"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-recommended">New Design</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Today · Clay + Timeline</div>
+      <h2>Today — Timeline</h2>
+      <p>Habits grouped by time of day. Bold "Today" headline. Terracotta progress bar and checkmarks. Tap any habit to complete — name strikes through, count updates live.</p>
+      <div class="card-link">View → (interactive)</div>
+    </div>
+  </a>
+
+  <a class="screen-card" href="today-current.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <div class="mini-content">
+            <div style="height:7px;background:white;border-radius:3px;margin-bottom:1px;"></div>
+            <div style="height:5px;background:#FFF5F0;border-radius:2px;margin-bottom:1px;"></div>
+            <div class="mini-habits">
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#FFF5F0;"></div>
+                <div class="mini-text-line"></div>
+                <div class="mini-check done"></div>
+              </div>
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#F5F3FF;"></div>
+                <div class="mini-text-line"></div>
+                <div class="mini-check done"></div>
+              </div>
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#EFF6FF;"></div>
+                <div class="mini-text-line"></div>
+                <div class="mini-check"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-current">Before</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Today</div>
+      <h2>Today — Before</h2>
+      <p>Original layout: XP bar, trial banner, progress ring, insight card — all before the first habit.</p>
+      <div class="card-link">View →</div>
+    </div>
+  </a>
+
+</div>
+
+<!-- Add Habit Flow -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">Add Habit Flow</div>
+  <div class="section-divider-line"></div>
+</div>
+<div class="grid">
+  <a class="screen-card" href="add-habit-current.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <div class="mini-content" style="align-items:center;">
+            <div style="margin:4px auto;width:40px;height:40px;background:#FFF5F0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 1px 4px rgba(0,0,0,0.08);">🏃</div>
+            <div style="height:4px;background:rgba(0,0,0,0.07);border-radius:2px;width:55%;margin:3px auto;"></div>
+            <div style="height:2px;background:rgba(0,0,0,0.05);border-radius:2px;width:40%;margin:2px auto;"></div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-current">Before</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Add Habit</div>
+      <h2>Add Habit — Swipe Cards</h2>
+      <p>Tinder-style swipe flow with a separate time picker sheet. Two steps of friction.</p>
+      <div class="card-link">View →</div>
+    </div>
+  </a>
+
+  <a class="screen-card" href="add-habit-list.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <div class="mini-content">
+            <div style="height:6px;background:#F5EDE5;border-radius:6px;margin-bottom:3px;"></div>
+            <div style="display:flex;gap:2px;margin-bottom:3px;">
+              <div style="height:5px;width:16px;background:#C2673A;border-radius:10px;"></div>
+              <div style="height:5px;width:12px;background:rgba(0,0,0,0.06);border-radius:10px;"></div>
+              <div style="height:5px;width:12px;background:rgba(0,0,0,0.06);border-radius:10px;"></div>
+            </div>
+            <div class="mini-habits">
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#FFF5F0;"></div>
+                <div class="mini-text-line"></div>
+                <div style="font-size:6px;color:#D4C4B8;">›</div>
+              </div>
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#F5F3FF;"></div>
+                <div class="mini-text-line"></div>
+                <div style="font-size:6px;color:#D4C4B8;">›</div>
+              </div>
+              <div class="mini-habit-row">
+                <div class="mini-sq" style="background:#EFF6FF;"></div>
+                <div class="mini-text-line"></div>
+                <div style="font-size:6px;color:#D4C4B8;">›</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-option-a">Option A</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Add Habit</div>
+      <h2>Add Habit — Quick List</h2>
+      <p>Scrollable suggestions. Tap to preview and pick a time inline. One step.</p>
+      <div class="card-link">View →</div>
+    </div>
+  </a>
+
+  <a class="screen-card" href="add-habit-categories.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <div class="mini-content" style="gap:2px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:2px;">
+              <div style="height:20px;background:#FFF5F0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;">💪</div>
+              <div style="height:20px;background:#F5F3FF;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;">🧠</div>
+              <div style="height:20px;background:#EFF6FF;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;">💼</div>
+              <div style="height:20px;background:#FFF1F2;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;">🤝</div>
+              <div style="height:20px;background:#F7FEE7;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;">🌿</div>
+              <div style="height:20px;background:#FFFBEB;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;">💰</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-option-b">Option B</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Add Habit</div>
+      <h2>Add Habit — Category Grid</h2>
+      <p>Goal-oriented browsing by life area. Warm tinted cards with multi-select.</p>
+      <div class="card-link">View →</div>
+    </div>
+  </a>
+</div>
+
+<!-- Habit Detail -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">Habit Detail</div>
+  <div class="section-divider-line"></div>
+</div>
+<div class="grid">
+  <a class="screen-card" href="habit-detail-current.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <div class="mini-content" style="align-items:center;">
+            <div style="width:24px;height:24px;border-radius:7px;background:#FFF5F0;display:flex;align-items:center;justify-content:center;font-size:13px;margin:2px auto;">🏃</div>
+            <div style="height:3px;background:rgba(0,0,0,0.09);border-radius:2px;width:65%;margin:2px auto;"></div>
+            <div style="height:12px;background:white;border-radius:3px;width:88%;margin:3px auto;"></div>
+            <div style="height:22px;background:white;border-radius:3px;width:88%;margin:1px auto;"></div>
+            <div style="height:9px;background:#FFF5F0;border-radius:3px;width:88%;margin:1px auto;"></div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-current">Before</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Habit Detail</div>
+      <h2>Habit Detail — Before</h2>
+      <p>Stats, four laws always expanded, identity statement, actions below fold.</p>
+      <div class="card-link">View →</div>
+    </div>
+  </a>
+
+  <a class="screen-card" href="habit-detail-simplified.html">
+    <div class="card-preview">
+      <div class="mini-phone">
+        <div class="mini-screen">
+          <div class="mini-di"></div>
+          <div class="mini-content">
+            <div style="display:flex;align-items:center;gap:3px;padding:1px;margin-bottom:2px;">
+              <div style="width:16px;height:16px;border-radius:5px;background:#FFF5F0;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;">🏃</div>
+              <div style="height:3px;background:rgba(0,0,0,0.09);border-radius:2px;flex:1;"></div>
+            </div>
+            <div style="height:11px;background:white;border-radius:3px;margin-bottom:2px;display:flex;">
+              <div style="flex:1;border-right:0.5px solid #F5EDE5;"></div>
+              <div style="flex:1;border-right:0.5px solid #F5EDE5;"></div>
+              <div style="flex:1;"></div>
+            </div>
+            <div style="height:16px;background:white;border-radius:3px;margin-bottom:2px;"></div>
+            <div style="height:8px;background:white;border-radius:3px;margin-bottom:2px;"></div>
+            <div style="display:flex;gap:2px;">
+              <div style="flex:1;height:9px;background:#C2673A;border-radius:3px;"></div>
+              <div style="flex:1;height:9px;background:#FFF5F0;border-radius:3px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="card-badge badge-recommended">Recommended</span>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Habit Detail</div>
+      <h2>Habit Detail — Simplified</h2>
+      <p>Stats and history front-and-center. Setup details collapsed. Actions above fold.</p>
+      <div class="card-link">View →</div>
+    </div>
+  </a>
+</div>
+
+<div class="footer">
+  <p>Interactive prototypes · Better You · Clay palette</p>
+</div>
+
+</body>
+</html>

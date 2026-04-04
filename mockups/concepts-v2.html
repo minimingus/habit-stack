@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better You — UX Concepts v2</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  background: #F5F4F1;
+  color: #1A1A1A;
+  padding-bottom: 80px;
+}
+
+/* ── Page Header ── */
+.page-header {
+  padding: 52px 48px 36px;
+  border-bottom: 1px solid #E8E4DE;
+  background: white;
+  margin-bottom: 48px;
+}
+.page-header h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 8px; }
+.page-header p { font-size: 16px; color: #9C9289; max-width: 560px; line-height: 1.6; }
+
+/* ── Concept Columns ── */
+.concepts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  padding: 0 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.concept-col { display: flex; flex-direction: column; gap: 20px; }
+
+.concept-heading {
+  padding: 0 4px;
+}
+.concept-num {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #9C9289; margin-bottom: 6px;
+}
+.concept-name {
+  font-size: 22px; font-weight: 700; color: #1A1A1A; letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+.concept-tagline { font-size: 14px; color: #9C9289; line-height: 1.5; }
+
+.concept-screens { display: flex; flex-direction: column; gap: 16px; }
+
+.screen-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: #C0BAB3; text-align: center; margin-top: 4px;
+}
+
+/* ── iPhone Frame ── */
+.iphone {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  aspect-ratio: 393/780;
+  border-radius: 44px;
+  background: #1a1a1a;
+  padding: 10px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 24px 64px rgba(0,0,0,0.25),
+    0 4px 16px rgba(0,0,0,0.15);
+  position: relative;
+}
+.iphone::after {
+  content: '';
+  position: absolute; left: -3px; top: 110px;
+  width: 3px; height: 28px;
+  background: #2a2a2a; border-radius: 3px 0 0 3px;
+  box-shadow: 0 40px 0 #2a2a2a, 0 76px 0 #2a2a2a;
+}
+.ip-pwr {
+  position: absolute; right: -3px; top: 140px;
+  width: 3px; height: 60px;
+  background: #2a2a2a; border-radius: 0 3px 3px 0;
+}
+.ip-screen {
+  width: 100%; height: 100%;
+  border-radius: 36px; overflow: hidden;
+  position: relative;
+}
+.di {
+  position: absolute; top: 12px; left: 50%;
+  transform: translateX(-50%);
+  width: 88px; height: 28px;
+  background: #000; border-radius: 16px; z-index: 20;
+}
+
+/* ── Shared micro-components ── */
+.sb {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 22px 4px; font-size: 14px; font-weight: 700;
+}
+.sb-right { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+
+.tab-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; padding: 8px 0 20px;
+  border-top: 0.5px solid;
+}
+.tab { flex: 1; text-align: center; cursor: pointer; }
+.tab-icon { font-size: 20px; display: block; margin-bottom: 3px; }
+.tab-lbl { font-size: 10px; font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════════════
+   CONCEPT 1: "CIRCLES"
+   Layout: Habit rings in a 2×N grid, like Streaks.
+   Nav: Today | Progress | Coach | Settings
+   Interaction: tap circle = fill ring, celebrate
+   ═══════════════════════════════════════════════════════════ */
+.c1 { background: #FAFAF9; height: 100%; }
+.c1 .sb { color: #1A1A1A; }
+
+.c1-header {
+  padding: 44px 20px 14px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.c1-title { font-size: 32px; font-weight: 700; color: #1A1A1A; letter-spacing: -0.7px; }
+.c1-date { font-size: 12px; color: #9C9289; text-align: right; }
+.c1-done { font-size: 28px; font-weight: 300; color: #0D9488; letter-spacing: -0.5px; }
+
+.c1-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; padding: 0 16px;
+}
+
+.c1-cell {
+  background: white;
+  border-radius: 20px;
+  padding: 16px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.05);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+}
+.c1-cell:active { transform: scale(0.96); }
+.c1-cell.done { opacity: 0.65; }
+
+.c1-ring-wrap { position: relative; width: 60px; height: 60px; }
+.c1-ring-wrap svg { transform: rotate(-90deg); }
+.c1-ring-emoji {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-size: 22px;
+}
+
+.c1-name { font-size: 13px; font-weight: 600; color: #1A1A1A; letter-spacing: -0.2px; text-align: center; }
+.c1-streak { font-size: 11px; color: #9C9289; }
+.c1-check {
+  position: absolute; top: 10px; right: 10px;
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid #E8E4DE;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  transition: all 0.2s;
+}
+.c1-cell.done .c1-check { background: #0D9488; border-color: #0D9488; color: white; }
+
+.c1 .tab-bar { background: rgba(250,250,249,0.94); backdrop-filter:blur(20px); border-top-color: #EDE9E4; }
+.c1 .tab-lbl { color: #9C9289; }
+.c1 .tab.active .tab-lbl { color: #0D9488; }
+
+/* ═══════════════════════════════════════════════════════════
+   CONCEPT 2: "FOCUS STACK"
+   Layout: One habit fills the screen at a time.
+   Progress dots at top. Hold button to complete.
+   Nav: Swipe between habits. Dots show progress.
+   ═══════════════════════════════════════════════════════════ */
+.c2 { background: #FAFAF9; height: 100%; }
+
+.c2-progress-dots {
+  display: flex; justify-content: center; gap: 6px;
+  padding: 46px 0 0;
+}
+.c2-dot {
+  width: 6px; height: 6px; border-radius: 3px;
+  background: #E8E4DE; transition: all 0.3s;
+}
+.c2-dot.done { background: #0D9488; width: 18px; }
+.c2-dot.current { background: #0D9488; width: 18px; }
+
+.c2-card-area {
+  padding: 16px 20px;
+  height: calc(100% - 120px);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.c2-habit-card {
+  background: white;
+  border-radius: 28px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.05);
+  width: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px; text-align: center;
+}
+
+.c2-icon-ring {
+  width: 88px; height: 88px;
+  border-radius: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+}
+
+.c2-habit-name { font-size: 22px; font-weight: 700; color: #1A1A1A; letter-spacing: -0.4px; }
+.c2-habit-meta { font-size: 14px; color: #9C9289; }
+.c2-streak-row { display: flex; align-items: center; gap: 6px; }
+.c2-streak-pill { background: #FFF7ED; color: #C2410C; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; }
+
+.c2-nav-row {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding-top: 4px;
+}
+.c2-nav-btn {
+  font-size: 12px; font-weight: 600; color: #9C9289;
+  background: #F5F4F1; border-radius: 20px; padding: 6px 12px;
+}
+
+.c2-hold-btn {
+  background: #0D9488; color: white;
+  border-radius: 18px; padding: 14px 40px;
+  font-size: 17px; font-weight: 600;
+  box-shadow: 0 4px 16px rgba(13,148,136,0.35);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.c2-hold-btn:active { transform: scale(0.95); }
+
+.c2-skip { font-size: 13px; color: #C0BAB3; margin-top: -4px; cursor: pointer; }
+
+.c2-bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 8px 20px 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: linear-gradient(transparent, rgba(250,250,249,0.97) 30%);
+}
+
+.c2-count-pill {
+  background: white; border-radius: 20px; padding: 5px 14px;
+  font-size: 13px; font-weight: 600; color: #9C9289;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  margin-top: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONCEPT 3: "TIMELINE"
+   Layout: Vertical time-of-day timeline.
+   Habits appear at their scheduled time.
+   Completing draws a line through them.
+   Nav: Today | Streaks | Coach | Settings
+   ═══════════════════════════════════════════════════════════ */
+.c3 { background: #F8F7F5; height: 100%; }
+
+.c3-header {
+  padding: 44px 20px 0;
+  background: white;
+  border-bottom: 0.5px solid #EDE9E4;
+  padding-bottom: 14px;
+}
+.c3-title { font-size: 30px; font-weight: 700; color: #1A1A1A; letter-spacing: -0.7px; }
+.c3-subtitle {
+  font-size: 13px; color: #9C9289; margin-top: 2px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.c3-fraction { font-size: 28px; font-weight: 300; color: #0D9488; letter-spacing: -0.5px; }
+
+.c3-timeline { padding: 16px 20px; overflow-y: auto; }
+
+.c3-time-block { margin-bottom: 18px; }
+.c3-time-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: #C0BAB3; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.c3-time-label::after { content: ''; flex: 1; height: 0.5px; background: #EDE9E4; }
+
+.c3-habit {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.c3-habit.done { opacity: 0.5; }
+
+.c3-timeline-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid #C0BAB3;
+  flex-shrink: 0; margin-left: 2px;
+  transition: all 0.2s;
+}
+.c3-habit.done .c3-timeline-dot { background: #0D9488; border-color: #0D9488; box-shadow: 0 0 0 4px rgba(13,148,136,0.12); }
+
+.c3-habit-content {
+  background: white;
+  border-radius: 14px;
+  padding: 11px 13px;
+  flex: 1;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+  position: relative; overflow: hidden;
+}
+.c3-habit.done .c3-habit-content::after {
+  content: '';
+  position: absolute; top: 50%; left: 0; right: 0;
+  height: 1.5px; background: rgba(0,0,0,0.12);
+}
+
+.c3-habit-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.c3-habit-name { font-size: 14px; font-weight: 600; color: #1A1A1A; letter-spacing: -0.2px; }
+.c3-habit-meta { font-size: 11px; color: #9C9289; margin-top: 1px; }
+.c3-habit-check {
+  width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #D8D3CE;
+  margin-left: auto; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: white;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.c3-habit.done .c3-habit-check { background: #0D9488; border-color: #0D9488; }
+
+.c3 .tab-bar { background: rgba(248,247,245,0.94); backdrop-filter:blur(20px); border-top-color: #EDE9E4; }
+.c3 .tab-lbl { color: #9C9289; }
+.c3 .tab.active .tab-lbl { color: #0D9488; }
+
+/* ── Concept description cards ── */
+.concept-desc {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.concept-desc h3 { font-size: 15px; font-weight: 700; color: #1A1A1A; margin-bottom: 10px; letter-spacing: -0.2px; }
+.concept-desc ul { list-style: none; padding: 0; }
+.concept-desc li {
+  font-size: 13px; color: #6B6560; padding: 4px 0;
+  padding-left: 16px; position: relative; line-height: 1.5;
+}
+.concept-desc li::before { content: '·'; position: absolute; left: 4px; color: #0D9488; font-size: 16px; line-height: 1.2; }
+
+/* ── Nav labels ── */
+.nav-label-row {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+}
+.nav-pill {
+  font-size: 11px; font-weight: 600; padding: 4px 10px;
+  border-radius: 20px; background: #F5F4F1; color: #6B6560;
+  border: 1px solid #EDE9E4;
+}
+.nav-pill.teal { background: #F0FDF9; color: #0D9488; border-color: rgba(13,148,136,0.2); }
+
+/* ── Footer ── */
+.footer {
+  max-width: 1400px; margin: 48px auto 0; padding: 0 40px;
+  font-size: 14px; color: #9C9289; text-align: center; line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>3 UX Concepts</h1>
+  <p>Three different layouts, interactions, and information architectures. No "Identity" language anywhere. Tell me which direction to build.</p>
+</div>
+
+<div class="concepts">
+
+  <!-- ════════════════════════════════
+       CONCEPT 1: CIRCLES GRID
+       ════════════════════════════════ -->
+  <div class="concept-col">
+    <div class="concept-heading">
+      <div class="concept-num">Concept 1</div>
+      <div class="concept-name">Circles</div>
+      <div class="concept-tagline">Habits as rings. Tap to complete. At-a-glance progress.</div>
+    </div>
+
+    <div class="concept-screens">
+
+      <!-- Today — circles -->
+      <div class="iphone">
+        <div class="ip-pwr"></div>
+        <div class="ip-screen">
+          <div class="di"></div>
+          <div class="c1">
+            <div class="sb" style="color:#1A1A1A;">
+              <span>9:41</span>
+              <span class="sb-right">●●● WiFi 🔋</span>
+            </div>
+
+            <div class="c1-header">
+              <div>
+                <div style="font-size:12px;color:#9C9289;margin-bottom:2px;">Thursday, Apr 3</div>
+                <div class="c1-title">Today</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="c1-done">2<span style="font-size:18px;color:#C0BAB3;">/5</span></div>
+                <div style="font-size:11px;color:#9C9289;margin-top:2px;">done today</div>
+              </div>
+            </div>
+
+            <div class="c1-grid">
+
+              <div class="c1-cell done">
+                <div class="c1-check">✓</div>
+                <div class="c1-ring-wrap">
+                  <svg width="60" height="60" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#E8E4DE" stroke-width="5"/>
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#0D9488" stroke-width="5"
+                      stroke-dasharray="150.8" stroke-dashoffset="0" stroke-linecap="round"/>
+                  </svg>
+                  <div class="c1-ring-emoji">🏃</div>
+                </div>
+                <div class="c1-name">Morning Walk</div>
+                <div class="c1-streak">🔥 5 days</div>
+              </div>
+
+              <div class="c1-cell done">
+                <div class="c1-check">✓</div>
+                <div class="c1-ring-wrap">
+                  <svg width="60" height="60" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#E8E4DE" stroke-width="5"/>
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#7C3AED" stroke-width="5"
+                      stroke-dasharray="150.8" stroke-dashoffset="0" stroke-linecap="round"/>
+                  </svg>
+                  <div class="c1-ring-emoji">🧘</div>
+                </div>
+                <div class="c1-name">Meditation</div>
+                <div class="c1-streak">3 days</div>
+              </div>
+
+              <div class="c1-cell">
+                <div class="c1-check"></div>
+                <div class="c1-ring-wrap">
+                  <svg width="60" height="60" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#E8E4DE" stroke-width="5"/>
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#2563EB" stroke-width="5"
+                      stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round"/>
+                  </svg>
+                  <div class="c1-ring-emoji">📖</div>
+                </div>
+                <div class="c1-name">Read</div>
+                <div class="c1-streak">🔥 12 days</div>
+              </div>
+
+              <div class="c1-cell">
+                <div class="c1-check"></div>
+                <div class="c1-ring-wrap">
+                  <svg width="60" height="60" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#E8E4DE" stroke-width="5"/>
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#EA580C" stroke-width="5"
+                      stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round"/>
+                  </svg>
+                  <div class="c1-ring-emoji">✍️</div>
+                </div>
+                <div class="c1-name">Journal</div>
+                <div class="c1-streak">2 days</div>
+              </div>
+
+              <div class="c1-cell">
+                <div class="c1-check"></div>
+                <div class="c1-ring-wrap">
+                  <svg width="60" height="60" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#E8E4DE" stroke-width="5"/>
+                    <circle cx="30" cy="30" r="24" fill="none" stroke="#0891B2" stroke-width="5"
+                      stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round"/>
+                  </svg>
+                  <div class="c1-ring-emoji">💧</div>
+                </div>
+                <div class="c1-name">Drink Water</div>
+                <div class="c1-streak">1 day</div>
+              </div>
+
+            </div>
+
+            <div class="tab-bar c1" style="position:absolute;bottom:0;left:0;right:0;background:rgba(250,250,249,0.94);backdrop-filter:blur(20px);border-top:0.5px solid #EDE9E4;padding:8px 0 20px;">
+              <div class="tab active"><span class="tab-icon">⊙</span><span class="tab-lbl" style="color:#0D9488;">Today</span></div>
+              <div class="tab"><span class="tab-icon">📈</span><span class="tab-lbl" style="color:#9C9289;">Progress</span></div>
+              <div class="tab"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#9C9289;">Coach</span></div>
+              <div class="tab"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#9C9289;">Settings</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Today — 2×N grid of rings</div>
+
+      <!-- Add habit — Circles style -->
+      <div class="iphone">
+        <div class="ip-pwr"></div>
+        <div class="ip-screen">
+          <div class="di"></div>
+          <div class="c1">
+            <div class="sb" style="color:#1A1A1A;"><span>9:41</span><span>●●●</span></div>
+            <div style="display:flex;align-items:center;padding:0 18px 10px;border-bottom:0.5px solid #EDE9E4;background:white;">
+              <span style="font-size:15px;color:#9C9289;min-width:50px;">Cancel</span>
+              <span style="flex:1;text-align:center;font-size:17px;font-weight:600;color:#1A1A1A;letter-spacing:-0.3px;">Add Habit</span>
+              <span style="min-width:50px;text-align:right;font-size:13px;color:#9C9289;">Custom</span>
+            </div>
+
+            <div style="padding:12px 16px 6px;">
+              <div style="background:white;border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                <span style="font-size:13px;color:#C0BAB3;">🔍</span>
+                <span style="font-size:15px;color:#C0BAB3;">Search habits…</span>
+              </div>
+            </div>
+
+            <!-- Add habit as grid of circles -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 16px;">
+              <div style="background:white;border-radius:18px;padding:14px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                <div style="font-size:28px;margin-bottom:6px;">🏋️</div>
+                <div style="font-size:13px;font-weight:600;color:#1A1A1A;">Workout</div>
+                <div style="font-size:11px;color:#9C9289;margin-top:2px;">Health</div>
+              </div>
+              <div style="background:white;border-radius:18px;padding:14px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                <div style="font-size:28px;margin-bottom:6px;">🌱</div>
+                <div style="font-size:13px;font-weight:600;color:#1A1A1A;">No Sugar</div>
+                <div style="font-size:11px;color:#9C9289;margin-top:2px;">Lifestyle</div>
+              </div>
+              <div style="background:white;border-radius:18px;padding:14px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                <div style="font-size:28px;margin-bottom:6px;">🥦</div>
+                <div style="font-size:13px;font-weight:600;color:#1A1A1A;">Eat Veggies</div>
+                <div style="font-size:11px;color:#9C9289;margin-top:2px;">Health</div>
+              </div>
+              <div style="background:white;border-radius:18px;padding:14px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                <div style="font-size:28px;margin-bottom:6px;">😴</div>
+                <div style="font-size:13px;font-weight:600;color:#1A1A1A;">Sleep 10pm</div>
+                <div style="font-size:11px;color:#9C9289;margin-top:2px;">Health</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Add Habit — browse grid</div>
+
+    </div>
+
+    <div class="concept-desc">
+      <h3>How it works</h3>
+      <ul>
+        <li>Habits shown as rings in a 2-column grid</li>
+        <li>Tap anywhere on the cell to mark done — ring fills with color</li>
+        <li>At-a-glance: see which rings are empty at first look</li>
+        <li>Add habit shows a browsable grid of icons</li>
+        <li>No list scrolling needed — everything fits on one screen</li>
+      </ul>
+      <div class="nav-label-row" style="margin-top:12px;">
+        <span style="font-size:12px;color:#9C9289;font-weight:600;">Tab bar:</span>
+        <span class="nav-pill teal">Today</span>
+        <span class="nav-pill">Progress</span>
+        <span class="nav-pill">Coach</span>
+        <span class="nav-pill">Settings</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════
+       CONCEPT 2: FOCUS STACK
+       ════════════════════════════════ -->
+  <div class="concept-col">
+    <div class="concept-heading">
+      <div class="concept-num">Concept 2</div>
+      <div class="concept-name">Focus Stack</div>
+      <div class="concept-tagline">One habit at a time. Swipe through. Hold to complete.</div>
+    </div>
+
+    <div class="concept-screens">
+
+      <!-- Today — focus card -->
+      <div class="iphone">
+        <div class="ip-pwr"></div>
+        <div class="ip-screen">
+          <div class="di"></div>
+          <div class="c2">
+            <div class="sb" style="color:#1A1A1A;"><span>9:41</span><span>●●●</span></div>
+
+            <div class="c2-progress-dots">
+              <div class="c2-dot done"></div>
+              <div class="c2-dot done"></div>
+              <div class="c2-dot current"></div>
+              <div class="c2-dot"></div>
+              <div class="c2-dot"></div>
+            </div>
+
+            <div style="text-align:center;padding:8px 0 4px;">
+              <span style="font-size:12px;color:#9C9289;font-weight:600;">3 of 5 · Thursday</span>
+            </div>
+
+            <div class="c2-card-area">
+              <div class="c2-habit-card">
+                <div class="c2-icon-ring" style="background:#F0FDF9;">🏃</div>
+                <div>
+                  <div class="c2-habit-name">Morning Walk</div>
+                  <div class="c2-habit-meta">15 min · every day</div>
+                </div>
+                <div class="c2-streak-row">
+                  <div class="c2-streak-pill">🔥 5-day streak</div>
+                </div>
+                <div class="c2-nav-row">
+                  <div class="c2-nav-btn">← Previous</div>
+                  <div style="font-size:11px;color:#C0BAB3;">swipe</div>
+                  <div class="c2-nav-btn">Next →</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="c2-bottom-bar">
+              <div class="c2-hold-btn">Hold to Complete</div>
+              <div class="c2-skip">Skip for today</div>
+            </div>
+
+            <div style="position:absolute;bottom:0;left:0;right:0;display:flex;background:rgba(250,250,249,0.94);backdrop-filter:blur(20px);border-top:0.5px solid #EDE9E4;padding:8px 0 20px;">
+              <div class="tab active" style="flex:1;text-align:center;"><span class="tab-icon">⊙</span><span class="tab-lbl" style="color:#0D9488;">Focus</span></div>
+              <div class="tab" style="flex:1;text-align:center;"><span class="tab-icon">📅</span><span class="tab-lbl" style="color:#9C9289;">History</span></div>
+              <div class="tab" style="flex:1;text-align:center;"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#9C9289;">Coach</span></div>
+              <div class="tab" style="flex:1;text-align:center;"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#9C9289;">Settings</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Today — focused single habit</div>
+
+      <!-- Add habit — focus style -->
+      <div class="iphone">
+        <div class="ip-pwr"></div>
+        <div class="ip-screen">
+          <div class="di"></div>
+          <div class="c2">
+            <div class="sb" style="color:#1A1A1A;"><span>9:41</span><span>●●●</span></div>
+            <div style="padding:40px 20px 16px;">
+              <div style="font-size:13px;color:#9C9289;margin-bottom:4px;">Step 1 of 2</div>
+              <div style="font-size:26px;font-weight:700;color:#1A1A1A;letter-spacing:-0.6px;line-height:1.15;">What habit do<br>you want to build?</div>
+            </div>
+
+            <!-- Large single-select cards -->
+            <div style="padding:0 20px;display:flex;flex-direction:column;gap:10px;">
+              <div style="background:white;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px solid #0D9488;">
+                <div style="width:44px;height:44px;border-radius:14px;background:#F0FDF9;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🏃</div>
+                <div style="flex:1;">
+                  <div style="font-size:16px;font-weight:600;color:#1A1A1A;">Morning Walk</div>
+                  <div style="font-size:12px;color:#9C9289;margin-top:2px;">15 min · Health</div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;">✓</div>
+              </div>
+              <div style="background:white;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                <div style="width:44px;height:44px;border-radius:14px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🧘</div>
+                <div style="flex:1;">
+                  <div style="font-size:16px;font-weight:600;color:#1A1A1A;">Meditation</div>
+                  <div style="font-size:12px;color:#9C9289;margin-top:2px;">10 min · Mind</div>
+                </div>
+              </div>
+              <div style="background:white;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                <div style="width:44px;height:44px;border-radius:14px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">📖</div>
+                <div style="flex:1;">
+                  <div style="font-size:16px;font-weight:600;color:#1A1A1A;">Read</div>
+                  <div style="font-size:12px;color:#9C9289;margin-top:2px;">20 min · Mind</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="position:absolute;bottom:24px;left:20px;right:20px;">
+              <div style="background:#0D9488;color:white;border-radius:14px;padding:15px;text-align:center;font-size:17px;font-weight:600;box-shadow:0 4px 16px rgba(13,148,136,0.3);">Continue →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Add Habit — select &amp; confirm</div>
+
+    </div>
+
+    <div class="concept-desc">
+      <h3>How it works</h3>
+      <ul>
+        <li>One habit fills the whole screen — no list scanning</li>
+        <li>Hold the big button to mark complete (satisfying)</li>
+        <li>Progress dots show where you are across all habits</li>
+        <li>Swipe left/right to navigate between habits</li>
+        <li>Add habit: pick from a list, confirm in 2 steps</li>
+        <li>Best for users who want focus over overview</li>
+      </ul>
+      <div class="nav-label-row" style="margin-top:12px;">
+        <span style="font-size:12px;color:#9C9289;font-weight:600;">Tab bar:</span>
+        <span class="nav-pill teal">Focus</span>
+        <span class="nav-pill">History</span>
+        <span class="nav-pill">Coach</span>
+        <span class="nav-pill">Settings</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════
+       CONCEPT 3: TIMELINE
+       ════════════════════════════════ -->
+  <div class="concept-col">
+    <div class="concept-heading">
+      <div class="concept-num">Concept 3</div>
+      <div class="concept-name">Timeline</div>
+      <div class="concept-tagline">Your day as a schedule. Habits at their time. Strike through when done.</div>
+    </div>
+
+    <div class="concept-screens">
+
+      <!-- Today — timeline -->
+      <div class="iphone">
+        <div class="ip-pwr"></div>
+        <div class="ip-screen">
+          <div class="di"></div>
+          <div class="c3">
+            <div class="sb" style="color:#1A1A1A;"><span>9:41</span><span>●●●</span></div>
+
+            <div class="c3-header">
+              <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                <div class="c3-title">Today</div>
+                <div class="c3-fraction">2<span style="font-size:18px;color:#C0BAB3;">/5</span></div>
+              </div>
+              <div class="c3-subtitle">
+                <span>Thursday, April 3</span>
+                <span style="background:#FFF7ED;color:#C2410C;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;">🔥 12-day streak</span>
+              </div>
+            </div>
+
+            <div class="c3-timeline" style="height:calc(100% - 148px);overflow-y:auto;padding-bottom:80px;">
+
+              <div class="c3-time-block">
+                <div class="c3-time-label">🌅 Morning</div>
+                <div class="c3-habit done">
+                  <div class="c3-timeline-dot"></div>
+                  <div class="c3-habit-content">
+                    <div class="c3-habit-icon" style="background:#F0FDF9;">🏃</div>
+                    <div style="flex:1;">
+                      <div class="c3-habit-name" style="text-decoration:line-through;color:#9C9289;">Morning Walk</div>
+                      <div class="c3-habit-meta">Done · 15 min</div>
+                    </div>
+                    <div class="c3-habit-check">✓</div>
+                  </div>
+                </div>
+                <div class="c3-habit done">
+                  <div class="c3-timeline-dot"></div>
+                  <div class="c3-habit-content">
+                    <div class="c3-habit-icon" style="background:#F5F3FF;">🧘</div>
+                    <div style="flex:1;">
+                      <div class="c3-habit-name" style="text-decoration:line-through;color:#9C9289;">Meditation</div>
+                      <div class="c3-habit-meta">Done · 10 min</div>
+                    </div>
+                    <div class="c3-habit-check">✓</div>
+                  </div>
+                </div>
+                <div class="c3-habit">
+                  <div class="c3-timeline-dot"></div>
+                  <div class="c3-habit-content">
+                    <div class="c3-habit-icon" style="background:#EFF6FF;">📖</div>
+                    <div style="flex:1;">
+                      <div class="c3-habit-name">Read</div>
+                      <div class="c3-habit-meta">20 min · 🔥 12 days</div>
+                    </div>
+                    <div class="c3-habit-check"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="c3-time-block">
+                <div class="c3-time-label">🌙 Evening</div>
+                <div class="c3-habit">
+                  <div class="c3-timeline-dot"></div>
+                  <div class="c3-habit-content">
+                    <div class="c3-habit-icon" style="background:#FFF7ED;">✍️</div>
+                    <div style="flex:1;">
+                      <div class="c3-habit-name">Journal</div>
+                      <div class="c3-habit-meta">10 min</div>
+                    </div>
+                    <div class="c3-habit-check"></div>
+                  </div>
+                </div>
+                <div class="c3-habit">
+                  <div class="c3-timeline-dot"></div>
+                  <div class="c3-habit-content">
+                    <div class="c3-habit-icon" style="background:#EFF6FF;">💧</div>
+                    <div style="flex:1;">
+                      <div class="c3-habit-name">Drink Water</div>
+                      <div class="c3-habit-meta">Throughout the day</div>
+                    </div>
+                    <div class="c3-habit-check"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- FAB -->
+            <div style="position:absolute;bottom:72px;right:16px;width:48px;height:48px;border-radius:50%;background:#0D9488;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;box-shadow:0 4px 16px rgba(13,148,136,0.35);">+</div>
+
+            <div style="position:absolute;bottom:0;left:0;right:0;display:flex;background:rgba(248,247,245,0.94);backdrop-filter:blur(20px);border-top:0.5px solid #EDE9E4;padding:8px 0 20px;">
+              <div class="tab active" style="flex:1;text-align:center;"><span class="tab-icon">📋</span><span class="tab-lbl" style="color:#0D9488;">Today</span></div>
+              <div class="tab" style="flex:1;text-align:center;"><span class="tab-icon">📅</span><span class="tab-lbl" style="color:#9C9289;">Streaks</span></div>
+              <div class="tab" style="flex:1;text-align:center;"><span class="tab-icon">💬</span><span class="tab-lbl" style="color:#9C9289;">Coach</span></div>
+              <div class="tab" style="flex:1;text-align:center;"><span class="tab-icon">⚙️</span><span class="tab-lbl" style="color:#9C9289;">Settings</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Today — timeline by time of day</div>
+
+      <!-- Add habit — timeline style (list) -->
+      <div class="iphone">
+        <div class="ip-pwr"></div>
+        <div class="ip-screen">
+          <div class="di"></div>
+          <div class="c3">
+            <div class="sb" style="color:#1A1A1A;"><span>9:41</span><span>●●●</span></div>
+            <div style="background:white;border-bottom:0.5px solid #EDE9E4;padding:0 18px 12px;">
+              <div style="font-size:13px;color:#9C9289;font-weight:500;margin-bottom:4px;padding-top:8px;">Add a Habit</div>
+              <div style="font-size:24px;font-weight:700;color:#1A1A1A;letter-spacing:-0.5px;">Pick a time<br>&amp; habit</div>
+            </div>
+
+            <!-- Time segments with habits -->
+            <div style="padding:12px 16px;overflow-y:auto;height:calc(100% - 100px);padding-bottom:80px;">
+
+              <div style="margin-bottom:14px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#C0BAB3;margin-bottom:8px;display:flex;align-items:center;gap:8px;">🌅 Morning <span style="flex:1;height:0.5px;background:#EDE9E4;display:inline-block;"></span></div>
+                <div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                  <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:0.5px solid #F2EEE9;">
+                    <div style="width:34px;height:34px;border-radius:10px;background:#F0FDF9;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🏃</div>
+                    <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#1A1A1A;">Morning Walk</div><div style="font-size:11px;color:#9C9289;">15 min</div></div>
+                    <span style="color:#C0BAB3;font-size:18px;">›</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;">
+                    <div style="width:34px;height:34px;border-radius:10px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🧘</div>
+                    <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#1A1A1A;">Meditation</div><div style="font-size:11px;color:#9C9289;">10 min</div></div>
+                    <span style="color:#C0BAB3;font-size:18px;">›</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#C0BAB3;margin-bottom:8px;display:flex;align-items:center;gap:8px;">🌙 Evening <span style="flex:1;height:0.5px;background:#EDE9E4;display:inline-block;"></span></div>
+                <div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                  <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:0.5px solid #F2EEE9;">
+                    <div style="width:34px;height:34px;border-radius:10px;background:#FFF7ED;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">✍️</div>
+                    <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#1A1A1A;">Journal</div><div style="font-size:11px;color:#9C9289;">10 min</div></div>
+                    <span style="color:#C0BAB3;font-size:18px;">›</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;">
+                    <div style="width:34px;height:34px;border-radius:10px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📖</div>
+                    <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#1A1A1A;">Read</div><div style="font-size:11px;color:#9C9289;">20 min</div></div>
+                    <span style="color:#C0BAB3;font-size:18px;">›</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">Add Habit — grouped by time</div>
+
+    </div>
+
+    <div class="concept-desc">
+      <h3>How it works</h3>
+      <ul>
+        <li>Habits ordered as a daily schedule — Morning → Evening</li>
+        <li>Completed habits get a strikethrough, like a to-do list</li>
+        <li>Timeline dot turns teal when done — visual chain</li>
+        <li>Add habit shows habits already grouped by when you'd do them</li>
+        <li>Familiar mental model: "what do I do today"</li>
+        <li>Best for planners and list-oriented users</li>
+      </ul>
+      <div class="nav-label-row" style="margin-top:12px;">
+        <span style="font-size:12px;color:#9C9289;font-weight:600;">Tab bar:</span>
+        <span class="nav-pill teal">Today</span>
+        <span class="nav-pill">Streaks</span>
+        <span class="nav-pill">Coach</span>
+        <span class="nav-pill">Settings</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>Three genuinely different UX models. No "Identity" language anywhere.<br>
+  Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> — or mix elements ("1's grid but 3's add habit flow") — and I'll rebuild the entire app.</p>
+</div>
+
+</body>
+</html>

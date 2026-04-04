@@ -17,8 +17,8 @@ struct HabitTemplate: Identifiable, Codable, Equatable {
     let suggestedDuration: Int // minutes
     let category: HabitCategory
     let identityTraits: [IdentityTrait]
-    let defaultTime: TimeOfDay
-    
+    let defaultTime: Habit.TimeOfDay
+
     init(
         id: UUID = UUID(),
         name: String,
@@ -27,7 +27,7 @@ struct HabitTemplate: Identifiable, Codable, Equatable {
         suggestedDuration: Int,
         category: HabitCategory,
         identityTraits: [IdentityTrait],
-        defaultTime: TimeOfDay
+        defaultTime: Habit.TimeOfDay
     ) {
         self.id = id
         self.name = name
@@ -37,23 +37,6 @@ struct HabitTemplate: Identifiable, Codable, Equatable {
         self.category = category
         self.identityTraits = identityTraits
         self.defaultTime = defaultTime
-    }
-}
-
-/// Time of day for habit scheduling
-enum TimeOfDay: String, Codable {
-    case morning = "Morning"
-    case afternoon = "Afternoon"
-    case evening = "Evening"
-    case anytime = "Anytime"
-    
-    var timeRange: String {
-        switch self {
-        case .morning: return "6-9 AM"
-        case .afternoon: return "12-3 PM"
-        case .evening: return "6-9 PM"
-        case .anytime: return "Flexible"
-        }
     }
 }
 

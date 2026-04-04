@@ -21,7 +21,7 @@ struct DailyInsightCard: View {
         "Boredom is part of the deal. Keep going anyway.",
         "Stack a new habit onto something you already do.",
         "Make the right thing the easy thing.",
-        "A 1% improvement today is invisible. A year of them is not.",
+        "A small improvement today is invisible. A year of them is not.",
         "Your trajectory matters more than your position.",
         "Reduce friction for the habits you want. Add friction for the ones you don't.",
         "Tie each habit to the person you want to become.",
@@ -49,7 +49,7 @@ struct DailyInsightCard: View {
     var body: some View {
         if dismissed { EmptyView() } else {
             HStack(alignment: .top, spacing: 12) {
-                Text("1%")
+                Text("tip")
                     .font(.caption.bold())
                     .foregroundStyle(Color("Teal"))
                     .padding(.horizontal, 8)

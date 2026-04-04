@@ -83,17 +83,9 @@ struct CompletionToastView: View {
         HStack(spacing: 6) {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(.white)
-            if let statement = identityStatement {
-                Text("+\(xpAmount) XP · Vote #\(voteCount) for \(statement.capitalized)")
-                    .font(.caption.bold())
-                    .foregroundStyle(.white)
-                    .lineLimit(2)
-            } else {
-                Text("+\(xpAmount) XP · One more vote for who you are becoming")
-                    .font(.caption.bold())
-                    .foregroundStyle(.white)
-                    .lineLimit(2)
-            }
+            Text("+\(xpAmount) XP · Nice work!")
+                .font(.caption.bold())
+                .foregroundStyle(.white)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)

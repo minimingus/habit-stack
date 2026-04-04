@@ -34,11 +34,11 @@ struct OnboardingPhilosophyView: View {
                 
                 VStack(spacing: 12) {
                     PrincipleRow(
-                        icon: "📊",
+                        icon: "chart.bar.fill",
                         text: "Consistency beats intensity"
                     )
                     PrincipleRow(
-                        icon: "🌱",
+                        icon: "leaf.fill",
                         text: "Small steps, big changes"
                     )
                 }
@@ -73,8 +73,10 @@ struct PrincipleRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            Text(icon)
+            Image(systemName: icon)
                 .font(.title3)
+                .foregroundStyle(Color("Teal"))
+                .frame(width: 28)
             Text(text)
                 .font(.subheadline)
             Spacer()

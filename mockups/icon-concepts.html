@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better — Icon Concepts</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  background: #EEE6DC;
+  min-height: 100vh;
+  padding: 60px 48px 80px;
+}
+
+h1 {
+  font-size: 38px;
+  font-weight: 800;
+  color: #1C1917;
+  letter-spacing: -0.8px;
+  margin-bottom: 6px;
+}
+.subtitle {
+  font-size: 15px;
+  color: #A89080;
+  margin-bottom: 56px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+}
+
+.concept {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.concept-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #A89080;
+}
+
+/* ── Icon sizes ── */
+.icon-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Large: 180px (like iPad icon preview) */
+.icon-lg {
+  width: 180px;
+  height: 180px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.18),
+    0 6px 20px rgba(0,0,0,0.12),
+    0 0 0 0.5px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Medium: 80px (home screen) */
+.icon-md {
+  width: 80px;
+  height: 80px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15), 0 0 0 0.5px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Small: 44px (notification/spotlight) */
+.icon-sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.size-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.desc-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px 16px;
+  width: 100%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+}
+.desc-card .name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1C1917;
+  margin-bottom: 4px;
+}
+.desc-card .mood {
+  font-size: 12px;
+  color: #A89080;
+  line-height: 1.5;
+}
+
+/* ── Home screen context ── */
+.homescreen {
+  background: #1a1a2e;
+  border-radius: 28px;
+  padding: 24px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.homescreen-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  overflow: hidden;
+  position: relative;
+}
+.homescreen-label {
+  font-size: 10px;
+  color: white;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ── SVG helpers ── */
+svg { display: block; }
+
+/* Gradient overlay for icon depth */
+.icon-gloss {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 55%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0));
+  border-radius: inherit;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<h1>Better — Icon Concepts</h1>
+<p class="subtitle">Five directions. Same clay palette. Reply A–E to implement.</p>
+
+<div class="grid">
+
+  <!-- ══ A: UPWARD ARROW ══ -->
+  <div class="concept">
+    <div class="concept-label">Option A</div>
+
+    <div class="icon-stack">
+      <!-- Large -->
+      <div class="icon-lg" style="background:linear-gradient(145deg,#D4733F,#B85A2A);">
+        <div class="icon-gloss"></div>
+        <svg width="88" height="88" viewBox="0 0 88 88" fill="none">
+          <!-- Shaft -->
+          <rect x="38" y="28" width="12" height="44" rx="6" fill="white" opacity="0.95"/>
+          <!-- Arrowhead -->
+          <path d="M18 42L44 14L70 42" stroke="white" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+
+      <!-- Sizes row -->
+      <div class="size-row">
+        <div class="icon-md" style="background:linear-gradient(145deg,#D4733F,#B85A2A);">
+          <div class="icon-gloss"></div>
+          <svg width="38" height="38" viewBox="0 0 88 88" fill="none">
+            <rect x="38" y="28" width="12" height="44" rx="6" fill="white" opacity="0.95"/>
+            <path d="M18 42L44 14L70 42" stroke="white" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="icon-sm" style="background:linear-gradient(145deg,#D4733F,#B85A2A);">
+          <div class="icon-gloss"></div>
+          <svg width="20" height="20" viewBox="0 0 88 88" fill="none">
+            <rect x="38" y="28" width="12" height="44" rx="6" fill="white" opacity="0.95"/>
+            <path d="M18 42L44 14L70 42" stroke="white" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home screen -->
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#D4733F,#B85A2A);">
+        <svg width="30" height="30" viewBox="0 0 88 88" fill="none">
+          <rect x="38" y="28" width="12" height="44" rx="6" fill="white" opacity="0.95"/>
+          <path d="M18 42L44 14L70 42" stroke="white" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+
+    <div class="desc-card">
+      <div class="name">Upward Arrow</div>
+      <div class="mood">Direct. "Better" = upward movement. Clean and instantly legible at any size. Safe, strong.</div>
+    </div>
+  </div>
+
+  <!-- ══ B: SPARK / ASTERISK ══ -->
+  <div class="concept">
+    <div class="concept-label">Option B</div>
+
+    <div class="icon-stack">
+      <div class="icon-lg" style="background:linear-gradient(145deg,#C2673A,#A8522A);">
+        <div class="icon-gloss"></div>
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+          <!-- 6-pointed spark/asterisk -->
+          <line x1="50" y1="12" x2="50" y2="88" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <line x1="12" y1="50" x2="88" y2="50" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <line x1="21" y1="21" x2="79" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <line x1="79" y1="21" x2="21" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <!-- Center dot -->
+          <circle cx="50" cy="50" r="9" fill="white"/>
+        </svg>
+      </div>
+
+      <div class="size-row">
+        <div class="icon-md" style="background:linear-gradient(145deg,#C2673A,#A8522A);">
+          <div class="icon-gloss"></div>
+          <svg width="42" height="42" viewBox="0 0 100 100" fill="none">
+            <line x1="50" y1="12" x2="50" y2="88" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <line x1="12" y1="50" x2="88" y2="50" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <line x1="21" y1="21" x2="79" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <line x1="79" y1="21" x2="21" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="50" cy="50" r="9" fill="white"/>
+          </svg>
+        </div>
+        <div class="icon-sm" style="background:linear-gradient(145deg,#C2673A,#A8522A);">
+          <div class="icon-gloss"></div>
+          <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
+            <line x1="50" y1="12" x2="50" y2="88" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <line x1="12" y1="50" x2="88" y2="50" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <line x1="21" y1="21" x2="79" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <line x1="79" y1="21" x2="21" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="50" cy="50" r="9" fill="white"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#C2673A,#A8522A);">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+          <line x1="50" y1="12" x2="50" y2="88" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <line x1="12" y1="50" x2="88" y2="50" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <line x1="21" y1="21" x2="79" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <line x1="79" y1="21" x2="21" y2="79" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <circle cx="50" cy="50" r="9" fill="white"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+
+    <div class="desc-card">
+      <div class="name">Spark</div>
+      <div class="mood">Modern, neutral, premium. The ✦ from the app header. Symmetrical — works at every size. No literal meaning, pure energy.</div>
+    </div>
+  </div>
+
+  <!-- ══ C: CHECKMARK ARC ══ -->
+  <div class="concept">
+    <div class="concept-label">Option C</div>
+
+    <div class="icon-stack">
+      <div class="icon-lg" style="background:linear-gradient(145deg,#C97B4A,#A85E30);">
+        <div class="icon-gloss"></div>
+        <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+          <!-- Arc (open circle, ~270°) -->
+          <path d="M48 14 A34 34 0 1 1 22 70" stroke="white" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.35"/>
+          <!-- Bold checkmark -->
+          <path d="M20 48L38 67L72 30" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="size-row">
+        <div class="icon-md" style="background:linear-gradient(145deg,#C97B4A,#A85E30);">
+          <div class="icon-gloss"></div>
+          <svg width="42" height="42" viewBox="0 0 96 96" fill="none">
+            <path d="M48 14 A34 34 0 1 1 22 70" stroke="white" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.35"/>
+            <path d="M20 48L38 67L72 30" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="icon-sm" style="background:linear-gradient(145deg,#C97B4A,#A85E30);">
+          <div class="icon-gloss"></div>
+          <svg width="22" height="22" viewBox="0 0 96 96" fill="none">
+            <path d="M48 14 A34 34 0 1 1 22 70" stroke="white" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.35"/>
+            <path d="M20 48L38 67L72 30" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#C97B4A,#A85E30);">
+        <svg width="32" height="32" viewBox="0 0 96 96" fill="none">
+          <path d="M48 14 A34 34 0 1 1 22 70" stroke="white" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.35"/>
+          <path d="M20 48L38 67L72 30" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+
+    <div class="desc-card">
+      <div class="name">Checkmark Arc</div>
+      <div class="mood">Completion + wholeness. The arc suggests continuity (habit loop), the check is the daily win. Warm clay gradient.</div>
+    </div>
+  </div>
+
+  <!-- ══ D: LETTERMARK B ══ -->
+  <div class="concept">
+    <div class="concept-label">Option D</div>
+
+    <div class="icon-stack">
+      <div class="icon-lg" style="background:linear-gradient(145deg,#BF6235,#9E4E22);">
+        <div class="icon-gloss"></div>
+        <!-- Heavy geometric B -->
+        <svg width="82" height="100" viewBox="0 0 82 100" fill="none">
+          <!-- Left vertical stroke -->
+          <rect x="10" y="10" width="16" height="80" rx="8" fill="white" opacity="0.95"/>
+          <!-- Top bump -->
+          <path d="M22 10 H46 Q68 10 68 32 Q68 52 44 52 H22" fill="white" opacity="0.95"/>
+          <!-- Bottom bump — slightly larger -->
+          <path d="M22 52 H48 Q72 52 72 72 Q72 92 46 92 H22" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+
+      <div class="size-row">
+        <div class="icon-md" style="background:linear-gradient(145deg,#BF6235,#9E4E22);">
+          <div class="icon-gloss"></div>
+          <svg width="36" height="44" viewBox="0 0 82 100" fill="none">
+            <rect x="10" y="10" width="16" height="80" rx="8" fill="white" opacity="0.95"/>
+            <path d="M22 10 H46 Q68 10 68 32 Q68 52 44 52 H22" fill="white" opacity="0.95"/>
+            <path d="M22 52 H48 Q72 52 72 72 Q72 92 46 92 H22" fill="white" opacity="0.95"/>
+          </svg>
+        </div>
+        <div class="icon-sm" style="background:linear-gradient(145deg,#BF6235,#9E4E22);">
+          <div class="icon-gloss"></div>
+          <svg width="20" height="24" viewBox="0 0 82 100" fill="none">
+            <rect x="10" y="10" width="16" height="80" rx="8" fill="white" opacity="0.95"/>
+            <path d="M22 10 H46 Q68 10 68 32 Q68 52 44 52 H22" fill="white" opacity="0.95"/>
+            <path d="M22 52 H48 Q72 52 72 72 Q72 92 46 92 H22" fill="white" opacity="0.95"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#BF6235,#9E4E22);">
+        <svg width="26" height="32" viewBox="0 0 82 100" fill="none">
+          <rect x="10" y="10" width="16" height="80" rx="8" fill="white" opacity="0.95"/>
+          <path d="M22 10 H46 Q68 10 68 32 Q68 52 44 52 H22" fill="white" opacity="0.95"/>
+          <path d="M22 52 H48 Q72 52 72 72 Q72 92 46 92 H22" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+
+    <div class="desc-card">
+      <div class="name">Lettermark B</div>
+      <div class="mood">Bold brand identity. White geometric "B" on clay. Unique in the App Store — no habit app uses a lettermark. Premium, confident.</div>
+    </div>
+  </div>
+
+  <!-- ══ E: GROWTH CURVE ══ -->
+  <div class="concept">
+    <div class="concept-label">Option E</div>
+
+    <div class="icon-stack">
+      <div class="icon-lg" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+        <div class="icon-gloss"></div>
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+          <!-- Subtle grid dots -->
+          <circle cx="20" cy="80" r="3" fill="white" opacity="0.15"/>
+          <circle cx="40" cy="80" r="3" fill="white" opacity="0.15"/>
+          <circle cx="60" cy="80" r="3" fill="white" opacity="0.15"/>
+          <circle cx="80" cy="80" r="3" fill="white" opacity="0.15"/>
+          <circle cx="20" cy="60" r="3" fill="white" opacity="0.15"/>
+          <circle cx="40" cy="60" r="3" fill="white" opacity="0.15"/>
+          <circle cx="60" cy="60" r="3" fill="white" opacity="0.15"/>
+          <circle cx="80" cy="60" r="3" fill="white" opacity="0.15"/>
+          <!-- Filled area under curve -->
+          <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18 L86 80 Z" fill="white" opacity="0.18"/>
+          <!-- Curve line -->
+          <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18" stroke="white" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.95"/>
+          <!-- End dot -->
+          <circle cx="86" cy="18" r="7" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+
+      <div class="size-row">
+        <div class="icon-md" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+          <div class="icon-gloss"></div>
+          <svg width="42" height="42" viewBox="0 0 100 100" fill="none">
+            <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18 L86 80 Z" fill="white" opacity="0.18"/>
+            <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18" stroke="white" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.95"/>
+            <circle cx="86" cy="18" r="7" fill="white" opacity="0.95"/>
+          </svg>
+        </div>
+        <div class="icon-sm" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+          <div class="icon-gloss"></div>
+          <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
+            <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18 L86 80 Z" fill="white" opacity="0.18"/>
+            <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18" stroke="white" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.95"/>
+            <circle cx="86" cy="18" r="7" fill="white" opacity="0.95"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+          <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18 L86 80 Z" fill="white" opacity="0.18"/>
+          <path d="M14 80 Q28 80 38 65 Q50 46 62 36 Q72 28 86 18" stroke="white" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.95"/>
+          <circle cx="86" cy="18" r="7" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+
+    <div class="desc-card">
+      <div class="name">Growth Curve</div>
+      <div class="mood">Progress over time. The curve + area fill reads as a chart trending up. Aspirational and data-forward. Subtle grid dots add depth.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:48px;padding:24px 28px;background:white;border-radius:20px;max-width:660px;box-shadow:0 2px 12px rgba(0,0,0,0.06),0 0 0 0.5px rgba(0,0,0,0.04);">
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#A89080;margin-bottom:10px;">All concepts share</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <div style="background:#FFF5F0;color:#C2673A;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;">Clay gradient background</div>
+    <div style="background:#FFF5F0;color:#C2673A;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;">White symbol</div>
+    <div style="background:#FFF5F0;color:#C2673A;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;">iOS squircle shape</div>
+    <div style="background:#FFF5F0;color:#C2673A;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;">Scales to 16px</div>
+  </div>
+</div>
+
+</body>
+</html>

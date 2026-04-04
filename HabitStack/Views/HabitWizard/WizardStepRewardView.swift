@@ -22,7 +22,7 @@ struct WizardStepRewardView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Make it Satisfying")
+                    Text("Add a Reward")
                         .font(.headline)
                     Text("Immediate rewards reinforce the habit.")
                         .font(.subheadline)

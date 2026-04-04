@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today — Timeline</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+
+/* Completed habit row */
+.habit-row.done-row {
+  border-left: 3px solid var(--teal);
+  opacity: 0.7;
+}
+.habit-row.done-row .habit-row-name {
+  text-decoration: line-through;
+  color: var(--ink-3);
+}
+.habit-row.done-row .habit-row-meta {
+  color: var(--ink-4);
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-label">Today — Timeline</div>
+      <div class="phone" style="height:860px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Screen -->
+          <div class="screen" style="height:720px; overflow-y:auto;" id="mainScreen">
+
+            <!-- Today Header -->
+            <div class="today-header">
+              <div class="today-date">Friday, Apr 4</div>
+              <div class="today-title-row">
+                <div class="today-title">Today</div>
+                <div class="today-count" id="countDisplay">2<span>/5</span></div>
+              </div>
+              <div class="today-progress-bar">
+                <div class="today-progress-fill" id="progressFill" style="width:40%;"></div>
+              </div>
+            </div>
+
+            <!-- Streak badge -->
+            <div style="padding:10px 20px 4px;">
+              <div class="streak-badge">🔥 12-day streak</div>
+            </div>
+
+            <!-- Morning section -->
+            <div class="timeline-section">
+              <span class="timeline-section-label">🌅 Morning</span>
+              <div class="timeline-section-line"></div>
+            </div>
+
+            <div class="habit-row done-row" onclick="toggleHabit(this)" data-done="true">
+              <div class="habit-icon" style="background:#FFF5F0;">🏃</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Morning Walk</div>
+                <div class="habit-row-meta">Done · 15 min</div>
+              </div>
+              <div class="check done">✓</div>
+            </div>
+
+            <div class="habit-row done-row" onclick="toggleHabit(this)" data-done="true">
+              <div class="habit-icon" style="background:#F5F3FF;">🧘</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Meditation</div>
+                <div class="habit-row-meta">Done · 10 min</div>
+              </div>
+              <div class="check done">✓</div>
+            </div>
+
+            <div class="habit-row" onclick="toggleHabit(this)" data-done="false">
+              <div class="habit-icon" style="background:#EFF6FF;">📖</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Read</div>
+                <div class="habit-row-meta">20 min</div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+            <!-- Afternoon section -->
+            <div class="timeline-section">
+              <span class="timeline-section-label">☀️ Afternoon</span>
+              <div class="timeline-section-line"></div>
+            </div>
+
+            <div class="habit-row" onclick="toggleHabit(this)" data-done="false">
+              <div class="habit-icon" style="background:#FFFBEB;">💪</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Workout</div>
+                <div class="habit-row-meta">30 min</div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+            <!-- Evening section -->
+            <div class="timeline-section">
+              <span class="timeline-section-label">🌙 Evening</span>
+              <div class="timeline-section-line"></div>
+            </div>
+
+            <div class="habit-row" onclick="toggleHabit(this)" data-done="false">
+              <div class="habit-icon" style="background:#FFF7ED;">✍️</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Journal</div>
+                <div class="habit-row-meta">10 min</div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+            <!-- bottom padding for FAB clearance -->
+            <div style="height:100px;"></div>
+
+          </div><!-- /screen -->
+
+          <!-- FAB -->
+          <div class="fab" onclick="this.style.transform='scale(0.9)'; setTimeout(()=>this.style.transform='',150)">+</div>
+
+          <!-- Tab Bar -->
+          <div class="tab-bar">
+            <div class="tab active">
+              <span class="tab-icon">📋</span>
+              <span class="tab-label">Today</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">📅</span>
+              <span class="tab-label">Streaks</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">💬</span>
+              <span class="tab-label">Coach</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">⚙️</span>
+              <span class="tab-label">Settings</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <h2>Today — Timeline</h2>
+    <p>Habits grouped by time of day. Tap any habit to complete it — name strikes through, checkmark fills, count updates, progress bar grows. Bold 800-weight "Today" title and terracotta accent.</p>
+    <div class="compare-section">
+      <div class="compare-section-title">Key Features</div>
+      <div class="compare-list">
+        <div class="compare-item pro"><span class="ci-icon">✓</span><span><strong class="pro">Timeline grouping</strong> — Morning / Afternoon / Evening sections give the day structure at a glance</span></div>
+        <div class="compare-item pro"><span class="ci-icon">✓</span><span><strong class="pro">Tap to complete</strong> — strikethrough + terracotta fill + count update, all in one tap</span></div>
+        <div class="compare-item pro"><span class="ci-icon">✓</span><span><strong class="pro">Progress bar</strong> — fills with terracotta gradient as habits are checked off</span></div>
+        <div class="compare-item pro"><span class="ci-icon">✓</span><span><strong class="pro">Bold title weight</strong> — 800-weight "Today" headline anchors the screen with confidence</span></div>
+        <div class="compare-item pro"><span class="ci-icon">✓</span><span><strong class="pro">Clay palette</strong> — warm white + terracotta, handcrafted feel, unique in the App Store</span></div>
+      </div>
+    </div>
+    <div class="compare-note-hint">Tap any habit row to toggle it complete</div>
+  </div>
+</div>
+
+<script>
+const TOTAL = 5;
+let doneCount = 2;
+
+function toggleHabit(row) {
+  const isDone = row.dataset.done === 'true';
+  const check = row.querySelector('.check');
+  const name = row.querySelector('.habit-row-name');
+  const meta = row.querySelector('.habit-row-meta');
+
+  if (isDone) {
+    row.dataset.done = 'false';
+    row.classList.remove('done-row');
+    check.classList.remove('done');
+    check.textContent = '';
+    name.style.textDecoration = '';
+    name.style.color = '';
+    meta.style.color = '';
+    doneCount--;
+  } else {
+    row.dataset.done = 'true';
+    row.classList.add('done-row');
+    check.classList.add('done');
+    check.textContent = '✓';
+    name.style.textDecoration = 'line-through';
+    name.style.color = 'var(--ink-3)';
+    meta.style.color = 'var(--ink-4)';
+    doneCount++;
+  }
+
+  // Update header
+  document.getElementById('countDisplay').innerHTML = doneCount + '<span>/' + TOTAL + '</span>';
+  document.getElementById('progressFill').style.width = Math.round(doneCount / TOTAL * 100) + '%';
+}
+</script>
+</body>
+</html>

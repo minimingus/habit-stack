@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Habit — Current (Swipe Cards)</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Swipe Card Stack ───────────────── */
+.swipe-stack {
+  position: relative;
+  height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
+.swipe-back {
+  position: absolute;
+  width: 276px;
+  height: 280px;
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow: var(--card-shadow-sm);
+}
+.swipe-back.b1 { transform: scale(0.95) translateY(14px); z-index: 2; opacity: 0.55; }
+.swipe-back.b2 { transform: scale(0.90) translateY(28px); z-index: 1; opacity: 0.3; }
+
+.swipe-card {
+  width: 292px;
+  background: var(--card);
+  border-radius: 24px;
+  padding: 24px 22px 18px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+  cursor: grab;
+  transition: transform 0.15s;
+}
+.swipe-card:active { cursor: grabbing; transform: scale(0.98); }
+
+.swipe-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: var(--tint-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  margin-bottom: 4px;
+  box-shadow: 0 2px 8px rgba(13,148,136,0.15);
+}
+.swipe-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-1);
+  letter-spacing: -0.3px;
+}
+.swipe-meta { font-size: 13px; color: var(--ink-3); margin-top: -2px; }
+.swipe-desc {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  padding: 0 4px;
+}
+.swipe-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  width: 100%;
+}
+.swipe-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 14px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s;
+}
+.swipe-btn:active { transform: scale(0.96); }
+.swipe-btn.skip { color: var(--red); background: #FFF1F2; }
+.swipe-btn.adopt { color: white; background: var(--teal); box-shadow: 0 2px 10px rgba(13,148,136,0.25); }
+
+.swipe-hints {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 36px;
+  font-size: 12px;
+  color: var(--ink-4);
+}
+.swipe-count {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--app-bg-2);
+  padding: 3px 10px;
+  border-radius: 10px;
+  color: var(--ink-3);
+}
+.custom-link {
+  text-align: center;
+  padding: 14px 16px 0;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.custom-link span { color: var(--teal); font-weight: 600; cursor: pointer; }
+
+/* ── Time Picker Sheet ──────────────── */
+.time-sheet {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.06);
+  padding: 0 20px 36px;
+  z-index: 30;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+}
+.time-sheet.open { transform: translateY(0); }
+.sheet-handle { width:36px; height:4px; background:var(--sep); border-radius:2px; margin:12px auto 20px; }
+
+.sheet-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--tint-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 auto 10px;
+  box-shadow: 0 2px 8px rgba(13,148,136,0.15);
+}
+.sheet-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink-1);
+  letter-spacing: -0.3px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.time-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.time-option {
+  padding: 13px 8px;
+  border-radius: 14px;
+  border: 1.5px solid var(--sep);
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-3);
+  background: none;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.time-option .t-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+.time-option:hover { border-color: var(--teal); color: var(--teal); }
+.time-option.selected {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  color: var(--teal);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-label">Step 1 — Swipe to Browse</div>
+      <div class="phone" style="height:820px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Nav bar -->
+          <div class="nav-bar">
+            <span class="nav-action muted" style="cursor:pointer;">Cancel</span>
+            <span class="nav-title">Add a Habit</span>
+            <span class="nav-action right"></span>
+          </div>
+
+          <!-- Screen content -->
+          <div class="screen" style="height:688px; padding-top:4px; position:relative; overflow:hidden;">
+
+            <div class="swipe-stack">
+              <div class="swipe-back b2"></div>
+              <div class="swipe-back b1"></div>
+              <div class="swipe-card">
+                <div class="swipe-icon">🏃</div>
+                <div class="swipe-name">Morning Walk</div>
+                <div class="swipe-meta">15 min · Health</div>
+                <p class="swipe-desc">Start your day with light movement. Builds momentum and clears your head.</p>
+                <div class="swipe-actions">
+                  <button class="swipe-btn skip" onclick="showTimeSheet()">✕ Skip</button>
+                  <button class="swipe-btn adopt" onclick="showTimeSheet()">✓ Adopt</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="swipe-hints">
+              <span>← Swipe to skip</span>
+              <span class="swipe-count">8 left</span>
+              <span>Swipe to add →</span>
+            </div>
+
+            <div class="custom-link">
+              Don't see it? <span>Build a custom habit</span>
+            </div>
+
+            <!-- Time picker sheet — second step -->
+            <div class="time-sheet" id="timeSheet">
+              <div class="sheet-handle"></div>
+              <div class="sheet-icon">🏃</div>
+              <div class="sheet-title">When will you Morning Walk?</div>
+              <div class="time-options">
+                <button class="time-option selected" onclick="selectTime(this)">
+                  <span class="t-icon">🌅</span>Morning
+                </button>
+                <button class="time-option" onclick="selectTime(this)">
+                  <span class="t-icon">☀️</span>Afternoon
+                </button>
+                <button class="time-option" onclick="selectTime(this)">
+                  <span class="t-icon">🌙</span>Evening
+                </button>
+                <button class="time-option" onclick="selectTime(this)">
+                  <span class="t-icon">🔄</span>Anytime
+                </button>
+              </div>
+              <button class="btn-primary" onclick="hideTimeSheet()">Add Habit</button>
+              <button class="btn-ghost" onclick="hideTimeSheet()">Cancel</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Card -->
+  <div class="compare-card">
+    <h2>Current Flow — Swipe Cards</h2>
+    <p>The FAB opens a full-screen modal with Tinder-style cards. Tapping "Adopt" triggers a second half-sheet to pick a time — two full steps of friction just to add one habit. The swipe metaphor is novel but adds no real benefit over a simple list.</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Issues Identified</div>
+      <div class="compare-list">
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">2-step friction</strong> — swipe to choose, then a second sheet to confirm the time of day</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">No scan mode</strong> — can only see one habit at a time, no way to compare options</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Skip is destructive</strong> — swiped cards disappear from the stack with no recovery</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Unfamiliar gesture</strong> — habit apps don't commonly use swipe-to-decide; increases learning curve</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Low information density</strong> — one card fills the whole screen; wastes real estate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">What Works</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Single focus</strong> — one habit at a time reduces initial overwhelm for new users</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Rich description</strong> — card has ample room for explanation text and context</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-note-hint">Click "Adopt" to reveal the second step time-picker sheet</div>
+  </div>
+</div>
+
+<script>
+function showTimeSheet() {
+  document.getElementById('timeSheet').classList.add('open');
+}
+function hideTimeSheet() {
+  document.getElementById('timeSheet').classList.remove('open');
+}
+function selectTime(el) {
+  document.querySelectorAll('.time-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</body>
+</html>

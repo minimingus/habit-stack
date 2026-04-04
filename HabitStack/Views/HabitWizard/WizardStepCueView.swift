@@ -86,7 +86,7 @@ struct WizardStepCueView: View {
                     }
                 }
 
-                FormSection(title: "Cue") {
+                FormSection(title: "Trigger") {
                     VStack(alignment: .leading, spacing: 10) {
                         if !filteredCues.isEmpty {
                             ChipGrid(spacing: 8) {
@@ -109,7 +109,7 @@ struct WizardStepCueView: View {
                 }
 
                 if !viewModel.existingHabits.isEmpty {
-                    FormSection(title: "Stack After Habit (Optional)") {
+                    FormSection(title: "Do After Habit (Optional)") {
                         Picker("Anchor Habit", selection: $viewModel.anchorHabitId) {
                             Text("None").tag(nil as UUID?)
                             ForEach(viewModel.existingHabits.filter { $0.id != viewModel.editingHabitId }) { h in
@@ -140,7 +140,7 @@ struct WizardStepCueView: View {
         if viewModel.replacingBehavior != nil {
             HStack(spacing: 10) {
                 Image(systemName: "arrow.triangle.2.circlepath").foregroundStyle(Color("Teal"))
-                Text("Same cue, new routine. Keep what triggers it — change what you do.")
+                Text("Same trigger, new action. Keep what starts it — change what you do.")
                     .font(.subheadline).foregroundStyle(Color("Stone500"))
             }
             .padding(12)

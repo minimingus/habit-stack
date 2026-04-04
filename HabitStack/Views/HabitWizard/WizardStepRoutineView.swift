@@ -7,9 +7,9 @@ struct WizardStepRoutineView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Make it Easy")
+                    Text("Start Small")
                         .font(.headline)
-                    Text("The 2-Minute Rule: make starting so easy you can't say no.")
+                    Text("Start so small you can't say no. Then build from there.")
                         .font(.subheadline)
                         .foregroundStyle(Color("Stone500"))
                 }
@@ -38,7 +38,29 @@ struct WizardStepRoutineView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
 
-                FormSection(title: "2-Minute Version") {
+                FormSection(title: "Difficulty") {
+                    HStack(spacing: 0) {
+                        ForEach([("Easy", 1), ("Medium", 2), ("Hard", 3)], id: \.1) { label, level in
+                            Button {
+                                viewModel.difficultyLevel = level
+                            } label: {
+                                Text(label)
+                                    .font(.subheadline.bold())
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .background(viewModel.difficultyLevel == level ? difficultyColor(level) : Color("Stone100"))
+                                    .foregroundStyle(viewModel.difficultyLevel == level ? .white : Color("Stone500"))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    Text("Easy habits are more likely to stick. Start small.")
+                        .font(.caption)
+                        .foregroundStyle(Color("Stone500"))
+                }
+
+                FormSection(title: "Tiny Version") {
                     TextField("e.g. Put on my running shoes", text: $viewModel.tinyVersion)
                         .padding()
                         .background(Color("Stone100"))
@@ -102,6 +124,14 @@ struct WizardStepRoutineView: View {
                 }
             }
             .padding(24)
+        }
+    }
+
+    private func difficultyColor(_ level: Int) -> Color {
+        switch level {
+        case 1: return Color.green
+        case 2: return Color.orange
+        default: return Color.red
         }
     }
 }

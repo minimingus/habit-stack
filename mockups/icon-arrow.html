@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better — Arrow Icon</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  background: #EEE6DC;
+  min-height: 100vh;
+  padding: 60px 48px 80px;
+}
+h1 { font-size: 38px; font-weight: 800; color: #1C1917; letter-spacing: -0.8px; margin-bottom: 6px; }
+.subtitle { font-size: 15px; color: #A89080; margin-bottom: 56px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  max-width: 960px;
+}
+
+.concept { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.concept-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #A89080; }
+
+.icon-lg {
+  width: 180px; height: 180px;
+  border-radius: 40px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 6px 20px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.06);
+  position: relative; overflow: hidden;
+}
+.icon-md {
+  width: 80px; height: 80px;
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  position: relative; overflow: hidden;
+}
+.icon-sm {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  position: relative; overflow: hidden;
+}
+.size-row { display: flex; align-items: flex-end; gap: 12px; }
+
+.icon-gloss {
+  position: absolute; top: 0; left: 0; right: 0; height: 55%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.13), rgba(255,255,255,0));
+  pointer-events: none;
+}
+
+.homescreen {
+  background: #1a1a2e;
+  border-radius: 28px;
+  padding: 24px 20px 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.homescreen-icon {
+  width: 60px; height: 60px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  overflow: hidden; position: relative;
+}
+.homescreen-label { font-size: 10px; color: white; font-weight: 500; }
+
+.desc-card {
+  background: white; border-radius: 14px; padding: 14px 16px; width: 100%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.04);
+}
+.desc-card .name { font-size: 14px; font-weight: 700; color: #1C1917; margin-bottom: 4px; }
+.desc-card .mood { font-size: 12px; color: #A89080; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<h1>Better — Arrow Variants</h1>
+<p class="subtitle">Diagonal arrow (↗) in four treatments. Reply 1–4 to pick one.</p>
+
+<div class="grid">
+
+  <!-- ══ 1: Clean diagonal arrow ══ -->
+  <div class="concept">
+    <div class="concept-label">Variant 1</div>
+    <div class="icon-lg" style="background:linear-gradient(145deg,#C2673A,#9E4E22);">
+      <div class="icon-gloss"></div>
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <!-- Shaft -->
+        <line x1="22" y1="74" x2="72" y2="24" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.95"/>
+        <!-- Arrowhead -->
+        <path d="M44 22 L74 22 L74 52" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="size-row">
+      <div class="icon-md" style="background:linear-gradient(145deg,#C2673A,#9E4E22);">
+        <div class="icon-gloss"></div>
+        <svg width="40" height="40" viewBox="0 0 96 96" fill="none">
+          <line x1="22" y1="74" x2="72" y2="24" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.95"/>
+          <path d="M44 22 L74 22 L74 52" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="icon-sm" style="background:linear-gradient(145deg,#C2673A,#9E4E22);">
+        <div class="icon-gloss"></div>
+        <svg width="22" height="22" viewBox="0 0 96 96" fill="none">
+          <line x1="22" y1="74" x2="72" y2="24" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.95"/>
+          <path d="M44 22 L74 22 L74 52" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#C2673A,#9E4E22);">
+        <svg width="30" height="30" viewBox="0 0 96 96" fill="none">
+          <line x1="22" y1="74" x2="72" y2="24" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.95"/>
+          <path d="M44 22 L74 22 L74 52" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+    <div class="desc-card">
+      <div class="name">Clean Line Arrow</div>
+      <div class="mood">Minimal. Stroke-only, no fill. Modern and sharp — similar to Robinhood, Linear. Clay-to-dark gradient bg.</div>
+    </div>
+  </div>
+
+  <!-- ══ 2: Filled arrow with circle ══ -->
+  <div class="concept">
+    <div class="concept-label">Variant 2</div>
+    <div class="icon-lg" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+      <div class="icon-gloss"></div>
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <!-- Subtle circle ring -->
+        <circle cx="48" cy="48" r="36" stroke="white" stroke-width="2" opacity="0.2"/>
+        <!-- Arrow shaft -->
+        <line x1="26" y1="70" x2="66" y2="30" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+        <!-- Arrowhead -->
+        <path d="M44 28 L68 28 L68 52" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="size-row">
+      <div class="icon-md" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+        <div class="icon-gloss"></div>
+        <svg width="40" height="40" viewBox="0 0 96 96" fill="none">
+          <circle cx="48" cy="48" r="36" stroke="white" stroke-width="2" opacity="0.2"/>
+          <line x1="26" y1="70" x2="66" y2="30" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <path d="M44 28 L68 28 L68 52" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="icon-sm" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+        <div class="icon-gloss"></div>
+        <svg width="22" height="22" viewBox="0 0 96 96" fill="none">
+          <line x1="26" y1="70" x2="66" y2="30" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <path d="M44 28 L68 28 L68 52" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#CB7040,#A85425);">
+        <svg width="30" height="30" viewBox="0 0 96 96" fill="none">
+          <circle cx="48" cy="48" r="36" stroke="white" stroke-width="2" opacity="0.2"/>
+          <line x1="26" y1="70" x2="66" y2="30" stroke="white" stroke-width="11" stroke-linecap="round" opacity="0.95"/>
+          <path d="M44 28 L68 28 L68 52" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+    <div class="desc-card">
+      <div class="name">Arrow + Ring</div>
+      <div class="mood">Arrow inside a ghost circle — adds depth without weight. Medium gradient, warmer tone.</div>
+    </div>
+  </div>
+
+  <!-- ══ 3: Bold filled arrow (solid, no stroke) ══ -->
+  <div class="concept">
+    <div class="concept-label">Variant 3</div>
+    <div class="icon-lg" style="background:linear-gradient(160deg,#D47840,#B05820);">
+      <div class="icon-gloss"></div>
+      <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
+        <!-- Thick solid arrow shape (filled polygon) -->
+        <path d="
+          M20 70
+          L54 36
+          L54 50
+          L68 50
+          L68 22
+          L40 22
+          L40 36
+          L54 36
+          L20 70
+          Z
+        " fill="white" opacity="0.95"/>
+        <!-- Arrowhead triangle -->
+        <polygon points="40,22 68,22 68,50" fill="white" opacity="0.95"/>
+      </svg>
+    </div>
+    <div class="size-row">
+      <div class="icon-md" style="background:linear-gradient(160deg,#D47840,#B05820);">
+        <div class="icon-gloss"></div>
+        <svg width="40" height="40" viewBox="0 0 90 90" fill="none">
+          <path d="M20 70 L54 36 L54 50 L68 50 L68 22 L40 22 L40 36 L54 36 L20 70 Z" fill="white" opacity="0.95"/>
+          <polygon points="40,22 68,22 68,50" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+      <div class="icon-sm" style="background:linear-gradient(160deg,#D47840,#B05820);">
+        <div class="icon-gloss"></div>
+        <svg width="22" height="22" viewBox="0 0 90 90" fill="none">
+          <path d="M20 70 L54 36 L54 50 L68 50 L68 22 L40 22 L40 36 L54 36 L20 70 Z" fill="white" opacity="0.95"/>
+          <polygon points="40,22 68,22 68,50" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+    </div>
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(160deg,#D47840,#B05820);">
+        <svg width="30" height="30" viewBox="0 0 90 90" fill="none">
+          <path d="M20 70 L54 36 L54 50 L68 50 L68 22 L40 22 L40 36 L54 36 L20 70 Z" fill="white" opacity="0.95"/>
+          <polygon points="40,22 68,22 68,50" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+    <div class="desc-card">
+      <div class="name">Bold Filled Arrow</div>
+      <div class="mood">Maximum weight. Filled solid arrow — punchy and legible at 16px. Feels like a system icon but ownable. Darker gradient.</div>
+    </div>
+  </div>
+
+  <!-- ══ 4: Rounded arrow on warm cream bg ══ -->
+  <div class="concept">
+    <div class="concept-label">Variant 4</div>
+    <div class="icon-lg" style="background:linear-gradient(145deg,#FAF0E6,#F0DEC8);">
+      <div class="icon-gloss"></div>
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <!-- Arrow shaft -->
+        <line x1="22" y1="74" x2="68" y2="28" stroke="#C2673A" stroke-width="13" stroke-linecap="round" opacity="0.95"/>
+        <!-- Arrowhead -->
+        <path d="M46 26 L70 26 L70 50" stroke="#C2673A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="size-row">
+      <div class="icon-md" style="background:linear-gradient(145deg,#FAF0E6,#F0DEC8);">
+        <div class="icon-gloss"></div>
+        <svg width="40" height="40" viewBox="0 0 96 96" fill="none">
+          <line x1="22" y1="74" x2="68" y2="28" stroke="#C2673A" stroke-width="13" stroke-linecap="round" opacity="0.95"/>
+          <path d="M46 26 L70 26 L70 50" stroke="#C2673A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="icon-sm" style="background:linear-gradient(145deg,#FAF0E6,#F0DEC8);">
+        <div class="icon-gloss"></div>
+        <svg width="22" height="22" viewBox="0 0 96 96" fill="none">
+          <line x1="22" y1="74" x2="68" y2="28" stroke="#C2673A" stroke-width="13" stroke-linecap="round" opacity="0.95"/>
+          <path d="M46 26 L70 26 L70 50" stroke="#C2673A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+    <div class="homescreen">
+      <div class="homescreen-icon" style="background:linear-gradient(145deg,#FAF0E6,#F0DEC8);">
+        <svg width="30" height="30" viewBox="0 0 96 96" fill="none">
+          <line x1="22" y1="74" x2="68" y2="28" stroke="#C2673A" stroke-width="13" stroke-linecap="round" opacity="0.95"/>
+          <path d="M46 26 L70 26 L70 50" stroke="#C2673A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="homescreen-label">Better</div>
+    </div>
+    <div class="desc-card">
+      <div class="name">Clay on Cream</div>
+      <div class="mood">Inverted — terracotta arrow on warm cream bg. Softer, more tactile. Stands out in the App Store because it's light while others are dark.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:48px;padding:20px 24px;background:white;border-radius:16px;max-width:500px;box-shadow:0 2px 12px rgba(0,0,0,0.06),0 0 0 0.5px rgba(0,0,0,0.04);">
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#A89080;margin-bottom:8px;">Next step</div>
+  <div style="font-size:14px;color:#1C1917;line-height:1.6;">Reply <strong>1</strong>, <strong>2</strong>, <strong>3</strong>, or <strong>4</strong> and I'll generate the icon as a proper 1024×1024 PNG and wire it into the Xcode project.</div>
+</div>
+
+</body>
+</html>

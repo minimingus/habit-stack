@@ -24,7 +24,7 @@ struct WizardStepCravingView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Make it Attractive")
+                    Text("Find Your Why")
                         .font(.headline)
                     Text("Habits stick when they match who you want to be.")
                         .font(.subheadline)

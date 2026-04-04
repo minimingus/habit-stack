@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Current</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Chip (inline badge) ────────────── */
+.badge-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--teal-light);
+  color: var(--teal);
+}
+.badge-chip.muted { background: var(--app-bg-2); color: var(--ink-3); }
+
+/* ── Stats Grid ─────────────────────── */
+.stat-grid {
+  display: flex;
+  background: var(--card);
+  border-radius: 16px;
+  margin: 0 16px 10px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-sm);
+}
+
+/* ── Laws List ──────────────────────── */
+.laws-list {
+  background: var(--card);
+  border-radius: 16px;
+  margin: 0 16px 10px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-sm);
+}
+.law-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 0.5px solid var(--sep-light);
+  align-items: flex-start;
+}
+.law-row:last-child { border-bottom: none; }
+.law-icon-wrap {
+  width: 28px; height: 28px;
+  background: var(--app-bg-2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 14px;
+}
+.law-body { flex: 1; }
+.law-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+.law-value { font-size: 14px; color: var(--ink-1); }
+.law-value.empty { color: var(--ink-4); font-style: italic; }
+
+/* ── Identity Card ──────────────────── */
+.identity-card {
+  margin: 0 16px 10px;
+  background: var(--teal-light);
+  border-radius: 14px;
+  padding: 13px 16px;
+  border: 1px solid rgba(13,148,136,0.1);
+}
+.identity-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+.identity-text { font-size: 14px; font-style: italic; color: var(--ink-1); line-height: 1.55; }
+
+/* ── Actions ────────────────────────── */
+.actions-section {
+  padding: 0 16px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-label">Habit Detail — Current</div>
+      <div class="phone" style="height:860px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Nav bar -->
+          <div class="nav-bar">
+            <span class="nav-action muted" style="cursor:pointer;">Done</span>
+            <span class="nav-title">Habit Details</span>
+            <span class="nav-action right"></span>
+          </div>
+
+          <!-- Screen content -->
+          <div class="screen" style="height:720px; overflow-y:auto; padding-bottom:24px;">
+
+            <!-- Hero — centered large squircle icon -->
+            <div style="text-align:center; padding:18px 20px 14px;">
+              <div style="width:64px;height:64px;border-radius:18px;background:var(--tint-teal);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px;box-shadow:0 2px 10px rgba(13,148,136,0.15);">🏃</div>
+              <div style="font-size:22px; font-weight:700; color:var(--ink-1); letter-spacing:-0.4px;">Morning Walk</div>
+              <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:9px;flex-wrap:wrap;">
+                <span class="badge-chip">🌅 Morning</span>
+                <span class="badge-chip muted">Daily</span>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stat-grid">
+              <div class="stat-cell">
+                <div class="stat-val">5</div>
+                <div class="stat-lbl">Current Streak</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-val">12</div>
+                <div class="stat-lbl">Best Streak</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-val">71%</div>
+                <div class="stat-lbl">7-day Rate</div>
+              </div>
+            </div>
+
+            <!-- Four Laws always expanded — causes scroll -->
+            <div class="section-hdr">Setup</div>
+
+            <div class="laws-list">
+              <div class="law-row">
+                <div class="law-icon-wrap">👁️</div>
+                <div class="law-body">
+                  <div class="law-label">Make it Obvious · Trigger</div>
+                  <div class="law-value">After: Coffee</div>
+                </div>
+              </div>
+              <div class="law-row">
+                <div class="law-icon-wrap">❤️</div>
+                <div class="law-body">
+                  <div class="law-label">Make it Attractive · Why</div>
+                  <div class="law-value empty">Not set</div>
+                </div>
+              </div>
+              <div class="law-row">
+                <div class="law-icon-wrap">⚡</div>
+                <div class="law-body">
+                  <div class="law-label">Make it Easy · Tiny Version</div>
+                  <div class="law-value">Put on shoes</div>
+                  <div style="font-size:12px; color:var(--ink-3); margin-top:2px;">Morning · Daily</div>
+                </div>
+              </div>
+              <div class="law-row">
+                <div class="law-icon-wrap">⭐</div>
+                <div class="law-body">
+                  <div class="law-label">Make it Satisfying · Reward</div>
+                  <div class="law-value empty">Not set</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Identity card -->
+            <div class="identity-card">
+              <div class="identity-label">Identity Statement</div>
+              <div class="identity-text">"I am becoming the type of person who takes a morning walk every day."</div>
+            </div>
+
+            <!-- Actions pushed below fold due to law list -->
+            <div class="actions-section">
+              <button class="btn-primary">Edit Habit</button>
+              <button class="btn-secondary">Replace Habit</button>
+              <button class="btn-destructive">Archive Habit</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Card -->
+  <div class="compare-card">
+    <h2>Habit Detail — Current</h2>
+    <p>Full detail view with stats, four laws breakdown always fully expanded, identity statement, and actions at the bottom. Shows everything at once — including fields that have never been filled in.</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Issues</div>
+      <div class="compare-list">
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Four laws always expanded</strong> — two of four fields say "Not set", creating visual noise and a sense of incompleteness</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Actions buried below fold</strong> — user must scroll past the entire setup section just to tap Edit</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Setup dominates over performance</strong> — shows what was configured rather than how the habit is performing</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">No history visualization</strong> — streak numbers alone lack the context of a calendar view</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">What Works</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Stats front-and-center</strong> — streak and rate appear immediately, no scrolling</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Clear section structure</strong> — hero, stats, setup, identity, actions flow logically</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Squircle icon hero</strong> — warm tinted icon gives the habit visual identity without cold solid circles</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-note-hint">Compare with Habit Detail — Simplified →</div>
+  </div>
+</div>
+
+</body>
+</html>

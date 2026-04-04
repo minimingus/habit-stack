@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better You — Design Concepts</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  background: #111;
+  color: white;
+  padding: 48px 32px 80px;
+}
+
+/* Page header */
+.page-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.page-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  margin-bottom: 10px;
+}
+.page-header p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.45);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Concept columns */
+.concepts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.concept-col { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+.concept-label {
+  text-align: center;
+}
+.concept-num {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 6px;
+}
+.concept-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+.concept-tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+}
+
+/* iPhone frame */
+.iphone {
+  width: 320px;
+  height: 640px;
+  border-radius: 44px;
+  background: #1a1a1a;
+  padding: 10px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 32px 80px rgba(0,0,0,0.7),
+    0 8px 24px rgba(0,0,0,0.4);
+  position: relative;
+  flex-shrink: 0;
+}
+.iphone::after {
+  content: '';
+  position: absolute;
+  left: -3px; top: 110px;
+  width: 3px; height: 30px;
+  background: #2a2a2a; border-radius: 3px 0 0 3px;
+  box-shadow: 0 42px 0 #2a2a2a, 0 80px 0 #2a2a2a;
+}
+.iphone-power {
+  position: absolute;
+  right: -3px; top: 140px;
+  width: 3px; height: 64px;
+  background: #2a2a2a; border-radius: 0 3px 3px 0;
+}
+.iphone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 36px;
+  overflow: hidden;
+  position: relative;
+}
+.di {
+  position: absolute;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  width: 88px; height: 28px;
+  background: #000; border-radius: 16px;
+  z-index: 10;
+}
+
+/* Status bar */
+.sb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 22px 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.sb-icons {
+  display: flex; align-items: flex-end; gap: 4px;
+}
+.sb-bar { width: 3px; background: currentColor; border-radius: 1px; }
+
+/* Nav */
+.nav {
+  display: flex; align-items: center;
+  padding: 4px 18px 10px;
+}
+.nav-title { flex: 1; text-align: center; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+.nav-side { min-width: 50px; font-size: 15px; }
+
+/* Scrollable content */
+.sc { height: 100%; overflow: hidden; }
+
+/* ──────────────────────────────────────────────────────────
+   CONCEPT A: "DARK BOLD" — Streaks-inspired
+   Background: pure black / dark surfaces
+   Colors: vivid per-habit colors on black
+   Typography: very large, bold numbers
+────────────────────────────────────────────────────────── */
+.a-screen {
+  background: #000;
+  height: 100%;
+  color: white;
+}
+.a-header {
+  padding: 46px 20px 16px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.a-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+.a-date { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+.a-progress-row {
+  display: flex; align-items: center; gap: 20px;
+  padding: 0 20px 20px;
+}
+.a-ring { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.a-ring svg { transform: rotate(-90deg); }
+.a-ring-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.a-ring-num { font-size: 22px; font-weight: 800; color: #0d9488; letter-spacing: -1px; line-height: 1; }
+.a-ring-den { font-size: 10px; color: rgba(255,255,255,0.35); }
+.a-progress-text {}
+.a-progress-label { font-size: 15px; font-weight: 600; }
+.a-progress-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.a-streak { display: inline-flex; align-items: center; gap: 4px; background: rgba(249,115,22,0.15); color: #fb923c; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 12px; margin-top: 6px; }
+
+.a-section { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.3); padding: 0 20px 8px; }
+
+.a-habit {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.a-habit-icon {
+  width: 44px; height: 44px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.a-habit-info { flex: 1; }
+.a-habit-name { font-size: 15px; font-weight: 600; }
+.a-habit-meta { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+.a-check { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.a-check.done { border-color: transparent; font-size: 12px; font-weight: 700; color: white; }
+
+.a-tab-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex;
+  background: rgba(18,18,18,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 0.5px solid rgba(255,255,255,0.08);
+  padding: 8px 0 20px;
+}
+.a-tab { flex: 1; text-align: center; font-size: 10px; color: rgba(255,255,255,0.3); padding: 2px 0; cursor: pointer; }
+.a-tab.active { color: #0d9488; }
+.a-tab-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+/* ──────────────────────────────────────────────────────────
+   CONCEPT B: "PURE LIGHT" — Habitify / Linear inspired
+   Background: pure white
+   Typography: confident, constrained
+   Colors: single teal accent, subtle grays
+────────────────────────────────────────────────────────── */
+.b-screen {
+  background: #f9f9f9;
+  height: 100%;
+}
+.b-header {
+  background: white;
+  padding: 46px 20px 14px;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+.b-date { font-size: 13px; color: #8e8e93; font-weight: 500; margin-bottom: 4px; }
+.b-title { font-size: 30px; font-weight: 700; color: #000; letter-spacing: -0.8px; }
+.b-title-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.b-fraction { font-size: 30px; font-weight: 300; color: #0d9488; letter-spacing: -0.5px; }
+
+.b-ring-section {
+  padding: 20px;
+  display: flex; align-items: center; gap: 20px;
+}
+.b-ring { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+.b-ring svg { transform: rotate(-90deg); }
+.b-ring-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.b-ring-num { font-size: 18px; font-weight: 700; color: #0d9488; letter-spacing: -0.5px; line-height: 1; }
+.b-ring-den { font-size: 9px; color: #8e8e93; }
+
+.b-habit {
+  background: white;
+  margin: 0 16px 6px;
+  border-radius: 12px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 0 #f0f0f0, 0 2px 8px rgba(0,0,0,0.04);
+  cursor: pointer;
+}
+.b-habit-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.b-habit-name { font-size: 15px; font-weight: 600; color: #000; letter-spacing: -0.2px; }
+.b-habit-meta { font-size: 12px; color: #8e8e93; margin-top: 1px; }
+.b-check { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #d1d1d6; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-left: auto; }
+.b-check.done { background: #0d9488; border-color: #0d9488; color: white; font-size: 11px; font-weight: 700; }
+
+.b-section { font-size: 11px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.8px; padding: 12px 20px 4px; }
+
+.b-tab-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  border-top: 0.5px solid #e5e5ea;
+  padding: 8px 0 20px;
+}
+.b-tab { flex: 1; text-align: center; font-size: 10px; color: #8e8e93; padding: 2px 0; cursor: pointer; }
+.b-tab.active { color: #0d9488; }
+.b-tab-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+/* ──────────────────────────────────────────────────────────
+   CONCEPT C: "WARM SYSTEM" — Arc / Things 3 inspired
+   Background: warm off-white #FAF9F7
+   Colors: warm grays + vivid accent (rich teal/indigo)
+   Cards: slight warmth, generous padding
+   Typography: very clean, humanist feel
+────────────────────────────────────────────────────────── */
+.c-screen {
+  background: #FAF9F7;
+  height: 100%;
+}
+.c-top {
+  padding: 46px 20px 16px;
+}
+.c-greeting { font-size: 13px; color: #9c9289; font-weight: 500; margin-bottom: 2px; }
+.c-title { font-size: 28px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.6px; }
+
+.c-progress-card {
+  margin: 0 16px 14px;
+  background: white;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.06);
+  display: flex; align-items: center; gap: 18px;
+}
+.c-ring { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+.c-ring svg { transform: rotate(-90deg); }
+.c-ring-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.c-ring-num { font-size: 16px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+.c-ring-den { font-size: 9px; color: #9c9289; }
+.c-progress-msg { font-size: 15px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.2px; }
+.c-progress-sub { font-size: 12px; color: #9c9289; margin-top: 2px; }
+.c-streak-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #c2410c; background: #fff7ed; padding: 3px 8px; border-radius: 10px; margin-top: 6px; }
+
+.c-section { font-size: 11px; font-weight: 600; color: #9c9289; text-transform: uppercase; letter-spacing: 0.8px; padding: 8px 20px 6px; }
+
+.c-habit {
+  margin: 0 16px 6px;
+  background: white;
+  border-radius: 16px;
+  padding: 13px 14px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+.c-habit-icon {
+  width: 38px; height: 38px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.c-habit-name { font-size: 15px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.2px; }
+.c-habit-meta { font-size: 12px; color: #9c9289; margin-top: 1px; }
+.c-check { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #d8d3ce; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-left: auto; }
+.c-check.done { background: #0d9488; border-color: #0d9488; color: white; font-size: 12px; font-weight: 700; }
+
+.c-tab-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex;
+  background: rgba(250,249,247,0.92);
+  backdrop-filter: blur(20px);
+  border-top: 0.5px solid #e8e5e1;
+  padding: 8px 0 20px;
+}
+.c-tab { flex: 1; text-align: center; font-size: 10px; color: #9c9289; padding: 2px 0; cursor: pointer; }
+.c-tab.active { color: #0d9488; }
+.c-tab-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+/* Concept choice buttons */
+.choices {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 32px; max-width: 1200px; margin: 40px auto 0;
+}
+.choice-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+}
+.choice-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+.choice-btn .choice-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.choice-btn .choice-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+.choice-btn.a-btn { border-color: rgba(13,148,136,0.4); }
+.choice-btn.a-btn:hover { border-color: #0d9488; }
+.choice-btn.b-btn { border-color: rgba(255,255,255,0.2); }
+.choice-btn.c-btn { border-color: rgba(251,191,36,0.3); }
+.choice-btn.c-btn:hover { border-color: #f59e0b; }
+
+.footer-note {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.2px;
+}
+
+/* Add habit preview labels */
+.concept-sublabel {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: rgba(255,255,255,0.25);
+  text-align: center; margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>3 Design Concepts</h1>
+  <p>Three distinct directions. Pick one and the entire mockup suite gets rebuilt to match.</p>
+</div>
+
+<div class="concepts">
+
+  <!-- ── CONCEPT A: Dark Bold ── -->
+  <div class="concept-col">
+    <div class="concept-label">
+      <div class="concept-num">Concept A</div>
+      <div class="concept-name">Dark &amp; Bold</div>
+      <div class="concept-tagline">Streaks / Oura Ring aesthetic</div>
+    </div>
+
+    <!-- Today screen -->
+    <div class="iphone">
+      <div class="iphone-power"></div>
+      <div class="iphone-screen">
+        <div class="di"></div>
+        <div class="a-screen">
+          <div class="a-header">
+            <div>
+              <div class="a-date" style="color:rgba(255,255,255,0.35)">Thursday, April 3</div>
+              <div class="a-title">Today</div>
+            </div>
+          </div>
+
+          <div class="a-progress-row">
+            <div class="a-ring">
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="33" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="9"/>
+                <circle cx="40" cy="40" r="33" fill="none" stroke="#0d9488" stroke-width="9"
+                  stroke-dasharray="207.3" stroke-dashoffset="103.7" stroke-linecap="round"/>
+              </svg>
+              <div class="a-ring-inner">
+                <div class="a-ring-num">2</div>
+                <div class="a-ring-den">of 4</div>
+              </div>
+            </div>
+            <div class="a-progress-text">
+              <div class="a-progress-label">Halfway there</div>
+              <div class="a-progress-sub">2 habits remaining</div>
+              <div class="a-streak">🔥 12-day streak</div>
+            </div>
+          </div>
+
+          <div class="a-section">Morning</div>
+          <div class="a-habit">
+            <div class="a-habit-icon" style="background:#0d9488;">🏃</div>
+            <div class="a-habit-info">
+              <div class="a-habit-name">Morning Walk</div>
+              <div class="a-habit-meta">🔥 5 days · 15 min</div>
+            </div>
+            <div class="a-check done" style="background:#0d9488;">✓</div>
+          </div>
+          <div class="a-habit">
+            <div class="a-habit-icon" style="background:#7c3aed;">🧘</div>
+            <div class="a-habit-info">
+              <div class="a-habit-name">Meditation</div>
+              <div class="a-habit-meta">10 min</div>
+            </div>
+            <div class="a-check done" style="background:#7c3aed;">✓</div>
+          </div>
+          <div class="a-habit">
+            <div class="a-habit-icon" style="background:#2563eb;">📖</div>
+            <div class="a-habit-info">
+              <div class="a-habit-name">Read</div>
+              <div class="a-habit-meta">🔥 12 days</div>
+            </div>
+            <div class="a-check"></div>
+          </div>
+
+          <div class="a-section" style="margin-top:8px;">Evening</div>
+          <div class="a-habit">
+            <div class="a-habit-icon" style="background:#ea580c;">✍️</div>
+            <div class="a-habit-info">
+              <div class="a-habit-name">Journal</div>
+              <div class="a-habit-meta">10 min</div>
+            </div>
+            <div class="a-check"></div>
+          </div>
+
+          <div class="a-tab-bar">
+            <div class="a-tab active"><span class="a-tab-icon">☀️</span>Today</div>
+            <div class="a-tab"><span class="a-tab-icon">🏛️</span>Identity</div>
+            <div class="a-tab"><span class="a-tab-icon">💬</span>Coach</div>
+            <div class="a-tab"><span class="a-tab-icon">⚙️</span>Settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept-sublabel">Today view</div>
+
+    <!-- Add habit screen -->
+    <div class="iphone">
+      <div class="iphone-power"></div>
+      <div class="iphone-screen">
+        <div class="di"></div>
+        <div class="a-screen" style="background:#000;">
+          <div class="sb" style="color:white; padding-top:16px;">
+            <span style="font-size:14px; font-weight:700;">9:41</span>
+            <div class="sb-icons" style="color:white;">
+              <div style="display:flex;align-items:flex-end;gap:1.5px;height:10px;">
+                <div class="sb-bar" style="height:4px;"></div>
+                <div class="sb-bar" style="height:6px;"></div>
+                <div class="sb-bar" style="height:8px;"></div>
+                <div class="sb-bar" style="height:10px;"></div>
+              </div>
+              <span style="font-size:11px;">●●●</span>
+            </div>
+          </div>
+          <div class="nav" style="border-bottom:0.5px solid rgba(255,255,255,0.08); background:#000;">
+            <span class="nav-side" style="color:rgba(255,255,255,0.4); font-size:15px;">Cancel</span>
+            <span class="nav-title" style="color:white;">Add a Habit</span>
+            <span class="nav-side" style="text-align:right; font-size:13px; color:rgba(255,255,255,0.4);">Custom</span>
+          </div>
+
+          <!-- Search -->
+          <div style="padding:12px 16px 4px;">
+            <div style="background:rgba(255,255,255,0.08); border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:8px;">
+              <span style="color:rgba(255,255,255,0.3); font-size:13px;">🔍</span>
+              <span style="font-size:15px; color:rgba(255,255,255,0.25);">Search habits…</span>
+            </div>
+          </div>
+
+          <!-- Pills -->
+          <div style="display:flex; gap:7px; padding:10px 16px; overflow:hidden;">
+            <div style="background:#0d9488; color:white; font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; flex-shrink:0;">All</div>
+            <div style="background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; flex-shrink:0;">💪 Health</div>
+            <div style="background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; flex-shrink:0;">🧠 Mind</div>
+          </div>
+
+          <!-- List -->
+          <div style="background:rgba(255,255,255,0.05); border-radius:16px; margin:0 16px; overflow:hidden;">
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:0.5px solid rgba(255,255,255,0.06);">
+              <div style="width:36px;height:36px;border-radius:10px;background:#0d9488;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🏃</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:white;">Morning Walk</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">15 min · Health</div>
+              </div>
+              <span style="color:rgba(255,255,255,0.2);font-size:18px;">›</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:0.5px solid rgba(255,255,255,0.06);">
+              <div style="width:36px;height:36px;border-radius:10px;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🧘</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:white;">Meditation</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">10 min · Mind</div>
+              </div>
+              <span style="color:rgba(255,255,255,0.2);font-size:18px;">›</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:0.5px solid rgba(255,255,255,0.06);">
+              <div style="width:36px;height:36px;border-radius:10px;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">📖</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:white;">Read</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">20 min · Mind</div>
+              </div>
+              <span style="color:rgba(255,255,255,0.2);font-size:18px;">›</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#0891b2;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">💧</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:white;">Drink Water</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">2 min · Health</div>
+              </div>
+              <span style="color:rgba(255,255,255,0.2);font-size:18px;">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept-sublabel">Add habit view</div>
+  </div>
+
+  <!-- ── CONCEPT B: Pure Light ── -->
+  <div class="concept-col">
+    <div class="concept-label">
+      <div class="concept-num">Concept B</div>
+      <div class="concept-name">Pure Light</div>
+      <div class="concept-tagline">Habitify / Linear aesthetic</div>
+    </div>
+
+    <div class="iphone">
+      <div class="iphone-power"></div>
+      <div class="iphone-screen">
+        <div class="di" style="background:#1c1c1e;"></div>
+        <div class="b-screen">
+          <div class="b-header">
+            <div class="b-date">Thursday, April 3</div>
+            <div class="b-title-row">
+              <div class="b-title">Today</div>
+              <div class="b-fraction">2<span style="font-size:18px;color:#c7c7cc;">/4</span></div>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div class="b-ring-section">
+            <div class="b-ring">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" fill="none" stroke="#f2f2f7" stroke-width="8"/>
+                <circle cx="36" cy="36" r="30" fill="none" stroke="#0d9488" stroke-width="8"
+                  stroke-dasharray="188.5" stroke-dashoffset="94.3" stroke-linecap="round"/>
+              </svg>
+              <div class="b-ring-inner">
+                <div class="b-ring-num">2</div>
+                <div class="b-ring-den">of 4</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:600;color:#000;letter-spacing:-0.2px;">Keep going!</div>
+              <div style="font-size:12px;color:#8e8e93;margin-top:2px;">2 habits remaining</div>
+              <div style="display:inline-flex;align-items:center;gap:4px;background:#fff7ed;color:#c2410c;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;margin-top:6px;">🔥 12-day streak</div>
+            </div>
+          </div>
+
+          <div class="b-section">Morning</div>
+          <div class="b-habit">
+            <div class="b-habit-icon" style="background:#ccfbf1;">🏃</div>
+            <div style="flex:1;">
+              <div class="b-habit-name">Morning Walk</div>
+              <div class="b-habit-meta">🔥 5 days · 15 min</div>
+            </div>
+            <div class="b-check done">✓</div>
+          </div>
+          <div class="b-habit">
+            <div class="b-habit-icon" style="background:#ede9fe;">🧘</div>
+            <div style="flex:1;">
+              <div class="b-habit-name">Meditation</div>
+              <div class="b-habit-meta">10 min</div>
+            </div>
+            <div class="b-check done">✓</div>
+          </div>
+          <div class="b-habit">
+            <div class="b-habit-icon" style="background:#dbeafe;">📖</div>
+            <div style="flex:1;">
+              <div class="b-habit-name">Read</div>
+              <div class="b-habit-meta">🔥 12 days</div>
+            </div>
+            <div class="b-check"></div>
+          </div>
+
+          <div class="b-section" style="margin-top:6px;">Evening</div>
+          <div class="b-habit">
+            <div class="b-habit-icon" style="background:#ffedd5;">✍️</div>
+            <div style="flex:1;">
+              <div class="b-habit-name">Journal</div>
+              <div class="b-habit-meta">10 min</div>
+            </div>
+            <div class="b-check"></div>
+          </div>
+
+          <div class="b-tab-bar">
+            <div class="b-tab active"><span class="b-tab-icon">☀️</span>Today</div>
+            <div class="b-tab"><span class="b-tab-icon">🏛️</span>Identity</div>
+            <div class="b-tab"><span class="b-tab-icon">💬</span>Coach</div>
+            <div class="b-tab"><span class="b-tab-icon">⚙️</span>Settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept-sublabel">Today view</div>
+
+    <div class="iphone">
+      <div class="iphone-power"></div>
+      <div class="iphone-screen">
+        <div class="di" style="background:#1c1c1e;"></div>
+        <div class="b-screen">
+          <div style="background:white; border-bottom:0.5px solid #f0f0f0; padding-top:14px;">
+            <div style="display:flex;align-items:center;padding:0 18px 12px;">
+              <span style="font-size:15px;color:#8e8e93;min-width:50px;">Cancel</span>
+              <span style="flex:1;text-align:center;font-size:15px;font-weight:600;color:#000;letter-spacing:-0.2px;">Add a Habit</span>
+              <span style="min-width:50px;text-align:right;font-size:13px;color:#0d9488;">Custom</span>
+            </div>
+          </div>
+
+          <div style="padding:10px 16px 4px;">
+            <div style="background:#f2f2f7; border-radius:10px; padding:9px 12px; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:12px;color:#8e8e93;">🔍</span>
+              <span style="font-size:15px;color:#8e8e93;">Search habits…</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:6px;padding:8px 16px;overflow:hidden;">
+            <div style="background:#0d9488;color:white;font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;flex-shrink:0;">All</div>
+            <div style="background:#f2f2f7;color:#8e8e93;font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;flex-shrink:0;">💪 Health</div>
+            <div style="background:#f2f2f7;color:#8e8e93;font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;flex-shrink:0;">🧠 Mind</div>
+          </div>
+
+          <div style="background:white;border-radius:14px;margin:4px 16px;overflow:hidden;box-shadow:0 1px 0 #f0f0f0,0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:0.5px solid #f5f5f5;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#ccfbf1;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🏃</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:#000;letter-spacing:-0.2px;">Morning Walk</div>
+                <div style="font-size:11px;color:#8e8e93;">15 min · Health</div>
+              </div>
+              <span style="color:#d1d1d6;font-size:18px;">›</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:0.5px solid #f5f5f5;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#ede9fe;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🧘</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:#000;letter-spacing:-0.2px;">Meditation</div>
+                <div style="font-size:11px;color:#8e8e93;">10 min · Mind</div>
+              </div>
+              <span style="color:#d1d1d6;font-size:18px;">›</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:0.5px solid #f5f5f5;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">📖</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:#000;letter-spacing:-0.2px;">Read</div>
+                <div style="font-size:11px;color:#8e8e93;">20 min · Mind</div>
+              </div>
+              <span style="color:#d1d1d6;font-size:18px;">›</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">💧</div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;color:#000;letter-spacing:-0.2px;">Drink Water</div>
+                <div style="font-size:11px;color:#8e8e93;">2 min · Health</div>
+              </div>
+              <span style="color:#d1d1d6;font-size:18px;">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept-sublabel">Add habit view</div>
+  </div>
+
+  <!-- ── CONCEPT C: Warm System ── -->
+  <div class="concept-col">
+    <div class="concept-label">
+      <div class="concept-num">Concept C</div>
+      <div class="concept-name">Warm &amp; Focused</div>
+      <div class="concept-tagline">Things 3 / Bear aesthetic</div>
+    </div>
+
+    <div class="iphone">
+      <div class="iphone-power"></div>
+      <div class="iphone-screen">
+        <div class="di" style="background:#111;"></div>
+        <div class="c-screen">
+          <div class="c-top">
+            <div class="c-greeting">Thursday, April 3</div>
+            <div class="c-title">Good morning 👋</div>
+          </div>
+
+          <div class="c-progress-card">
+            <div class="c-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#f0ece8" stroke-width="8"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#0d9488" stroke-width="8"
+                  stroke-dasharray="163.4" stroke-dashoffset="81.7" stroke-linecap="round"/>
+              </svg>
+              <div class="c-ring-inner">
+                <div class="c-ring-num">2/4</div>
+                <div class="c-ring-den">done</div>
+              </div>
+            </div>
+            <div>
+              <div class="c-progress-msg">Halfway there!</div>
+              <div class="c-progress-sub">2 left for today</div>
+              <div class="c-streak-badge">🔥 12 days</div>
+            </div>
+          </div>
+
+          <div class="c-section">Morning</div>
+          <div class="c-habit">
+            <div class="c-habit-icon" style="background:#f0fdf9;">🏃</div>
+            <div style="flex:1;">
+              <div class="c-habit-name">Morning Walk</div>
+              <div class="c-habit-meta">5-day streak · 15 min</div>
+            </div>
+            <div class="c-check done">✓</div>
+          </div>
+          <div class="c-habit">
+            <div class="c-habit-icon" style="background:#f5f3ff;">🧘</div>
+            <div style="flex:1;">
+              <div class="c-habit-name">Meditation</div>
+              <div class="c-habit-meta">10 min</div>
+            </div>
+            <div class="c-check done">✓</div>
+          </div>
+          <div class="c-habit">
+            <div class="c-habit-icon" style="background:#eff6ff;">📖</div>
+            <div style="flex:1;">
+              <div class="c-habit-name">Read</div>
+              <div class="c-habit-meta">12-day streak</div>
+            </div>
+            <div class="c-check"></div>
+          </div>
+
+          <div class="c-section" style="margin-top:6px;">Evening</div>
+          <div class="c-habit">
+            <div class="c-habit-icon" style="background:#fff7ed;">✍️</div>
+            <div style="flex:1;">
+              <div class="c-habit-name">Journal</div>
+              <div class="c-habit-meta">10 min</div>
+            </div>
+            <div class="c-check"></div>
+          </div>
+
+          <div class="c-tab-bar">
+            <div class="c-tab active"><span class="c-tab-icon">☀️</span>Today</div>
+            <div class="c-tab"><span class="c-tab-icon">🏛️</span>Identity</div>
+            <div class="c-tab"><span class="c-tab-icon">💬</span>Coach</div>
+            <div class="c-tab"><span class="c-tab-icon">⚙️</span>Settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept-sublabel">Today view</div>
+
+    <div class="iphone">
+      <div class="iphone-power"></div>
+      <div class="iphone-screen">
+        <div class="di" style="background:#111;"></div>
+        <div class="c-screen">
+          <div style="padding:46px 18px 14px; border-bottom:0.5px solid #e8e5e1;">
+            <div style="font-size:13px;color:#9c9289;margin-bottom:4px;font-weight:500;">Add a Habit</div>
+            <div style="font-size:24px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;">What do you<br>want to build?</div>
+          </div>
+
+          <div style="padding:10px 16px 4px;">
+            <div style="background:white;border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06),0 0 0 0.5px rgba(0,0,0,0.05);">
+              <span style="font-size:13px;color:#9c9289;">🔍</span>
+              <span style="font-size:15px;color:#c0bab3;">Search habits…</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:6px;padding:10px 16px;overflow:hidden;">
+            <div style="background:#0d9488;color:white;font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;flex-shrink:0;">All</div>
+            <div style="background:white;color:#9c9289;font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.06);">💪 Health</div>
+            <div style="background:white;color:#9c9289;font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.06);">🧠 Mind</div>
+          </div>
+
+          <div style="margin:0 16px;overflow:hidden;">
+            <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06),0 0 0 0.5px rgba(0,0,0,0.05);">
+              <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:0.5px solid #f0ece8;">
+                <div style="width:38px;height:38px;border-radius:12px;background:#f0fdf9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🏃</div>
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;letter-spacing:-0.2px;">Morning Walk</div>
+                  <div style="font-size:11px;color:#9c9289;">15 min · Health</div>
+                </div>
+                <span style="color:#c0bab3;font-size:18px;">›</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:0.5px solid #f0ece8;">
+                <div style="width:38px;height:38px;border-radius:12px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🧘</div>
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;letter-spacing:-0.2px;">Meditation</div>
+                  <div style="font-size:11px;color:#9c9289;">10 min · Mind</div>
+                </div>
+                <span style="color:#c0bab3;font-size:18px;">›</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:0.5px solid #f0ece8;">
+                <div style="width:38px;height:38px;border-radius:12px;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📖</div>
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;letter-spacing:-0.2px;">Read</div>
+                  <div style="font-size:11px;color:#9c9289;">20 min · Mind</div>
+                </div>
+                <span style="color:#c0bab3;font-size:18px;">›</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+                <div style="width:38px;height:38px;border-radius:12px;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💧</div>
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;letter-spacing:-0.2px;">Drink Water</div>
+                  <div style="font-size:11px;color:#9c9289;">2 min · Health</div>
+                </div>
+                <span style="color:#c0bab3;font-size:18px;">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept-sublabel">Add habit view</div>
+  </div>
+
+</div>
+
+<!-- Choice section -->
+<div class="choices">
+  <div class="choice-btn a-btn">
+    <div class="choice-title">A — Dark &amp; Bold</div>
+    <div class="choice-desc">Black background, vivid colored icons, bold numbers. Feels premium like Oura or Streaks. Best for users who check at a glance.</div>
+  </div>
+  <div class="choice-btn b-btn">
+    <div class="choice-title">B — Pure Light</div>
+    <div class="choice-desc">White &amp; clean, tinted icon backgrounds, subtle shadows. Habitify / Notion aesthetic. Safe, polished, broad appeal.</div>
+  </div>
+  <div class="choice-btn c-btn">
+    <div class="choice-title">C — Warm &amp; Focused</div>
+    <div class="choice-desc">Off-white warmth, white cards, humanist tone. Things 3 / Bear aesthetic. Feels thoughtful and personal.</div>
+  </div>
+</div>
+
+<div class="footer-note">
+  Tell me which concept (A, B, or C) and I'll rebuild all mockup screens to match.
+</div>
+
+</body>
+</html>

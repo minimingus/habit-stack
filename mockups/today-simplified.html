@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today — Simplified</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-label">Today — Simplified</div>
+      <div class="phone" style="height:860px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Title + date -->
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding: 2px 20px 8px; background: var(--app-bg);">
+            <h1 style="font-size:34px; font-weight:700; color:var(--ink-1); letter-spacing:-0.6px;">Today</h1>
+            <span style="font-size:14px; color:var(--ink-3); font-weight:400;">Fri, Apr 4</span>
+          </div>
+
+          <!-- Scrollable Screen Content -->
+          <div class="screen" style="height:700px; overflow-y:auto; padding-bottom:88px;">
+
+            <!-- Hero Progress Ring — free-floating, not in a card -->
+            <div class="progress-hero">
+              <div class="ring-wrap">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="var(--sep)" stroke-width="8"/>
+                  <circle id="ringCircle" cx="50" cy="50" r="42" fill="none" stroke="var(--teal)" stroke-width="8"
+                    stroke-dasharray="263.9" stroke-dashoffset="131.95" stroke-linecap="round"
+                    style="transform:rotate(-90deg); transform-origin:50% 50%; transition: stroke-dashoffset 0.5s cubic-bezier(0.32,0.72,0,1);"/>
+                </svg>
+                <div class="ring-text">
+                  <span class="ring-num" id="ringNum">2</span>
+                  <span class="ring-denom" id="ringDenom">of 4</span>
+                </div>
+              </div>
+              <div>
+                <div class="ring-label" id="ringLabel">Halfway there!</div>
+                <div class="ring-sub" id="ringSub">2 habits remaining today</div>
+                <div class="streak-badge">🔥 12-day streak</div>
+              </div>
+            </div>
+
+            <!-- One-line insight -->
+            <div class="insight-row">
+              <span>💡</span>
+              <span>"One rep counts more than zero. Always."</span>
+            </div>
+
+            <!-- Morning section -->
+            <div class="section-hdr">🌅 Morning</div>
+
+            <div class="habit-row done" id="hw1" style="border-left-color:var(--teal);" onclick="toggleHabit(this,'var(--teal)','#0D9488')">
+              <div class="habit-icon" style="background:var(--tint-teal);">🏃</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Morning Walk</div>
+                <div class="habit-row-meta"><span>🔥 5 days</span><span>·</span><span>15 min</span></div>
+              </div>
+              <div class="check done">✓</div>
+            </div>
+
+            <div class="habit-row done" id="hw2" style="border-left-color:var(--teal);" onclick="toggleHabit(this,'var(--teal)','#7C3AED')">
+              <div class="habit-icon" style="background:var(--tint-purple);">🧘</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Meditation</div>
+                <div class="habit-row-meta"><span>10 min</span></div>
+              </div>
+              <div class="check done">✓</div>
+            </div>
+
+            <div class="habit-row" id="hw3" onclick="toggleHabit(this,'var(--teal)','#2563EB')">
+              <div class="habit-icon" style="background:var(--tint-blue);">📖</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Read</div>
+                <div class="habit-row-meta"><span>🔥 12 days</span><span>·</span><span>20 min</span></div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+            <!-- Evening section -->
+            <div class="section-hdr" style="margin-top:4px;">🌙 Evening</div>
+
+            <div class="habit-row" id="hw4" onclick="toggleHabit(this,'var(--teal)','#EA580C')">
+              <div class="habit-icon" style="background:var(--tint-orange);">✍️</div>
+              <div class="habit-row-info">
+                <div class="habit-row-name">Journal</div>
+                <div class="habit-row-meta"><span>10 min</span></div>
+              </div>
+              <div class="check"></div>
+            </div>
+
+          </div>
+
+          <!-- FAB -->
+          <div class="fab">+</div>
+
+          <!-- Tab Bar -->
+          <div class="tab-bar">
+            <div class="tab active">
+              <span class="tab-icon">☀️</span>
+              <span class="tab-label" style="color:var(--teal);">Today</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">🏛️</span>
+              <span class="tab-label">Identity</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">💬</span>
+              <span class="tab-label">Coach</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon">⚙️</span>
+              <span class="tab-label">Settings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Card -->
+  <div class="compare-card">
+    <h2>Today — Simplified</h2>
+    <p>Remove everything that competes with the primary job: show habits and let me check them off. The free-floating progress ring replaces the entire noise stack (XP bar + trial banner + insight card) with one focused hero section.</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">What Was Removed and Why</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">XP bar removed</strong> — moved to Profile/Settings. Adds noise without helping users check habits.</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Trial banner removed</strong> — shown contextually once per session max, not on every open.</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Insight card collapsed to one line</strong> — teal-tinted italic row, no dismiss button clutter.</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Ring floats freely</strong> — not inside a card. Full visual weight as the day's main KPI.</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">First habit visible on load</strong> — no scrolling required. Reduces to-do list anxiety.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">What's Preserved</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span>Progress ring — daily completion at a glance, updates live as you tap</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span>Time-grouped sections — morning/evening mental sequencing</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span>Per-habit streaks — inline motivation next to each habit name</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span>Squircle habit icons — warm tinted backgrounds, distinct at a glance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <p>Recommended. The ring + streak hero replaces XP bar + trial banner + insight card in a single compact section. Every element below it is a habit, which is exactly what users came for.</p>
+    </div>
+    <div class="compare-note-hint">Tap habits to toggle completion — the ring updates in real time</div>
+  </div>
+</div>
+
+<script>
+const CIRC = 263.9;
+
+function toggleHabit(row, borderColor, checkColor) {
+  const check = row.querySelector('.check');
+  const isDone = row.classList.contains('done');
+
+  if (isDone) {
+    row.classList.remove('done');
+    row.style.borderLeftColor = 'transparent';
+    row.style.opacity = '';
+    check.classList.remove('done');
+    check.style.background = '';
+    check.style.borderColor = '';
+    check.style.boxShadow = '';
+    check.textContent = '';
+  } else {
+    row.classList.add('done');
+    row.style.borderLeftColor = 'var(--teal)';
+    row.style.opacity = '0.75';
+    check.classList.add('done');
+    check.textContent = '✓';
+  }
+  updateRing();
+}
+
+function updateRing() {
+  const rows = document.querySelectorAll('.habit-row');
+  const total = rows.length;
+  const done = document.querySelectorAll('.habit-row.done').length;
+  const pct = total > 0 ? done / total : 0;
+
+  document.getElementById('ringNum').textContent = done;
+  document.getElementById('ringDenom').textContent = 'of ' + total;
+  document.getElementById('ringCircle').setAttribute('stroke-dashoffset', CIRC - pct * CIRC);
+
+  if (done === total && total > 0) {
+    document.getElementById('ringLabel').textContent = '🎉 All done!';
+    document.getElementById('ringSub').textContent = 'Outstanding work today.';
+  } else if (done === 0) {
+    document.getElementById('ringLabel').textContent = "Let's go!";
+    document.getElementById('ringSub').textContent = total + ' habits to do today';
+  } else {
+    const left = total - done;
+    document.getElementById('ringLabel').textContent = done === 1 ? 'Good start!' : 'Halfway there!';
+    document.getElementById('ringSub').textContent = left + ' habit' + (left !== 1 ? 's' : '') + ' remaining today';
+  }
+}
+</script>
+</body>
+</html>

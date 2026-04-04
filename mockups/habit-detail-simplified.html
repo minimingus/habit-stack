@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Simplified</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Chip (inline badge) ────────────── */
+.badge-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--teal-light);
+  color: var(--teal);
+}
+.badge-chip.muted { background: var(--app-bg-2); color: var(--ink-3); }
+
+/* ── Cal legend ─────────────────────── */
+.cal-card {
+  background: var(--card);
+  border-radius: 16px;
+  margin: 0 16px 10px;
+  padding: 14px 16px;
+  box-shadow: var(--card-shadow-sm);
+}
+.cal-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.cal-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ── Actions ────────────────────────── */
+.actions-section {
+  padding: 0 16px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.action-row { display: flex; gap: 10px; }
+.action-row .btn-primary { flex: 1; font-size: 15px; padding: 13px; }
+.action-row .btn-secondary { flex: 1; font-size: 15px; padding: 13px; }
+</style>
+</head>
+<body>
+
+<a class="back-home" href="index.html">← All Screens</a>
+
+<div class="page-layout">
+  <div class="phones-row">
+    <div class="phone-wrapper">
+      <div class="phone-label">Habit Detail — Simplified</div>
+      <div class="phone" style="height:860px;">
+        <div class="phone-power"></div>
+        <div class="phone-inner">
+          <div class="dynamic-island"></div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+              <div class="sig"><span></span><span></span><span></span><span></span></div>
+              <svg class="wifi" viewBox="0 0 15 11" fill="none">
+                <path d="M7.5 8.5a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z" fill="currentColor"/>
+                <path d="M3.5 5.5a5.6 5.6 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M1 3a9.5 9.5 0 0113 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              <div class="batt"><div class="batt-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Nav bar — Edit in nav for thumb reach -->
+          <div class="nav-bar">
+            <span class="nav-action muted" style="cursor:pointer;">Done</span>
+            <span class="nav-title">Morning Walk</span>
+            <span class="nav-action right" style="font-weight:600;cursor:pointer;">Edit</span>
+          </div>
+
+          <!-- Screen content -->
+          <div class="screen" style="height:720px; overflow-y:auto; padding-bottom:24px;">
+
+            <!-- Compact hero — squircle icon + name + chips side-by-side -->
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 20px 12px;">
+              <div style="width:60px;height:60px;border-radius:17px;background:var(--tint-teal);display:flex;align-items:center;justify-content:center;font-size:29px;flex-shrink:0;box-shadow:0 2px 10px rgba(13,148,136,0.15);">🏃</div>
+              <div>
+                <div style="font-size:20px; font-weight:700; color:var(--ink-1); letter-spacing:-0.3px;">Morning Walk</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:7px;flex-wrap:wrap;">
+                  <span class="badge-chip">🌅 Morning</span>
+                  <span class="badge-chip muted">Daily</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats row — first content, no scrolling needed -->
+            <div class="stats-row">
+              <div class="stat-cell">
+                <div class="stat-val">🔥 5</div>
+                <div class="stat-lbl">Streak</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-val">12</div>
+                <div class="stat-lbl">Best</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-val">71%</div>
+                <div class="stat-lbl">7-day</div>
+              </div>
+            </div>
+
+            <!-- 7-day dot calendar -->
+            <div class="cal-card">
+              <div class="cal-header">Last 7 days</div>
+              <div class="dot-cal">
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Thu</div>
+                  <div class="dot done"></div>
+                </div>
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Fri</div>
+                  <div class="dot done"></div>
+                </div>
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Sat</div>
+                  <div class="dot miss"></div>
+                </div>
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Sun</div>
+                  <div class="dot done"></div>
+                </div>
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Mon</div>
+                  <div class="dot done"></div>
+                </div>
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Tue</div>
+                  <div class="dot done"></div>
+                </div>
+                <div class="dot-day">
+                  <div class="dot-day-lbl">Wed</div>
+                  <div class="dot today"></div>
+                </div>
+              </div>
+              <div class="cal-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--teal);"></div>Done
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--app-bg-2);"></div>Missed
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--teal-light);border:1.5px solid var(--teal);"></div>Today
+                </div>
+              </div>
+            </div>
+
+            <!-- Collapsible setup accordion -->
+            <div class="accord">
+              <div class="accord-header" onclick="toggleAccord(this)">
+                <div>
+                  <div class="accord-title">Setup Details</div>
+                  <div class="accord-sub">Trigger · Why · Tiny version · Reward</div>
+                </div>
+                <span class="accord-chevron">›</span>
+              </div>
+              <div class="accord-body" id="setupBody">
+                <div class="accord-row">
+                  <div class="accord-row-icon">👁️</div>
+                  <span class="accord-row-text">After: Coffee</span>
+                </div>
+                <div class="accord-row">
+                  <div class="accord-row-icon">❤️</div>
+                  <span class="accord-row-text empty">Why not set</span>
+                </div>
+                <div class="accord-row">
+                  <div class="accord-row-icon">⚡</div>
+                  <span class="accord-row-text">Tiny version: Put on shoes</span>
+                </div>
+                <div class="accord-row">
+                  <div class="accord-row-icon">⭐</div>
+                  <span class="accord-row-text empty">Reward not set</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions visible without scrolling -->
+            <div class="actions-section">
+              <div class="action-row">
+                <button class="btn-primary">Edit</button>
+                <button class="btn-secondary">Replace</button>
+              </div>
+              <button class="btn-destructive">Archive</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Card -->
+  <div class="compare-card">
+    <h2>Habit Detail — Simplified</h2>
+    <p>Lead with what matters: performance stats and 7-day visual history. Setup details are available but collapsed — on demand, not forced on every view. The Edit button is reachable from the nav bar without any scrolling.</p>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Key Changes</div>
+      <div class="compare-list">
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Stats visible immediately</strong> — streak, best, and 7-day rate appear without scrolling</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">7-day dot calendar</strong> — visual history at a glance, instantly scannable pattern of done/missed/today</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Edit in nav bar</strong> — the most common action is reachable with a thumb without scrolling</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Setup collapsed by default</strong> — four laws available one tap away, not forced on every view</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Actions above fold</strong> — Edit/Replace/Archive visible without scrolling past the setup section</span>
+        </div>
+        <div class="compare-item pro">
+          <span class="ci-icon">✓</span>
+          <span><strong class="pro">Compact hero</strong> — squircle icon + name + chips side-by-side saves 60px of vertical space</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-section">
+      <div class="compare-section-title">Trade-offs</div>
+      <div class="compare-list">
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Setup hidden by default</strong> — users need to discover the accordion for trigger/reward details</span>
+        </div>
+        <div class="compare-item con">
+          <span class="ci-icon">✗</span>
+          <span><strong class="con">Identity statement removed from main view</strong> — can be added inside the accordion if valued</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <p>Recommended. Stats and visual history are what users actually want on this screen. The four laws details remain accessible — just one tap away inside the accordion.</p>
+    </div>
+    <div class="compare-note-hint">Click "Setup Details" to expand the accordion</div>
+  </div>
+</div>
+
+<script>
+function toggleAccord(header) {
+  const body = document.getElementById('setupBody');
+  const chevron = header.querySelector('.accord-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+</script>
+</body>
+</html>

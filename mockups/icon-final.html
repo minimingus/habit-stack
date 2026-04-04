@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better — App Icon Final</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  background: #EEE6DC;
+  min-height: 100vh;
+  padding: 60px 48px 80px;
+}
+h1 { font-size: 38px; font-weight: 800; color: #1C1917; letter-spacing: -0.8px; margin-bottom: 6px; }
+.subtitle { font-size: 15px; color: #A89080; margin-bottom: 56px; }
+
+.row { display: flex; align-items: flex-end; gap: 40px; flex-wrap: wrap; margin-bottom: 56px; }
+
+.icon-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #A89080; }
+
+img.icon {
+  display: block;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.10);
+}
+img.icon-xl  { width: 200px; height: 200px; border-radius: 46px; }
+img.icon-lg  { width: 120px; height: 120px; border-radius: 28px; }
+img.icon-md  { width:  76px; height:  76px; border-radius: 17px; }
+img.icon-sm  { width:  42px; height:  42px; border-radius: 10px; }
+
+.homescreen {
+  background: #111827;
+  border-radius: 24px;
+  padding: 20px 16px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.homescreen img {
+  width: 60px; height: 60px; border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+.homescreen-label { font-size: 10px; color: white; font-weight: 500; }
+
+.on-dark { background: #1C1917; border-radius: 20px; padding: 24px; }
+.on-white { background: #FFFFFF; border-radius: 20px; padding: 24px; }
+</style>
+</head>
+<body>
+
+<h1>Better — Final Icon</h1>
+<p class="subtitle">Warm gradient · Clay arrow · 1024×1024 PNG</p>
+
+<div class="row">
+  <div class="icon-wrap">
+    <div class="label">XL</div>
+    <img class="icon icon-xl" src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+  </div>
+  <div class="icon-wrap">
+    <div class="label">Large</div>
+    <img class="icon icon-lg" src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+  </div>
+  <div class="icon-wrap">
+    <div class="label">Medium</div>
+    <img class="icon icon-md" src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+  </div>
+  <div class="icon-wrap">
+    <div class="label">Small</div>
+    <img class="icon icon-sm" src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+  </div>
+</div>
+
+<div class="row">
+  <div class="icon-wrap">
+    <div class="label">Home Screen</div>
+    <div class="homescreen">
+      <img src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+      <div class="homescreen-label">Better</div>
+    </div>
+  </div>
+
+  <div class="icon-wrap">
+    <div class="label">On Dark</div>
+    <div class="on-dark">
+      <img class="icon icon-lg" src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+    </div>
+  </div>
+
+  <div class="icon-wrap">
+    <div class="label">On White</div>
+    <div class="on-white">
+      <img class="icon icon-lg" src="../HabitStack/Assets.xcassets/AppIcon.appiconset/AppIcon.png" alt="Better icon">
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

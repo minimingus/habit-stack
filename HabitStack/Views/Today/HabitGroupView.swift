@@ -6,9 +6,9 @@ struct HabitGroupView: View {
 
     private var routineName: String {
         switch timeOfDay {
-        case .morning: return "Morning Routine"
-        case .afternoon: return "Afternoon Routine"
-        case .evening: return "Evening Routine"
+        case .morning: return "Morning"
+        case .afternoon: return "Afternoon"
+        case .evening: return "Evening"
         case .allDay: return "Anytime"
         }
     }

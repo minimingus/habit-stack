@@ -102,15 +102,6 @@ struct OnboardingFlow: View {
 
             // Convert each adopted template into a real Habit and persist it
             for (index, template) in state.adoptedHabits.enumerated() {
-                let timeOfDay: Habit.TimeOfDay = {
-                    switch template.defaultTime {
-                    case .morning: return .morning
-                    case .afternoon: return .afternoon
-                    case .evening: return .evening
-                    case .anytime: return .allDay
-                    }
-                }()
-
                 let habit = Habit(
                     id: UUID(),
                     userId: userId,
@@ -118,8 +109,9 @@ struct OnboardingFlow: View {
                     emoji: template.emoji,
                     color: "#0D9488",
                     frequency: .daily,
-                    timeOfDay: timeOfDay,
+                    timeOfDay: template.defaultTime,
                     reminderEnabled: false,
+                    difficultyLevel: 1,
                     sortOrder: index,
                     createdAt: Date()
                 )

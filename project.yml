@@ -29,9 +29,9 @@ targets:
     info:
       path: HabitStack/Info.plist
       properties:
-        CFBundleName: Better You
-        CFBundleDisplayName: Better You
-        CFBundleIdentifier: com.tomerab.habitstack
+        CFBundleName: Better
+        CFBundleDisplayName: Better
+        CFBundleIdentifier: com.tomerab.better
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         UILaunchScreen:
@@ -42,7 +42,7 @@ targets:
           - UIInterfaceOrientationPortrait
         CFBundleURLTypes:
           - CFBundleURLSchemes:
-              - habitstack
+              - better
     dependencies:
       - package: Supabase
         product: Supabase
@@ -57,7 +57,7 @@ targets:
         SWIFT_VERSION: "5.10"
         DEVELOPMENT_TEAM: FDLSN3ZJFV
         CODE_SIGN_STYLE: Automatic
-        PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack
+        PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.better
         CODE_SIGN_ENTITLEMENTS: HabitStack/HabitStack.entitlements
 
   HabitStackWidget:
@@ -71,8 +71,8 @@ targets:
     info:
       path: HabitStackWidget/Info.plist
       properties:
-        CFBundleDisplayName: Better You Widget
-        CFBundleIdentifier: com.tomerab.habitstack.widget
+        CFBundleDisplayName: Better Widget
+        CFBundleIdentifier: com.tomerab.better.widget
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -80,7 +80,7 @@ targets:
         SWIFT_VERSION: "5.10"
         DEVELOPMENT_TEAM: FDLSN3ZJFV
         CODE_SIGN_STYLE: Automatic
-        PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.habitstack.widget
+        PRODUCT_BUNDLE_IDENTIFIER: com.tomerab.better.widget
         CODE_SIGN_ENTITLEMENTS: HabitStackWidget/HabitStackWidget.entitlements
 
   HabitStackTests:
