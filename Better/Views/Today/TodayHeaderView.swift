@@ -58,7 +58,8 @@ struct TodayHeaderView: View {
             // Streak badge
             if bestStreak > 0 {
                 HStack(spacing: 4) {
-                    Text("🔥")
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(.orange)
                     Text("\(bestStreak)-day streak")
                         .font(.caption.bold())
                         .foregroundStyle(Color("Teal"))
@@ -73,7 +74,6 @@ struct TodayHeaderView: View {
         .padding(.top, 20)
         .padding(.bottom, 14)
         .background(Color("CardBackground"))
-        .clipShape(RoundedRectangle(cornerRadius: 0))
     }
 
     private func formattedDate() -> String {

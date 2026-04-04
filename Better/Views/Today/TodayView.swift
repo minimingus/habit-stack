@@ -207,7 +207,7 @@ struct TodayView: View {
                 .padding(.bottom, 24)
             }
             .navigationTitle("")
-            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
             .errorToast($viewModel.errorMessage)
             .task {
                 await viewModel.loadToday()

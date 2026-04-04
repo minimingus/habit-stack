@@ -25,7 +25,7 @@ struct HabitGroupView: View {
     private var iconColor: Color {
         switch timeOfDay {
         case .morning: return .orange
-        case .afternoon: return .yellow
+        case .afternoon: return Color.orange.opacity(0.8)
         case .evening: return .indigo
         case .allDay: return Color("Teal")
         }

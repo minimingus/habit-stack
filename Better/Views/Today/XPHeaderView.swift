@@ -66,7 +66,8 @@ struct XPHeaderView: View {
                     .font(.caption)
                     .foregroundStyle(Color("Teal"))
                     .italic()
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
             }
         }
         .padding(.horizontal, 16)

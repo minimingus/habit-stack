@@ -172,7 +172,7 @@ struct HabitCardView: View {
             if showConfetti {
                 ConfettiView()
                     .frame(height: 120)
-                    .offset(y: -40)
+                    .offset(y: -10)
                     .allowsHitTesting(false)
             }
         }
@@ -332,6 +332,8 @@ struct HabitCardView: View {
                     Image(systemName: "minus")
                         .font(.caption.bold())
                         .foregroundStyle(Color("Stone500"))
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(currentCount == 0)
 
@@ -349,6 +351,8 @@ struct HabitCardView: View {
                     Image(systemName: "plus")
                         .font(.caption.bold())
                         .foregroundStyle(accentColor)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(currentCount >= targetCount)
             }
@@ -372,7 +376,7 @@ private struct DifficultyDots: View {
 
     private var dotColor: Color {
         switch level {
-        case 1: return .green
+        case 1: return Color("Teal")
         case 2: return .orange
         default: return .red
         }
