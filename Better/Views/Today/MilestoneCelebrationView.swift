@@ -45,7 +45,7 @@ struct MilestoneCelebrationView: View {
         case 30: return "🏆"
         case 66: return "🧠"
         case 100: return "💯"
-        default: return "⭐"
+        default: return "🎯"
         }
     }
 

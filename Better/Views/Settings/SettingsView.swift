@@ -92,6 +92,7 @@ struct SettingsView: View {
                 }
 
                 // Developer
+                #if DEBUG
                 Section("Developer") {
                     Button(role: .destructive) {
                         showResetAlert = true
@@ -99,6 +100,7 @@ struct SettingsView: View {
                         Label("Reset App Data", systemImage: "trash")
                     }
                 }
+                #endif
 
                 // About
                 Section("About") {
@@ -110,8 +112,8 @@ struct SettingsView: View {
                         versionTapCount += 1
                         if versionTapCount >= 7 { showAdminSpend = true }
                     }
-                    Link("Privacy Policy", destination: URL(string: "https://habitstack.app/privacy")!)
-                    Link("Support", destination: URL(string: "https://habitstack.app/support")!)
+                    Link("Privacy Policy", destination: URL(string: "https://betterapp.app/privacy")!)
+                    Link("Support", destination: URL(string: "https://betterapp.app/support")!)
                 }
             }
             .navigationTitle("Settings")

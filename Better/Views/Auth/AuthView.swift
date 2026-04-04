@@ -29,7 +29,7 @@ struct AuthView: View {
                 VStack(spacing: 16) {
                     TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                         .textContentType(.emailAddress)
                         .padding()
                         .background(Color("Stone100"))

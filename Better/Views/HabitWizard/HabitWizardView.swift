@@ -174,7 +174,7 @@ private struct StepIndicator: View {
         HStack(spacing: 6) {
             ForEach(0..<total, id: \.self) { i in
                 Capsule()
-                    .fill(i <= current ? Color("Teal") : Color("Stone100"))
+                    .fill(i < current ? Color("Teal") : i == current ? Color("Teal").opacity(0.6) : Color("Stone100"))
                     .frame(height: 4)
             }
         }

@@ -94,7 +94,14 @@ struct AnalyticsView: View {
                             .padding(.horizontal, 16)
                         }
 
-                        if viewModel.isLoading {
+                        if viewModel.selectedHabit == nil {
+                            EmptyStateView(
+                                icon: "chart.bar",
+                                headline: "Pick a habit",
+                                subtext: "Select a habit above to see your streak history"
+                            )
+                            .frame(height: 300)
+                        } else if viewModel.isLoading {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                         } else {
@@ -149,7 +156,7 @@ struct AnalyticsView: View {
                 .padding(.vertical, 16)
             }
             .background(Color("AppBackground").ignoresSafeArea())
-            .navigationTitle("Analytics")
+            .navigationTitle("Streaks")
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
             .sheet(isPresented: $showCellSheet) {

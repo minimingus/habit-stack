@@ -38,7 +38,8 @@ enum IdentityTrait: String, Codable, CaseIterable, Identifiable {
 
     /// Display name without emoji prefix
     var displayName: String {
-        String(rawValue.dropFirst(2))
+        guard let spaceIndex = rawValue.firstIndex(of: " ") else { return rawValue }
+        return String(rawValue[rawValue.index(after: spaceIndex)...])
     }
 
     /// SF Symbol for UI display

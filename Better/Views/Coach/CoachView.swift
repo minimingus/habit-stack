@@ -24,7 +24,9 @@ struct CoachView: View {
                             EmptyStateView(
                                 icon: "bubble.left.and.bubble.right",
                                 headline: "Ask your Habit Coach",
-                                subtext: "Get personalized advice to build consistency and stay on track."
+                                subtext: "Get personalized advice to build consistency and stay on track.",
+                                cta: "Ask a question",
+                                onCTA: { isInputFocused = true }
                             )
                             .frame(minHeight: 300)
                         } else {
@@ -108,7 +110,6 @@ struct CoachView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showPaywall) { PaywallView() }
-            .sheet(isPresented: $viewModel.showSoftPaywall) { PaywallView() }
         }
     }
 }
