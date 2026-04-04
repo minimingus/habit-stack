@@ -18,6 +18,10 @@ struct OnboardingCompletionView: View {
         VStack(spacing: 30) {
             Spacer()
 
+            Text("You're set")
+                .font(.largeTitle.weight(.heavy))
+                .foregroundStyle(Color("Stone950"))
+
             Text("Your habits:")
                 .font(.title2)
                 .fontWeight(.bold)
@@ -26,7 +30,7 @@ struct OnboardingCompletionView: View {
                 ForEach(adoptedHabits.prefix(3)) { habit in
                     HStack(spacing: 12) {
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
+                            .foregroundStyle(Color("Teal"))
                             .font(.title3)
                         
                         HStack(spacing: 4) {
@@ -38,13 +42,13 @@ struct OnboardingCompletionView: View {
                         Spacer()
                     }
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color("Stone100"))
                     .cornerRadius(8)
                 }
             }
             
             VStack(spacing: 12) {
-                Text("Start tomorrow. Track daily.")
+                Text("Start today. Track daily.")
                     .font(.body)
                 
                 Text("Small wins compound.")
@@ -54,7 +58,7 @@ struct OnboardingCompletionView: View {
                 Text("Consistency > Perfection")
                     .font(.callout)
                     .fontWeight(.semibold)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(Color("Teal"))
                     .padding(.top, 8)
             }
             .multilineTextAlignment(.center)
@@ -63,7 +67,7 @@ struct OnboardingCompletionView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "bell.fill")
                         .font(.caption)
-                        .foregroundColor(.accentColor)
+                        .foregroundStyle(Color("Teal"))
                     Text("We'll remind you tomorrow at \(day1ReminderTime.formatted(date: .omitted, time: .shortened)) to start your first habit.")
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -82,8 +86,8 @@ struct OnboardingCompletionView: View {
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.accentColor)
-                .foregroundColor(.white)
+                .background(Color("Teal"))
+                .foregroundStyle(.white)
                 .cornerRadius(12)
             }
             .controlSize(.large)

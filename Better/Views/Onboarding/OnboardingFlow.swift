@@ -101,13 +101,15 @@ struct OnboardingFlow: View {
             let totalCount = state.adoptedHabits.count
 
             // Convert each adopted template into a real Habit and persist it
+            let habitColors = ["#C2673A", "#0D9488", "#7C3AED", "#D97706", "#059669", "#DC2626"]
             for (index, template) in state.adoptedHabits.enumerated() {
+                let color = habitColors[index % habitColors.count]
                 let habit = Habit(
                     id: UUID(),
                     userId: userId,
                     name: template.name,
                     emoji: template.emoji,
-                    color: "#0D9488",
+                    color: color,
                     frequency: .daily,
                     timeOfDay: template.defaultTime,
                     reminderEnabled: false,

@@ -24,7 +24,7 @@ struct OnboardingVisionView: View {
                 .font(.system(size: 100))
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.blue, .purple],
+                        colors: [Color("Teal"), Color("Teal").opacity(0.6)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -45,7 +45,7 @@ struct OnboardingVisionView: View {
                 
                 Text("A better version of you.\nWhat's different?")
                     .font(.body)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
             .opacity(showText ? 1 : 0)
@@ -59,8 +59,8 @@ struct OnboardingVisionView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.accentColor)
-                    .foregroundColor(.white)
+                    .background(Color("Teal"))
+                    .foregroundStyle(.white)
                     .cornerRadius(12)
             }
             .opacity(showText ? 1 : 0)

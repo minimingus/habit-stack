@@ -24,7 +24,7 @@ struct OnboardingHabitSwipeView: View {
             VStack(spacing: 8) {
                 Text("Based on who you want to become,")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                 
                 Text("Pick at least 1 habit to start:")
                     .font(.headline)
@@ -51,14 +51,18 @@ struct OnboardingHabitSwipeView: View {
                 } else {
                     // All cards swiped
                     VStack(spacing: 16) {
+                        Image(systemName: "arrow.2.circlepath")
+                            .font(.system(size: 40))
+                            .foregroundStyle(Color("Teal"))
+
                         Text("No more suggestions")
                             .font(.title3)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
 
                         if adoptedHabits.count < targetCount {
                             Text("Pick at least 1 habit to get started")
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
 
                             Button(action: {
                                 PostHogSDK.shared.capture("onboarding_habits_reshuffled")
@@ -70,8 +74,8 @@ struct OnboardingHabitSwipeView: View {
                                 Label("Shuffle new suggestions", systemImage: "shuffle")
                                     .font(.headline)
                                     .padding()
-                                    .background(Color.accentColor)
-                                    .foregroundColor(.white)
+                                    .background(Color("Teal"))
+                                    .foregroundStyle(.white)
                                     .cornerRadius(12)
                             }
                         }
@@ -83,7 +87,7 @@ struct OnboardingHabitSwipeView: View {
             // Progress
             Text("\(adoptedHabits.count)/\(targetCount) habits adopted")
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
             
             Spacer()
             
@@ -95,8 +99,8 @@ struct OnboardingHabitSwipeView: View {
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.accentColor)
-                            .foregroundColor(.white)
+                            .background(Color("Teal"))
+                            .foregroundStyle(.white)
                             .cornerRadius(12)
                     }
 
@@ -110,7 +114,7 @@ struct OnboardingHabitSwipeView: View {
                         }) {
                             Text("I'll add more later")
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         }
                     }
                 }

@@ -28,7 +28,7 @@ struct OnboardingIdentitySelectionView: View {
                 
                 Text("Select all that resonate")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
             .padding(.top)
             
@@ -50,8 +50,8 @@ struct OnboardingIdentitySelectionView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(selectedTraits.isEmpty ? Color.gray : Color.accentColor)
-                    .foregroundColor(.white)
+                    .background(selectedTraits.isEmpty ? Color.gray : Color("Teal"))
+                    .foregroundStyle(.white)
                     .cornerRadius(12)
             }
             .disabled(selectedTraits.isEmpty)
