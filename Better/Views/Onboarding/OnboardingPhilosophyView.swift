@@ -29,7 +29,7 @@ struct OnboardingPhilosophyView: View {
             VStack(spacing: 20) {
                 Text("Let's build your routine,\none habit at a time.")
                     .font(.body)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                 
                 VStack(spacing: 12) {
@@ -51,8 +51,8 @@ struct OnboardingPhilosophyView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.accentColor)
-                    .foregroundColor(.white)
+                    .background(Color("Teal"))
+                    .foregroundStyle(.white)
                     .cornerRadius(12)
             }
         }
@@ -82,7 +82,7 @@ struct PrincipleRow: View {
             Spacer()
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color("Stone100"))
         .cornerRadius(8)
     }
 }
