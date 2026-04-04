@@ -33,11 +33,9 @@
 		2F3BDC7087B42B5F10A767EC /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = F07464AF41F7920FB798B040 /* Secrets.plist */; };
 		332D57FBB0F1DDFCA791AF93 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8ED8B281CEA4FB080F0C50 /* SettingsView.swift */; };
 		36066B89BBF61B5B6C61354F /* CoachService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB133E7160A5C4A36D322EA7 /* CoachService.swift */; };
-		374E75B1447CD41926306C6D /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFF1E3415B3156ADB4D09B8 /* OnboardingContainerView.swift */; };
 		3946E77F116CB7C635848591 /* ChipGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3457103FAB63CA88E56979 /* ChipGrid.swift */; };
 		3D1860EBF7E7DC6F73321D67 /* WeeklyReflectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13ABBC7A22B044D81B82F87 /* WeeklyReflectionView.swift */; };
 		3DF1D21C2EAFF2DEDDFABC1B /* WhatsNewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248D7107A3AB4B5D94C96B17 /* WhatsNewSheet.swift */; };
-		4211134BE0C1FB37D6D4DC2F /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F4EBA1DDCB6529666E800A /* WelcomeView.swift */; };
 		42D86ECCEFD7987E83698E28 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A3B24B6C9FE8E69FDD2B5A /* SignUpView.swift */; };
 		44F8362F232E24013298893C /* BetterWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B9349578E991FDE56DD05186 /* BetterWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		46CF31965D2A26D870A0F8C5 /* DailyInsightCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE468EF3561E44B6461B33 /* DailyInsightCard.swift */; };
@@ -236,7 +234,6 @@
 		D60C8CA1492E17D7E6A7859E /* ScorecardEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardEntry.swift; sourceTree = "<group>"; };
 		DA62893CA1AB76BF85895304 /* Better.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Better.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF19BB020DA0FD5A0A0A3D3 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
-		DCFF1E3415B3156ADB4D09B8 /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
 		E1147CCEEF1DE66701009DAF /* CoachViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachViewModel.swift; sourceTree = "<group>"; };
 		E13ABBC7A22B044D81B82F87 /* WeeklyReflectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflectionView.swift; sourceTree = "<group>"; };
 		E23675946FA002610AA376BC /* XPHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPHeaderView.swift; sourceTree = "<group>"; };
@@ -257,7 +254,6 @@
 		F5F484E2368BC6ACD22737EF /* HabitTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTimerView.swift; sourceTree = "<group>"; };
 		F67D258474117277594DB2A5 /* HabitCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCardView.swift; sourceTree = "<group>"; };
 		F6AFEB4D97B7856904D570E8 /* CheckButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckButton.swift; sourceTree = "<group>"; };
-		F6F4EBA1DDCB6529666E800A /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F7358D782EA7C4A01939F4CC /* HabitTemplateLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTemplateLibraryView.swift; sourceTree = "<group>"; };
 		F781491A2015D91BB5F0137F /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		F99AE565ABBDDF83C376F773 /* ArchivedHabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedHabitsView.swift; sourceTree = "<group>"; };
@@ -380,14 +376,12 @@
 			children = (
 				7DE2539FEE0F6E5A4C861E86 /* NotificationPermissionView.swift */,
 				45066A1C6FC5E678B1A552EF /* OnboardingCompletionView.swift */,
-				DCFF1E3415B3156ADB4D09B8 /* OnboardingContainerView.swift */,
 				70FA33AD8474A1A431DE62D0 /* OnboardingFlow.swift */,
 				A8D2211B642801A0862F955F /* OnboardingHabitSwipeView.swift */,
 				E3148D0C8D882027A2869D3F /* OnboardingIdentitySelectionView.swift */,
 				D07C384B5143D345D99DE95A /* OnboardingPhilosophyView.swift */,
 				796825DB8F6FB898B1BF440E /* OnboardingVisionView.swift */,
 				1E0867075AE86EF9979B35C7 /* ScorecardOnboardingView.swift */,
-				F6F4EBA1DDCB6529666E800A /* WelcomeView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -792,7 +786,6 @@
 				67E3F5677593A6FC8EF8DC8F /* NotificationManager.swift in Sources */,
 				4B8741964C793F3AD75AD5C8 /* NotificationPermissionView.swift in Sources */,
 				15656F7BE4470CE42EDEB8CC /* OnboardingCompletionView.swift in Sources */,
-				374E75B1447CD41926306C6D /* OnboardingContainerView.swift in Sources */,
 				FFEBC5E117F59B6C25044B89 /* OnboardingFlow.swift in Sources */,
 				E342A6CA541A5850F9F8EB23 /* OnboardingHabitSwipeView.swift in Sources */,
 				497EDBF0917307D0C0D26F16 /* OnboardingIdentitySelectionView.swift in Sources */,
@@ -828,7 +821,6 @@
 				B0487E1B33020E357296E16C /* TrialExpiryBanner.swift in Sources */,
 				2A679FDC08CE93233D543B43 /* UpgradeNudgeCard.swift in Sources */,
 				3D1860EBF7E7DC6F73321D67 /* WeeklyReflectionView.swift in Sources */,
-				4211134BE0C1FB37D6D4DC2F /* WelcomeView.swift in Sources */,
 				571960E2C4A3CECEADADDD02 /* WhatsNewRegistry.swift in Sources */,
 				3DF1D21C2EAFF2DEDDFABC1B /* WhatsNewSheet.swift in Sources */,
 				5D2CFF95F4F725E438BEEA14 /* WizardStepCravingView.swift in Sources */,
