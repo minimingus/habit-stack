@@ -13,95 +13,107 @@ struct SwipeableHabitCard: View {
     let onSwipeLeft: () -> Void
     let onSwipeRight: () -> Void
 
+    // How far dragged as a 0–1 progress value
+    private var dragProgress: Double { min(abs(Double(offset.width)) / 100, 1) }
+    private var isAddingDirection: Bool { offset.width > 0 }
+
     var body: some View {
         ZStack {
-            // Background
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(UIColor.secondarySystemBackground))
-                .shadow(color: .black.opacity(isDragging ? 0.18 : 0.10), radius: isDragging ? 16 : 8, y: 4)
+            // ── Card surface ──────────────────────────────────────────
+            RoundedRectangle(cornerRadius: 28)
+                .fill(Color(UIColor.systemBackground))
+                .shadow(
+                    color: .black.opacity(isDragging ? 0.16 : 0.08),
+                    radius: isDragging ? 24 : 12,
+                    y: isDragging ? 8 : 4
+                )
 
-            // Swipe hint overlay
-            if offset.width > 40 {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color("Teal").opacity(min(Double(offset.width - 40) / 100, 0.15)))
-            } else if offset.width < -40 {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.red.opacity(min(Double(-offset.width - 40) / 100, 0.15)))
-            }
+            // ── Directional tint (fades in as you drag) ───────────────
+            RoundedRectangle(cornerRadius: 28)
+                .fill(
+                    isAddingDirection
+                        ? Color("Teal").opacity(dragProgress * 0.18)
+                        : Color.red.opacity(dragProgress * 0.18)
+                )
 
+            // ── Content ───────────────────────────────────────────────
             VStack(spacing: 0) {
-                // Emoji in a tinted squircle
-                ZStack {
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(Color("TealLight"))
-                        .frame(width: 72, height: 72)
-                    Text(template.emoji)
-                        .font(.system(size: 36))
-                }
-                .padding(.top, 32)
+                // Category chip
+                Text(template.category.displayName.uppercased())
+                    .font(.system(size: 10, weight: .bold))
+                    .tracking(1.5)
+                    .foregroundStyle(Color("Teal"))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .background(Color("TealLight"))
+                    .clipShape(Capsule())
+                    .padding(.top, 32)
+
+                // Large emoji
+                Text(template.emoji)
+                    .font(.system(size: 72))
+                    .padding(.top, 20)
 
                 // Name
                 Text(template.name)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(Color.primary)
                     .multilineTextAlignment(.center)
-                    .padding(.top, 16)
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 28)
+                    .padding(.top, 14)
 
-                // Meta
-                Text("\(template.suggestedDuration) min · \(template.category.displayName)")
+                // Duration
+                Text("\(template.suggestedDuration) min")
                     .font(.subheadline)
                     .foregroundStyle(Color.secondary)
                     .padding(.top, 4)
 
                 // Description
                 Text(template.description)
-                    .font(.body)
+                    .font(.callout)
                     .foregroundStyle(Color.secondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 28)
-                    .padding(.top, 12)
                     .lineLimit(3)
+                    .padding(.horizontal, 32)
+                    .padding(.top, 12)
 
                 Spacer()
 
-                // Buttons
-                HStack(spacing: 32) {
-                    Button(action: onSwipeLeft) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "xmark")
-                            Text("Skip")
-                        }
-                        .font(.callout.weight(.medium))
-                        .foregroundStyle(Color.secondary)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 12)
-                        .background(Color(UIColor.tertiarySystemBackground))
-                        .clipShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
-
-                    Button(action: onSwipeRight) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "plus")
-                            Text("Add")
-                        }
-                        .font(.callout.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 12)
-                        .background(Color("Teal"))
-                        .clipShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
+                // Swipe hint
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.left")
+                        .font(.caption2.weight(.semibold))
+                    Text("swipe to skip or add")
+                        .font(.caption)
+                    Image(systemName: "arrow.right")
+                        .font(.caption2.weight(.semibold))
                 }
-                .padding(.bottom, 28)
+                .foregroundStyle(Color.secondary.opacity(0.5))
+                .padding(.bottom, 24)
+            }
+
+            // ── Drag label overlay ────────────────────────────────────
+            if dragProgress > 0.2 {
+                VStack {
+                    HStack {
+                        if !isAddingDirection {
+                            dragLabel(text: "Skip", icon: "xmark", color: .red)
+                                .padding(20)
+                        }
+                        Spacer()
+                        if isAddingDirection {
+                            dragLabel(text: "Add", icon: "checkmark", color: Color("Teal"))
+                                .padding(20)
+                        }
+                    }
+                    Spacer()
+                }
+                .opacity(dragProgress)
             }
         }
         .frame(width: 320, height: 460)
         .offset(offset)
         .rotationEffect(.degrees(Double(offset.width / 22)))
-        // minimumDistance: 10 ensures simple taps reach the buttons above
         .gesture(
             DragGesture(minimumDistance: 10)
                 .onChanged { g in
@@ -113,13 +125,34 @@ struct SwipeableHabitCard: View {
                     if abs(offset.width) > 110 {
                         completeSwipe(offset.width > 0 ? .right : .left)
                     } else {
-                        withAnimation(.spring(response: 0.3)) { offset = .zero }
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            offset = .zero
+                        }
                     }
                 }
         )
         .accessibilityLabel("\(template.name), \(template.category.displayName), \(template.suggestedDuration) minutes")
         .accessibilityAction(named: "Add") { onSwipeRight() }
         .accessibilityAction(named: "Skip") { onSwipeLeft() }
+    }
+
+    @ViewBuilder
+    private func dragLabel(text: String, icon: String, color: Color) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 14, weight: .bold))
+            Text(text)
+                .font(.system(size: 15, weight: .bold))
+        }
+        .foregroundStyle(color)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(color.opacity(0.12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(color.opacity(0.4), lineWidth: 1.5)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 
     private func completeSwipe(_ direction: SwipeDirection) {
@@ -136,17 +169,20 @@ struct SwipeableHabitCard: View {
 enum SwipeDirection { case left, right }
 
 #Preview {
-    SwipeableHabitCard(
-        template: HabitTemplate(
-            name: "Morning Walk",
-            emoji: "🚶",
-            description: "Start your day with movement and fresh air",
-            suggestedDuration: 15,
-            category: .health,
-            identityTraits: [.stronger, .energetic],
-            defaultTime: .morning
-        ),
-        onSwipeLeft: {},
-        onSwipeRight: {}
-    )
+    ZStack {
+        Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+        SwipeableHabitCard(
+            template: HabitTemplate(
+                name: "Morning Walk",
+                emoji: "🚶",
+                description: "Start your day with movement and fresh air to boost energy.",
+                suggestedDuration: 15,
+                category: .health,
+                identityTraits: [.stronger, .energetic],
+                defaultTime: .morning
+            ),
+            onSwipeLeft: {},
+            onSwipeRight: {}
+        )
+    }
 }
